@@ -1,4 +1,5 @@
 ---
+name: security-agent
 model: sonnet
 description: Security review specialist - SAST, DAST, dependency audit, compliance validation
 tools:

@@ -1,4 +1,5 @@
 ---
+name: conductor
 model: opus
 description: Meta-orchestrator that coordinates the SDLC agent workflow
 tools:

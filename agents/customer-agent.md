@@ -1,4 +1,5 @@
 ---
+name: customer-agent
 model: sonnet
 description: Post-deployment acceptance testing and validation specialist
 tools:

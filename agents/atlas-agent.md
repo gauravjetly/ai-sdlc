@@ -1,4 +1,5 @@
 ---
+name: atlas-agent
 model: sonnet
 description: DevOps/SRE specialist for deployment, infrastructure, and operational readiness
 tools:
