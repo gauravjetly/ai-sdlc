@@ -58,6 +58,7 @@
       { id: 'qa', name: 'QA Agent', icon: '🧪', color: '#f59e0b', model: 'Sonnet', role: 'Testing' },
       { id: 'atlas', name: 'Atlas', icon: '🚀', color: '#8b5cf6', model: 'Sonnet', role: 'Deployment' },
       { id: 'customer', name: 'Customer', icon: '✅', color: '#22c55e', model: 'Sonnet', role: 'Acceptance' },
+      { id: 'finops', name: 'FinOps', icon: '💰', color: '#fbbf24', model: 'Haiku', role: 'Cost Tracking' },
       { id: 'tracker', name: 'Tracker', icon: '📊', color: '#64748b', model: 'Haiku', role: 'Monitoring' },
     ];
 
@@ -67,25 +68,37 @@
       const [projects, setProjects] = useState([]);
       const [activity, setActivity] = useState([]);
       const [registry, setRegistry] = useState(null);
+      const [costs, setCosts] = useState([]);
+      const [totalBudget, setTotalBudget] = useState(0);
+      const [totalSpent, setTotalSpent] = useState(0);
       const [lastUpdate, setLastUpdate] = useState(new Date());
       const [isLoading, setIsLoading] = useState(true);
 
       // Fetch data from API
       const fetchData = async () => {
         try {
-          const [registryRes, projectsRes, activityRes] = await Promise.all([
+          const [registryRes, projectsRes, activityRes, costsRes] = await Promise.all([
             fetch('/api/registry'),
             fetch('/api/projects'),
-            fetch('/api/activity?limit=50')
+            fetch('/api/activity?limit=50'),
+            fetch('/api/costs')
           ]);
 
           const registryData = await registryRes.json();
           const projectsData = await projectsRes.json();
           const activityData = await activityRes.json();
+          const costsData = await costsRes.json();
+
+          // Calculate total budget and spent
+          const budget = costsData.reduce((sum, cost) => sum + (cost.budget || 0), 0);
+          const spent = costsData.reduce((sum, cost) => sum + (cost.total_cost || 0), 0);
 
           setRegistry(registryData);
           setProjects(projectsData);
           setActivity(activityData);
+          setCosts(costsData);
+          setTotalBudget(budget);
+          setTotalSpent(spent);
           setLastUpdate(new Date());
           setIsLoading(false);
         } catch (error) {
@@ -122,6 +135,33 @@
       };
 
       const getAgent = (id) => AGENTS.find(a => a.id === id) || AGENTS[0];
+
+      // Helper function for budget status
+      const getBudgetStatus = (spent, budget) => {
+        if (!budget || budget === 0) {
+          return { color: '#64748b', indicator: '⚪', label: 'No Budget' };
+        }
+        const pct = (spent / budget) * 100;
+        if (pct >= 90) return { color: '#ef4444', indicator: '🔴', label: 'Critical' };
+        if (pct >= 50) return { color: '#f59e0b', indicator: '🟡', label: 'Warning' };
+        return { color: '#22c55e', indicator: '🟢', label: 'Healthy' };
+      };
+
+      // Helper function for currency formatting
+      const formatCost = (amount, currency = 'USD') => {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: currency
+        }).format(amount || 0);
+      };
+
+      // Helper function for cost efficiency metrics
+      const calculateCostEfficiency = () => {
+        const totalTokens = costs.reduce((sum, cost) => sum + (cost.total_tokens || 0), 0);
+        const avgCostPerProject = costs.length > 0 ? totalSpent / costs.length : 0;
+        const costPer1KTokens = totalTokens > 0 ? (totalSpent / totalTokens) * 1000 : 0;
+        return { totalTokens, avgCostPerProject, costPer1KTokens };
+      };
 
       const stats = registry ? registry.stats : {
         totalProjects: 0,
@@ -201,7 +241,7 @@
             gap: '4px',
             borderBottom: '1px solid #334155'
           }}>
-            {['dashboard', 'projects', 'agents', 'activity'].map(tab => (
+            {['dashboard', 'projects', 'agents', 'costs', 'activity'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -229,7 +269,7 @@
             {activeTab === 'dashboard' && (
               <div>
                 {/* Stats Cards */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', marginBottom: '24px' }}>
                   {[
                     { label: 'Total Projects', value: stats.totalProjects, color: '#3b82f6', icon: <GitBranch size={20} /> },
                     { label: 'Completed', value: stats.completedProjects, color: '#22c55e', icon: <CheckCircle size={20} /> },
@@ -251,7 +291,67 @@
                       </div>
                     </div>
                   ))}
+                  {/* Total Spent Card */}
+                  <div style={{
+                    background: '#1e293b',
+                    borderRadius: '12px',
+                    padding: '20px',
+                    border: '1px solid #334155'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                      <div>
+                        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Total Spent</p>
+                        <p style={{ margin: '8px 0 0 0', fontSize: '32px', fontWeight: 700, color: '#fbbf24' }}>
+                          {formatCost(totalSpent)}
+                        </p>
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          marginTop: '8px',
+                          fontSize: '11px',
+                          color: getBudgetStatus(totalSpent, totalBudget).color
+                        }}>
+                          <span>{getBudgetStatus(totalSpent, totalBudget).indicator}</span>
+                          <span>{getBudgetStatus(totalSpent, totalBudget).label}</span>
+                        </div>
+                      </div>
+                      <div style={{ color: '#fbbf24', opacity: 0.5, fontSize: '20px' }}>💰</div>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Budget Utilization Progress Bar */}
+                {totalBudget > 0 && (
+                  <div style={{
+                    background: '#1e293b',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    border: '1px solid #334155',
+                    marginBottom: '24px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '13px', fontWeight: 600 }}>Budget Utilization</span>
+                      <span style={{ fontSize: '13px', color: '#94a3b8' }}>
+                        {formatCost(totalSpent)} / {formatCost(totalBudget)} ({Math.round((totalSpent / totalBudget) * 100)}%)
+                      </span>
+                    </div>
+                    <div style={{
+                      width: '100%',
+                      height: '12px',
+                      background: '#0f172a',
+                      borderRadius: '6px',
+                      overflow: 'hidden'
+                    }}>
+                      <div style={{
+                        width: `${Math.min((totalSpent / totalBudget) * 100, 100)}%`,
+                        height: '100%',
+                        background: getBudgetStatus(totalSpent, totalBudget).color,
+                        transition: 'width 0.3s ease, background 0.3s ease'
+                      }} />
+                    </div>
+                  </div>
+                )}
 
                 {/* Agent Workflow */}
                 <div style={{
@@ -263,7 +363,7 @@
                 }}>
                   <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>Agent Workflow</h2>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', padding: '8px 0' }}>
-                    {AGENTS.filter(a => a.id !== 'tracker').map((agent, i) => (
+                    {AGENTS.filter(a => a.id !== 'tracker' && a.id !== 'finops').map((agent, i) => (
                       <React.Fragment key={agent.id}>
                         <div style={{
                           background: agent.color,
@@ -276,11 +376,36 @@
                           <div style={{ fontSize: '12px', fontWeight: 600 }}>{agent.name}</div>
                           <div style={{ fontSize: '10px', opacity: 0.8 }}>{agent.model}</div>
                         </div>
-                        {i < AGENTS.filter(a => a.id !== 'tracker').length - 1 && (
+                        {i < AGENTS.filter(a => a.id !== 'tracker' && a.id !== 'finops').length - 1 && (
                           <ChevronRight size={20} style={{ color: '#64748b', flexShrink: 0 }} />
                         )}
                       </React.Fragment>
                     ))}
+                  </div>
+                  <div style={{
+                    marginTop: '12px',
+                    padding: '12px',
+                    background: '#0f172a',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '12px'
+                  }}>
+                    <div style={{
+                      background: '#fbbf24',
+                      borderRadius: '6px',
+                      padding: '8px 12px',
+                      minWidth: '80px',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{ fontSize: '20px', marginBottom: '2px' }}>💰</div>
+                      <div style={{ fontSize: '11px', fontWeight: 600 }}>FinOps</div>
+                      <div style={{ fontSize: '9px', opacity: 0.8 }}>Haiku</div>
+                    </div>
+                    <div style={{ flex: 1, color: '#94a3b8' }}>
+                      Tracks costs across all agents • Real-time budget monitoring • Optimization recommendations
+                    </div>
                   </div>
                 </div>
 
@@ -396,6 +521,29 @@
                               </div>
                             </div>
 
+                            {/* Cost Information */}
+                            {project.cost && (
+                              <div style={{
+                                background: '#0f172a',
+                                borderRadius: '8px',
+                                padding: '10px',
+                                marginBottom: '12px',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                              }}>
+                                <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                                  Cost: <span style={{ color: '#fbbf24', fontWeight: 600 }}>{formatCost(project.cost.total_cost)}</span>
+                                  {project.cost.budget > 0 && (
+                                    <span> / {formatCost(project.cost.budget)}</span>
+                                  )}
+                                </div>
+                                <span style={{ fontSize: '14px' }}>
+                                  {getBudgetStatus(project.cost.total_cost, project.cost.budget).indicator}
+                                </span>
+                              </div>
+                            )}
+
                             {/* Phase Progress */}
                             {project.phases && (
                               <div style={{ display: 'flex', gap: '4px' }}>
@@ -435,6 +583,83 @@
                       }}>
                         <h2 style={{ margin: '0 0 4px 0', fontSize: '18px', fontWeight: 600 }}>{selectedProject.name}</h2>
                         <p style={{ margin: '0 0 20px 0', fontSize: '12px', color: '#64748b' }}>{selectedProject.id}</p>
+
+                        {/* Cost Breakdown */}
+                        {selectedProject.cost && (
+                          <div style={{ marginBottom: '20px' }}>
+                            <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>Cost Breakdown</h3>
+                            <div style={{
+                              background: '#0f172a',
+                              borderRadius: '8px',
+                              padding: '12px',
+                              marginBottom: '12px'
+                            }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
+                                <span style={{ color: '#94a3b8' }}>Total Cost</span>
+                                <span style={{ color: '#fbbf24', fontWeight: 600 }}>{formatCost(selectedProject.cost.total_cost)}</span>
+                              </div>
+                              {selectedProject.cost.budget > 0 && (
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
+                                  <span style={{ color: '#94a3b8' }}>Budget</span>
+                                  <span style={{ fontWeight: 500 }}>{formatCost(selectedProject.cost.budget)}</span>
+                                </div>
+                              )}
+                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
+                                <span style={{ color: '#94a3b8' }}>Total Tokens</span>
+                                <span style={{ fontWeight: 500 }}>{selectedProject.cost.total_tokens?.toLocaleString()}</span>
+                              </div>
+                              {selectedProject.cost.budget > 0 && (
+                                <div style={{
+                                  marginTop: '12px',
+                                  paddingTop: '12px',
+                                  borderTop: '1px solid #334155',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '8px',
+                                  fontSize: '12px'
+                                }}>
+                                  <span style={{ fontSize: '16px' }}>
+                                    {getBudgetStatus(selectedProject.cost.total_cost, selectedProject.cost.budget).indicator}
+                                  </span>
+                                  <span style={{ color: getBudgetStatus(selectedProject.cost.total_cost, selectedProject.cost.budget).color }}>
+                                    {getBudgetStatus(selectedProject.cost.total_cost, selectedProject.cost.budget).label}
+                                  </span>
+                                  <span style={{ marginLeft: 'auto', color: '#64748b' }}>
+                                    {Math.round((selectedProject.cost.total_cost / selectedProject.cost.budget) * 100)}% used
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            {/* Cost by Agent */}
+                            {selectedProject.cost.breakdown_by_agent && selectedProject.cost.breakdown_by_agent.length > 0 && (
+                              <div>
+                                <h4 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 600, color: '#94a3b8' }}>By Agent</h4>
+                                {selectedProject.cost.breakdown_by_agent.map((agentCost, i) => {
+                                  const agent = getAgent(agentCost.agent);
+                                  return (
+                                    <div key={i} style={{
+                                      background: '#0f172a',
+                                      borderRadius: '6px',
+                                      padding: '8px',
+                                      marginBottom: '6px',
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      alignItems: 'center'
+                                    }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span style={{ fontSize: '14px' }}>{agent.icon}</span>
+                                        <span style={{ fontSize: '11px', color: '#94a3b8' }}>{agent.name}</span>
+                                      </div>
+                                      <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: 600 }}>
+                                        {formatCost(agentCost.cost)}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        )}
 
                         <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>Phase Details</h3>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -484,6 +709,20 @@
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
                 {AGENTS.map(agent => {
                   const agentStats = registry?.agents?.[agent.id] || { invocations: 0, totalDuration: 0 };
+
+                  // Calculate total cost for this agent across all projects
+                  let agentTotalCost = 0;
+                  let agentTotalTokens = 0;
+                  costs.forEach(projectCost => {
+                    if (projectCost.breakdown_by_agent) {
+                      const agentBreakdown = projectCost.breakdown_by_agent.find(a => a.agent === agent.id);
+                      if (agentBreakdown) {
+                        agentTotalCost += agentBreakdown.cost || 0;
+                        agentTotalTokens += agentBreakdown.tokens || 0;
+                      }
+                    }
+                  });
+
                   return (
                     <div key={agent.id} style={{
                       background: '#1e293b',
@@ -520,6 +759,18 @@
                           <span style={{ color: '#94a3b8' }}>Invocations</span>
                           <span style={{ fontWeight: 500 }}>{agentStats.invocations}</span>
                         </div>
+                        {agentTotalCost > 0 && (
+                          <>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
+                              <span style={{ color: '#94a3b8' }}>Total Cost</span>
+                              <span style={{ fontWeight: 600, color: '#fbbf24' }}>{formatCost(agentTotalCost)}</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
+                              <span style={{ color: '#94a3b8' }}>Tokens</span>
+                              <span style={{ fontWeight: 500 }}>{agentTotalTokens.toLocaleString()}</span>
+                            </div>
+                          </>
+                        )}
                         {agentStats.blocked > 0 && (
                           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
                             <span style={{ color: '#ef4444' }}>Blocked</span>
@@ -536,6 +787,296 @@
                     </div>
                   );
                 })}
+              </div>
+            )}
+
+            {/* Costs Tab */}
+            {activeTab === 'costs' && (
+              <div>
+                {costs.length === 0 ? (
+                  <div style={{
+                    background: '#1e293b',
+                    borderRadius: '12px',
+                    padding: '60px',
+                    border: '1px solid #334155',
+                    textAlign: 'center'
+                  }}>
+                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>💰</div>
+                    <h3 style={{ fontSize: '18px', marginBottom: '8px', fontWeight: 600 }}>No Cost Data Yet</h3>
+                    <p style={{ color: '#64748b', fontSize: '14px' }}>
+                      Cost tracking will appear here after running workflows
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {/* Summary Cards */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
+                      <div style={{
+                        background: '#1e293b',
+                        borderRadius: '12px',
+                        padding: '20px',
+                        border: '1px solid #334155'
+                      }}>
+                        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Total Budget</p>
+                        <p style={{ margin: '8px 0 0 0', fontSize: '28px', fontWeight: 700, color: '#3b82f6' }}>
+                          {formatCost(totalBudget)}
+                        </p>
+                      </div>
+                      <div style={{
+                        background: '#1e293b',
+                        borderRadius: '12px',
+                        padding: '20px',
+                        border: '1px solid #334155'
+                      }}>
+                        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Total Spent</p>
+                        <p style={{ margin: '8px 0 0 0', fontSize: '28px', fontWeight: 700, color: '#fbbf24' }}>
+                          {formatCost(totalSpent)}
+                        </p>
+                      </div>
+                      <div style={{
+                        background: '#1e293b',
+                        borderRadius: '12px',
+                        padding: '20px',
+                        border: '1px solid #334155'
+                      }}>
+                        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Remaining</p>
+                        <p style={{ margin: '8px 0 0 0', fontSize: '28px', fontWeight: 700, color: '#22c55e' }}>
+                          {formatCost(Math.max(0, totalBudget - totalSpent))}
+                        </p>
+                      </div>
+                      <div style={{
+                        background: '#1e293b',
+                        borderRadius: '12px',
+                        padding: '20px',
+                        border: '1px solid #334155'
+                      }}>
+                        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Budget Health</p>
+                        <div style={{
+                          margin: '8px 0 0 0',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px'
+                        }}>
+                          <span style={{ fontSize: '28px' }}>
+                            {getBudgetStatus(totalSpent, totalBudget).indicator}
+                          </span>
+                          <span style={{
+                            fontSize: '16px',
+                            fontWeight: 600,
+                            color: getBudgetStatus(totalSpent, totalBudget).color
+                          }}>
+                            {getBudgetStatus(totalSpent, totalBudget).label}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Cost by Agent Chart */}
+                    <div style={{
+                      background: '#1e293b',
+                      borderRadius: '12px',
+                      padding: '20px',
+                      border: '1px solid #334155',
+                      marginBottom: '24px'
+                    }}>
+                      <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>Cost by Agent</h2>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        {AGENTS.filter(a => a.id !== 'tracker').map(agent => {
+                          // Calculate agent cost across all projects
+                          let agentCost = 0;
+                          let agentTokens = 0;
+                          let agentInvocations = 0;
+                          costs.forEach(projectCost => {
+                            if (projectCost.breakdown_by_agent) {
+                              const breakdown = projectCost.breakdown_by_agent.find(a => a.agent === agent.id);
+                              if (breakdown) {
+                                agentCost += breakdown.cost || 0;
+                                agentTokens += breakdown.tokens || 0;
+                                agentInvocations += breakdown.invocations || 0;
+                              }
+                            }
+                          });
+
+                          const percentage = totalSpent > 0 ? (agentCost / totalSpent) * 100 : 0;
+
+                          return (
+                            <div key={agent.id} style={{
+                              background: '#0f172a',
+                              borderRadius: '8px',
+                              padding: '12px'
+                            }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <span style={{ fontSize: '18px' }}>{agent.icon}</span>
+                                  <span style={{ fontWeight: 600 }}>{agent.name}</span>
+                                  <span style={{ color: '#64748b' }}>• {agentInvocations} invocations • {agentTokens.toLocaleString()} tokens</span>
+                                </div>
+                                <span style={{ fontWeight: 600, color: '#fbbf24' }}>{formatCost(agentCost)}</span>
+                              </div>
+                              <div style={{
+                                width: '100%',
+                                height: '8px',
+                                background: '#1e293b',
+                                borderRadius: '4px',
+                                overflow: 'hidden'
+                              }}>
+                                <div style={{
+                                  width: `${percentage}%`,
+                                  height: '100%',
+                                  background: agent.color,
+                                  transition: 'width 0.3s ease'
+                                }} />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', marginBottom: '24px' }}>
+                      {/* Cost by Project */}
+                      <div style={{
+                        background: '#1e293b',
+                        borderRadius: '12px',
+                        padding: '20px',
+                        border: '1px solid #334155'
+                      }}>
+                        <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>Cost by Project</h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+                          {costs.map((cost, i) => {
+                            const status = getBudgetStatus(cost.total_cost, cost.budget);
+                            const percentage = cost.budget > 0 ? (cost.total_cost / cost.budget) * 100 : 0;
+                            return (
+                              <div key={i} style={{
+                                background: '#0f172a',
+                                borderRadius: '8px',
+                                padding: '12px',
+                                borderLeft: `3px solid ${status.color}`
+                              }}>
+                                <div style={{ marginBottom: '8px' }}>
+                                  <div style={{ fontSize: '13px', fontWeight: 600, marginBottom: '4px' }}>{cost.project_name}</div>
+                                  <div style={{ fontSize: '11px', color: '#64748b' }}>{cost.project_id}</div>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '12px' }}>
+                                  <span style={{ color: '#94a3b8' }}>Spent</span>
+                                  <span style={{ color: '#fbbf24', fontWeight: 600 }}>{formatCost(cost.total_cost)}</span>
+                                </div>
+                                {cost.budget > 0 && (
+                                  <>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '12px' }}>
+                                      <span style={{ color: '#94a3b8' }}>Budget</span>
+                                      <span style={{ fontWeight: 500 }}>{formatCost(cost.budget)}</span>
+                                    </div>
+                                    <div style={{
+                                      width: '100%',
+                                      height: '6px',
+                                      background: '#1e293b',
+                                      borderRadius: '3px',
+                                      overflow: 'hidden',
+                                      marginBottom: '6px'
+                                    }}>
+                                      <div style={{
+                                        width: `${Math.min(percentage, 100)}%`,
+                                        height: '100%',
+                                        background: status.color,
+                                        transition: 'width 0.3s ease'
+                                      }} />
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px' }}>
+                                      <span>{status.indicator}</span>
+                                      <span style={{ color: status.color }}>{Math.round(percentage)}% utilized</span>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Cost Efficiency & Optimization */}
+                      <div>
+                        {/* Cost Efficiency Metrics */}
+                        <div style={{
+                          background: '#1e293b',
+                          borderRadius: '12px',
+                          padding: '20px',
+                          border: '1px solid #334155',
+                          marginBottom: '16px'
+                        }}>
+                          <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>Cost Efficiency</h2>
+                          {(() => {
+                            const efficiency = calculateCostEfficiency();
+                            return (
+                              <>
+                                <div style={{
+                                  background: '#0f172a',
+                                  borderRadius: '8px',
+                                  padding: '12px',
+                                  marginBottom: '8px'
+                                }}>
+                                  <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Avg Cost / Project</div>
+                                  <div style={{ fontSize: '20px', fontWeight: 700, color: '#fbbf24' }}>
+                                    {formatCost(efficiency.avgCostPerProject)}
+                                  </div>
+                                </div>
+                                <div style={{
+                                  background: '#0f172a',
+                                  borderRadius: '8px',
+                                  padding: '12px',
+                                  marginBottom: '8px'
+                                }}>
+                                  <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Cost / 1K Tokens</div>
+                                  <div style={{ fontSize: '20px', fontWeight: 700, color: '#fbbf24' }}>
+                                    {formatCost(efficiency.costPer1KTokens)}
+                                  </div>
+                                </div>
+                                <div style={{
+                                  background: '#0f172a',
+                                  borderRadius: '8px',
+                                  padding: '12px'
+                                }}>
+                                  <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Total Tokens</div>
+                                  <div style={{ fontSize: '20px', fontWeight: 700, color: '#3b82f6' }}>
+                                    {efficiency.totalTokens.toLocaleString()}
+                                  </div>
+                                </div>
+                              </>
+                            );
+                          })()}
+                        </div>
+
+                        {/* Optimization Tips */}
+                        <div style={{
+                          background: '#1e293b',
+                          borderRadius: '12px',
+                          padding: '20px',
+                          border: '1px solid #334155'
+                        }}>
+                          <h2 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 600 }}>💡 Optimization Tips</h2>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px', color: '#94a3b8' }}>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <span style={{ color: '#22c55e' }}>✓</span>
+                              <span>Use Haiku for simple tasks</span>
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <span style={{ color: '#22c55e' }}>✓</span>
+                              <span>Cache frequently used prompts</span>
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <span style={{ color: '#22c55e' }}>✓</span>
+                              <span>Set project budgets proactively</span>
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <span style={{ color: '#22c55e' }}>✓</span>
+                              <span>Monitor cost trends daily</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
@@ -625,7 +1166,9 @@
             fontSize: '12px',
             color: '#64748b'
           }}>
-            <div>AI-SDLC Framework v2.1 • Auto-refresh: 3s • Registry: {registry ? '✅ Connected' : '⚠️ Not Connected'}</div>
+            <div>
+              AI-SDLC Framework v2.1.1 • Auto-refresh: 3s • Registry: {registry ? '✅ Connected' : '⚠️ Not Connected'} • Costs: {costs.length > 0 ? `✅ ${costs.length} projects` : '⚠️ No data'}
+            </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Zap size={14} style={{ color: '#22c55e' }} />
               <span>Speed • Clarity • Control</span>
