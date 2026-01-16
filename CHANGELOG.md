@@ -2,6 +2,31 @@
 
 All notable changes to the AI-SDLC Framework.
 
+## [2.1.1] - 2025-01-15
+
+### Added
+- **FinOps Agent** - Automatic AI token cost tracking and budget monitoring
+- **Production-Ready Dashboard** - Node.js server with RESTful API endpoints
+- **Costs Tab** - Comprehensive cost analytics with budget health indicators
+- **Cost Integration** - Real-time cost data across Dashboard, Projects, and Agents tabs
+- **Budget Alerts** - Color-coded warnings at 50% (🟡) and 90% (🔴) thresholds
+- **Cost Efficiency Metrics** - Average cost per project, cost per 1K tokens
+- **API Endpoints** - `/api/costs`, `/api/costs/:projectId` for FinOps data
+- **Cost Breakdown** - Spending by agent, by project, with optimization tips
+
+### Changed
+- Dashboard now runs as standalone Node.js server (not JSX artifact)
+- Version footer updated to v2.1.1 with cost tracking status
+- Agent count increased from 9 to 10 (added FinOps)
+- `/api/projects` now includes merged cost data
+- Dashboard auto-refresh rate remains 3 seconds
+
+### Enhanced
+- **Dashboard Tab**: Added Total Spent card and budget utilization progress bar
+- **Projects Tab**: Cost displays in project cards with budget health indicators
+- **Agents Tab**: Total cost per agent across all projects
+- **Backend**: Data transformation for FinOps native format to dashboard schema
+
 ## [2.1.0] - 2025-01-15
 
 ### Added
@@ -64,6 +89,14 @@ All notable changes to the AI-SDLC Framework.
 1. **Update**: `sdlc-update /path/to/aisdlc-complete.zip`
 2. **Initialize registry**: `sdlc-registry init`
 3. **Open Control Center**: Use the JSX artifact in Claude.ai
+
+### From 2.1.0 to 2.1.1
+
+1. **Update**: `sdlc-update /path/to/aisdlc-2.1.1.zip`
+2. **Start Dashboard Server**: `node dashboard/server.js`
+3. **Access**: Open `http://localhost:3030` to see new Costs tab
+4. **Note**: FinOps Agent automatically tracks costs to `~/.claude/finops-registry/costs/`
+5. **Note**: Dashboard is now a Node.js server (not JSX artifact)
 
 ---
 

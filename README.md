@@ -2,14 +2,28 @@
 
 ## Complete Enterprise Software Development Automation
 
-**Version**: 2.0.0  
-**Author**: Deltek Cloud Engineering  
+**Version**: 2.1.1
+**Author**: Deltek Cloud Engineering
 
 ---
 
+## What's New in v2.1.1
+
+- **FinOps Agent** - Automatic AI token cost tracking and budget monitoring
+- **Production-Ready Dashboard** - Real-time cost analytics and budget health
+- **Cost Visibility** - Track spending by project, by agent, with efficiency metrics
+- **Budget Alerts** - Color-coded warnings at 50% and 90% thresholds (🟢🟡🔴)
+- **Comprehensive Analytics** - New Costs tab with optimization recommendations
+
+## What's New in v2.1.0
+
+- **Control Center Dashboard** - Web UI for real-time monitoring
+- **Registry System** - Centralized tracking across all projects
+- **Update Manager** - Seamless version upgrades with rollback
+
 ## What's New in v2.0
 
-- **Separated DevOps/SRE Agent** - Dedicated deployment specialist
+- **Separated DevOps/SRE Agent** - Dedicated deployment specialist (Atlas)
 - **Post-Deployment Acceptance** - Customer Agent tests live environment
 - **Security Agent** - Pure security review (no deployment concerns)
 - **7-Phase Workflow** - Clear separation of concerns
@@ -70,7 +84,7 @@
 
 ---
 
-## The 9 Agents
+## The 10 Agents
 
 | Agent | Model | Role | Key Output |
 |-------|-------|------|------------|
@@ -82,6 +96,7 @@
 | **QA Agent** | Sonnet | Pre-deployment testing | TEST-REPORT-*.md |
 | **Atlas Agent** | Sonnet | Deployment & operations | DEPLOY-*.md |
 | **Customer Agent** | Sonnet | Post-deployment UAT | UAT-*.md |
+| **FinOps Agent** | Haiku | Cost tracking & optimization | Cost reports, budget alerts |
 | **Tracker Agent** | Haiku | Progress monitoring | Status reports |
 
 ---
@@ -151,34 +166,81 @@ sdlc-update --changelog
 
 ## Control Center Dashboard
 
-Real-time UI for monitoring agent activity across all projects.
+Production-ready web UI for real-time monitoring of agent activity, cost tracking, and budget management across all projects.
 
 ### Features
-- **Dashboard**: Stats, workflow visualization, recent activity
-- **Projects**: Track all SDLC workflows, phase progress, blockers
-- **Agents**: Invocation counts, average durations, success rates
-- **Activity**: Chronological log of all agent actions
+
+**Dashboard Tab:**
+- **Stats Overview**: Total projects, completed, in progress, blocked, total spent
+- **Budget Utilization**: Progress bar with color-coded health indicators (🟢🟡🔴)
+- **Agent Workflow**: Visual representation of all 10 agents including FinOps
+- **Recent Activity**: Real-time feed of agent actions
+
+**Projects Tab:**
+- **Project Cards**: Status, cost metrics, budget health per project
+- **Phase Progress**: Visual indicators for each SDLC phase
+- **Cost Breakdown**: Detailed spending by agent for selected project
+- **Budget Status**: Color-coded alerts at 50% (🟡) and 90% (🔴) thresholds
+
+**Agents Tab:**
+- **Agent Cards**: All 10 agents with invocation counts and stats
+- **Cost Totals**: Aggregate spending per agent across all projects
+- **Token Usage**: Total tokens consumed by each agent
+- **Performance Metrics**: Success rates, blocked/failed counts
+
+**Costs Tab** ⭐ NEW:
+- **Summary Cards**: Total budget, total spent, remaining, budget health
+- **Cost by Agent Chart**: Horizontal bars showing cost distribution and percentages
+- **Cost by Project Grid**: Budget utilization with status indicators for each project
+- **Cost Efficiency Metrics**:
+  - Average cost per project
+  - Cost per 1,000 tokens
+  - Total tokens across all projects
+- **Optimization Tips**: Best practices for reducing AI token costs
+
+**Activity Tab:**
+- **Chronological Log**: All agent actions with timestamps
+- **Event Types**: Phase starts, completions, blocks, approvals
+- **Filtering**: View by agent, project, or event type
 
 ### Usage
 
-1. **Open the dashboard artifact** in Claude.ai:
-   - Copy `dashboard/sdlc-control-center.jsx`
-   - Paste into a new Claude conversation
-   - It will render as an interactive React component
+**Start the Dashboard Server:**
+```bash
+node dashboard/server.js
+```
 
-2. **Or run the registry CLI**:
-   ```bash
-   sdlc-registry status      # View stats
-   sdlc-registry activity    # View recent activity
-   sdlc-registry projects    # List all projects
-   ```
+The dashboard will automatically open at `http://localhost:3030`
+
+**Or run the registry CLI:**
+```bash
+sdlc-registry status      # View stats
+sdlc-registry activity    # View recent activity
+sdlc-registry projects    # List all projects
+```
 
 ### How It Works
 
-Agents automatically log their activity to `~/.claude/sdlc-registry/`:
-- Project creation, phase starts, completions
-- Blocking events (security, QA, customer)
-- Progress updates and outputs
+**SDLC Registry** (`~/.claude/sdlc-registry/`):
+- Agents log project creation, phase progress, completions
+- Blocking events (security, QA, customer rejections)
+- Progress updates and output artifacts
+
+**FinOps Registry** (`~/.claude/finops-registry/costs/`):
+- FinOps Agent tracks AI token costs in real-time
+- Cost files created per project: `{PROJECT_ID}-costs.json`
+- Automatic budget monitoring and alert generation
+- Cost breakdown by agent, model, and token usage
+
+**Dashboard Integration:**
+- Auto-refresh every 3 seconds for real-time updates
+- Merges SDLC and FinOps data for unified view
+- RESTful API endpoints for external integrations:
+  - `GET /api/registry` - SDLC stats and projects
+  - `GET /api/projects` - Projects with merged cost data
+  - `GET /api/costs` - All cost data
+  - `GET /api/costs/:projectId` - Specific project costs
+  - `GET /api/activity` - Activity log
 
 ---
 
@@ -253,7 +315,8 @@ aisdlc-2.1.0/
 │   └── sdlc-security.md         # Security only
 │
 ├── dashboard/                   # Control Center UI
-│   └── sdlc-control-center.jsx  # React dashboard artifact
+│   ├── server.js                # Node.js server with FinOps API
+│   └── index.html               # React dashboard (inline, production-ready)
 │
 ├── scripts/                     # CLI Tools & Build
 │   ├── sdlc-registry.sh         # Registry CLI
@@ -379,6 +442,7 @@ When you add a deprecation, it's automatically:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.1.1 | 2025-01-15 | FinOps integration, cost tracking, production dashboard |
 | 2.1.0 | 2025-01-15 | Control Center, Registry, Update Manager |
 | 2.0.0 | 2025-01-15 | Atlas agent, post-deploy UAT |
 | 1.0.0 | 2025-01-15 | Initial release |
