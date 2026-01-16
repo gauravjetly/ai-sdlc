@@ -1,0 +1,49 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Logs
+*.log
+logs/
+dashboard/dashboard.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.swn
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Temp files
+tmp/
+temp/
+*.tmp
+
+# Build outputs
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Test outputs
+coverage/
+.nyc_output/
+
+# Personal data (don't commit user's registry data)
+test-registry/
+
+# Backup files
+*.bak
+*.backup
+*~

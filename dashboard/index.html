@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-SDLC Control Center</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+    #root {
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Lucide icon components (simplified versions)
+    const Icon = ({ children, size = 16, ...props }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        {children}
+      </svg>
+    );
+
+    const CheckCircle = (props) => <Icon {...props}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></Icon>;
+    const XCircle = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></Icon>;
+    const Clock = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></Icon>;
+    const Play = (props) => <Icon {...props}><polygon points="5 3 19 12 5 21 5 3"></polygon></Icon>;
+    const Activity = (props) => <Icon {...props}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></Icon>;
+    const GitBranch = (props) => <Icon {...props}><line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></Icon>;
+    const Layers = (props) => <Icon {...props}><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></Icon>;
+    const RefreshCw = (props) => <Icon {...props}><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></Icon>;
+    const ChevronRight = (props) => <Icon {...props}><polyline points="9 18 15 12 9 6"></polyline></Icon>;
+    const Zap = (props) => <Icon {...props}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></Icon>;
+
+    // Agent definitions
+    const AGENTS = [
+      { id: 'conductor', name: 'Conductor', icon: '🎭', color: '#081581', model: 'Opus', role: 'Orchestrator' },
+      { id: 'ba', name: 'BA Agent', icon: '📋', color: '#1742F6', model: 'Sonnet', role: 'Requirements' },
+      { id: 'jets', name: 'Jets', icon: '🏗️', color: '#6D18F1', model: 'Opus', role: 'Architecture' },
+      { id: 'engineer', name: 'Engineer', icon: '💻', color: '#00B6C3', model: 'Sonnet', role: 'Development' },
+      { id: 'security', name: 'Security', icon: '🔒', color: '#ef4444', model: 'Sonnet', role: 'Security Review' },
+      { id: 'qa', name: 'QA Agent', icon: '🧪', color: '#f59e0b', model: 'Sonnet', role: 'Testing' },
+      { id: 'atlas', name: 'Atlas', icon: '🚀', color: '#8b5cf6', model: 'Sonnet', role: 'Deployment' },
+      { id: 'customer', name: 'Customer', icon: '✅', color: '#22c55e', model: 'Sonnet', role: 'Acceptance' },
+      { id: 'tracker', name: 'Tracker', icon: '📊', color: '#64748b', model: 'Haiku', role: 'Monitoring' },
+    ];
+
+    function SDLCControlCenter() {
+      const [activeTab, setActiveTab] = useState('dashboard');
+      const [selectedProject, setSelectedProject] = useState(null);
+      const [projects, setProjects] = useState([]);
+      const [activity, setActivity] = useState([]);
+      const [registry, setRegistry] = useState(null);
+      const [lastUpdate, setLastUpdate] = useState(new Date());
+      const [isLoading, setIsLoading] = useState(true);
+
+      // Fetch data from API
+      const fetchData = async () => {
+        try {
+          const [registryRes, projectsRes, activityRes] = await Promise.all([
+            fetch('/api/registry'),
+            fetch('/api/projects'),
+            fetch('/api/activity?limit=50')
+          ]);
+
+          const registryData = await registryRes.json();
+          const projectsData = await projectsRes.json();
+          const activityData = await activityRes.json();
+
+          setRegistry(registryData);
+          setProjects(projectsData);
+          setActivity(activityData);
+          setLastUpdate(new Date());
+          setIsLoading(false);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          setIsLoading(false);
+        }
+      };
+
+      // Initial load and auto-refresh every 3 seconds
+      useEffect(() => {
+        fetchData();
+        const interval = setInterval(fetchData, 3000);
+        return () => clearInterval(interval);
+      }, []);
+
+      const getStatusColor = (status) => {
+        switch (status) {
+          case 'complete': return '#22c55e';
+          case 'in_progress': return '#3b82f6';
+          case 'blocked': return '#ef4444';
+          case 'pending': return '#94a3b8';
+          default: return '#64748b';
+        }
+      };
+
+      const getStatusIcon = (status) => {
+        switch (status) {
+          case 'complete': return <CheckCircle size={16} />;
+          case 'in_progress': return <Play size={16} />;
+          case 'blocked': return <XCircle size={16} />;
+          case 'pending': return <Clock size={16} />;
+          default: return <Clock size={16} />;
+        }
+      };
+
+      const getAgent = (id) => AGENTS.find(a => a.id === id) || AGENTS[0];
+
+      const stats = registry ? registry.stats : {
+        totalProjects: 0,
+        completedProjects: 0,
+        activeProjects: 0,
+        blockedProjects: 0
+      };
+
+      if (isLoading) {
+        return (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh',
+            flexDirection: 'column',
+            gap: '16px'
+          }}>
+            <RefreshCw size={48} style={{ animation: 'spin 1s linear infinite' }} />
+            <div style={{ fontSize: '18px', color: '#94a3b8' }}>Loading Control Center...</div>
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          </div>
+        );
+      }
+
+      return (
+        <div style={{
+          fontFamily: 'system-ui, -apple-system, sans-serif',
+          background: '#0f172a',
+          minHeight: '100vh',
+          color: '#e2e8f0'
+        }}>
+          {/* Header */}
+          <div style={{
+            background: 'linear-gradient(135deg, #081581 0%, #1742F6 50%, #6D18F1 100%)',
+            padding: '20px 24px',
+            borderBottom: '1px solid #334155'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <Layers size={28} />
+                  AI-SDLC Control Center
+                </h1>
+                <p style={{ margin: '4px 0 0 0', fontSize: '14px', opacity: 0.8 }}>
+                  Real-time agent workflow monitoring • Last update: {lastUpdate.toLocaleTimeString()}
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={fetchData}
+                  style={{
+                    background: 'rgba(255,255,255,0.1)',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: '6px',
+                    padding: '8px 16px',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '14px'
+                  }}
+                >
+                  <RefreshCw size={16} />
+                  Refresh Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation Tabs */}
+          <div style={{
+            background: '#1e293b',
+            padding: '0 24px',
+            display: 'flex',
+            gap: '4px',
+            borderBottom: '1px solid #334155'
+          }}>
+            {['dashboard', 'projects', 'agents', 'activity'].map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                style={{
+                  background: activeTab === tab ? '#0f172a' : 'transparent',
+                  border: 'none',
+                  borderBottom: activeTab === tab ? '2px solid #3b82f6' : '2px solid transparent',
+                  padding: '12px 20px',
+                  color: activeTab === tab ? '#fff' : '#94a3b8',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  textTransform: 'capitalize'
+                }}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Main Content */}
+          <div style={{ padding: '24px' }}>
+
+            {/* Dashboard Tab */}
+            {activeTab === 'dashboard' && (
+              <div>
+                {/* Stats Cards */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
+                  {[
+                    { label: 'Total Projects', value: stats.totalProjects, color: '#3b82f6', icon: <GitBranch size={20} /> },
+                    { label: 'Completed', value: stats.completedProjects, color: '#22c55e', icon: <CheckCircle size={20} /> },
+                    { label: 'In Progress', value: stats.activeProjects, color: '#f59e0b', icon: <Activity size={20} /> },
+                    { label: 'Blocked', value: stats.blockedProjects, color: '#ef4444', icon: <XCircle size={20} /> },
+                  ].map((stat, i) => (
+                    <div key={i} style={{
+                      background: '#1e293b',
+                      borderRadius: '12px',
+                      padding: '20px',
+                      border: '1px solid #334155'
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                        <div>
+                          <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>{stat.label}</p>
+                          <p style={{ margin: '8px 0 0 0', fontSize: '32px', fontWeight: 700, color: stat.color }}>{stat.value}</p>
+                        </div>
+                        <div style={{ color: stat.color, opacity: 0.5 }}>{stat.icon}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Agent Workflow */}
+                <div style={{
+                  background: '#1e293b',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  border: '1px solid #334155',
+                  marginBottom: '24px'
+                }}>
+                  <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>Agent Workflow</h2>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', padding: '8px 0' }}>
+                    {AGENTS.filter(a => a.id !== 'tracker').map((agent, i) => (
+                      <React.Fragment key={agent.id}>
+                        <div style={{
+                          background: agent.color,
+                          borderRadius: '8px',
+                          padding: '12px 16px',
+                          minWidth: '100px',
+                          textAlign: 'center'
+                        }}>
+                          <div style={{ fontSize: '24px', marginBottom: '4px' }}>{agent.icon}</div>
+                          <div style={{ fontSize: '12px', fontWeight: 600 }}>{agent.name}</div>
+                          <div style={{ fontSize: '10px', opacity: 0.8 }}>{agent.model}</div>
+                        </div>
+                        {i < AGENTS.filter(a => a.id !== 'tracker').length - 1 && (
+                          <ChevronRight size={20} style={{ color: '#64748b', flexShrink: 0 }} />
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Recent Activity */}
+                <div style={{
+                  background: '#1e293b',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  border: '1px solid #334155'
+                }}>
+                  <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>
+                    Recent Activity {activity.length > 0 && `(${activity.length} events)`}
+                  </h2>
+                  {activity.length === 0 ? (
+                    <div style={{
+                      padding: '40px',
+                      textAlign: 'center',
+                      color: '#64748b',
+                      fontSize: '14px'
+                    }}>
+                      No activity yet. Start a workflow with /sdlc-start to see updates here.
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {activity.slice(0, 10).map((item, i) => {
+                        const agent = getAgent(item.agent);
+                        return (
+                          <div key={i} style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '12px',
+                            background: '#0f172a',
+                            borderRadius: '8px',
+                            borderLeft: `3px solid ${agent.color}`
+                          }}>
+                            <div style={{ fontSize: '20px' }}>{agent.icon}</div>
+                            <div style={{ flex: 1 }}>
+                              <div style={{ fontSize: '14px', fontWeight: 500 }}>{item.action}</div>
+                              <div style={{ fontSize: '12px', color: '#64748b' }}>
+                                {agent.name} • {item.project}
+                              </div>
+                            </div>
+                            <div style={{
+                              fontSize: '11px',
+                              color: '#64748b',
+                              whiteSpace: 'nowrap'
+                            }}>
+                              {new Date(item.timestamp).toLocaleTimeString()}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Projects Tab */}
+            {activeTab === 'projects' && (
+              <div>
+                {projects.length === 0 ? (
+                  <div style={{
+                    background: '#1e293b',
+                    borderRadius: '12px',
+                    padding: '60px',
+                    border: '1px solid #334155',
+                    textAlign: 'center'
+                  }}>
+                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>📁</div>
+                    <h3 style={{ fontSize: '18px', marginBottom: '8px', fontWeight: 600 }}>No Projects Yet</h3>
+                    <p style={{ color: '#64748b', fontSize: '14px' }}>
+                      Start a workflow with /sdlc-start to create your first project
+                    </p>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', gap: '24px' }}>
+                    {/* Project List */}
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        {projects.map(project => (
+                          <div
+                            key={project.id}
+                            onClick={() => setSelectedProject(project)}
+                            style={{
+                              background: selectedProject?.id === project.id ? '#334155' : '#1e293b',
+                              borderRadius: '12px',
+                              padding: '16px',
+                              border: '1px solid #334155',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s'
+                            }}
+                          >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
+                              <div>
+                                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>{project.name}</h3>
+                                <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#64748b' }}>{project.id}</p>
+                              </div>
+                              <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                padding: '4px 10px',
+                                borderRadius: '12px',
+                                fontSize: '12px',
+                                fontWeight: 500,
+                                background: `${getStatusColor(project.status)}20`,
+                                color: getStatusColor(project.status)
+                              }}>
+                                {getStatusIcon(project.status)}
+                                {project.status.replace('_', ' ')}
+                              </div>
+                            </div>
+
+                            {/* Phase Progress */}
+                            {project.phases && (
+                              <div style={{ display: 'flex', gap: '4px' }}>
+                                {project.phases.map((phase, i) => {
+                                  const agent = getAgent(phase.agent);
+                                  return (
+                                    <div
+                                      key={i}
+                                      title={`${agent.name}: ${phase.status}`}
+                                      style={{
+                                        flex: 1,
+                                        height: '6px',
+                                        borderRadius: '3px',
+                                        background: phase.status === 'complete' ? agent.color :
+                                                   phase.status === 'in_progress' ? `${agent.color}80` :
+                                                   phase.status === 'blocked' ? '#ef4444' : '#334155'
+                                      }}
+                                    />
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Project Detail */}
+                    {selectedProject && selectedProject.phases && (
+                      <div style={{
+                        width: '400px',
+                        background: '#1e293b',
+                        borderRadius: '12px',
+                        padding: '20px',
+                        border: '1px solid #334155',
+                        height: 'fit-content'
+                      }}>
+                        <h2 style={{ margin: '0 0 4px 0', fontSize: '18px', fontWeight: 600 }}>{selectedProject.name}</h2>
+                        <p style={{ margin: '0 0 20px 0', fontSize: '12px', color: '#64748b' }}>{selectedProject.id}</p>
+
+                        <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>Phase Details</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {selectedProject.phases.map((phase, i) => {
+                            const agent = getAgent(phase.agent);
+                            return (
+                              <div key={i} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                padding: '10px',
+                                background: '#0f172a',
+                                borderRadius: '8px',
+                                borderLeft: `3px solid ${phase.status === 'blocked' ? '#ef4444' : agent.color}`
+                              }}>
+                                <div style={{ fontSize: '18px' }}>{agent.icon}</div>
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ fontSize: '13px', fontWeight: 500 }}>{agent.name}</div>
+                                  {phase.output && (
+                                    <div style={{ fontSize: '11px', color: '#64748b' }}>{phase.output}</div>
+                                  )}
+                                  {phase.reason && (
+                                    <div style={{ fontSize: '11px', color: '#ef4444' }}>{phase.reason}</div>
+                                  )}
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                  <div style={{ color: getStatusColor(phase.status) }}>
+                                    {getStatusIcon(phase.status)}
+                                  </div>
+                                  {phase.duration && (
+                                    <div style={{ fontSize: '10px', color: '#64748b' }}>{phase.duration}</div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Agents Tab */}
+            {activeTab === 'agents' && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                {AGENTS.map(agent => {
+                  const agentStats = registry?.agents?.[agent.id] || { invocations: 0, totalDuration: 0 };
+                  return (
+                    <div key={agent.id} style={{
+                      background: '#1e293b',
+                      borderRadius: '12px',
+                      padding: '20px',
+                      border: '1px solid #334155',
+                      borderTop: `4px solid ${agent.color}`
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                        <div style={{
+                          fontSize: '32px',
+                          width: '50px',
+                          height: '50px',
+                          background: `${agent.color}20`,
+                          borderRadius: '12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          {agent.icon}
+                        </div>
+                        <div>
+                          <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>{agent.name}</h3>
+                          <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#64748b' }}>{agent.role}</p>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
+                          <span style={{ color: '#94a3b8' }}>Model</span>
+                          <span style={{ fontWeight: 500 }}>{agent.model}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
+                          <span style={{ color: '#94a3b8' }}>Invocations</span>
+                          <span style={{ fontWeight: 500 }}>{agentStats.invocations}</span>
+                        </div>
+                        {agentStats.blocked > 0 && (
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
+                            <span style={{ color: '#ef4444' }}>Blocked</span>
+                            <span style={{ fontWeight: 500, color: '#ef4444' }}>{agentStats.blocked}</span>
+                          </div>
+                        )}
+                        {agentStats.failed > 0 && (
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
+                            <span style={{ color: '#f59e0b' }}>Failed</span>
+                            <span style={{ fontWeight: 500, color: '#f59e0b' }}>{agentStats.failed}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Activity Tab */}
+            {activeTab === 'activity' && (
+              <div style={{
+                background: '#1e293b',
+                borderRadius: '12px',
+                padding: '20px',
+                border: '1px solid #334155'
+              }}>
+                <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>
+                  All Activity ({activity.length} events)
+                </h2>
+                {activity.length === 0 ? (
+                  <div style={{
+                    padding: '40px',
+                    textAlign: 'center',
+                    color: '#64748b',
+                    fontSize: '14px'
+                  }}>
+                    No activity logged yet.
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {activity.map((item, i) => {
+                      const agent = getAgent(item.agent);
+                      return (
+                        <div key={i} style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '16px',
+                          padding: '16px',
+                          background: '#0f172a',
+                          borderRadius: '8px',
+                          borderLeft: `3px solid ${
+                            item.type === 'blocked' ? '#ef4444' :
+                            item.type === 'approved' ? '#22c55e' :
+                            item.type === 'complete' ? '#3b82f6' : agent.color
+                          }`
+                        }}>
+                          <div style={{
+                            fontSize: '24px',
+                            width: '44px',
+                            height: '44px',
+                            background: `${agent.color}20`,
+                            borderRadius: '10px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                            {agent.icon}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '14px', fontWeight: 500, marginBottom: '4px' }}>{item.action}</div>
+                            <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: '#64748b' }}>
+                              <span>{agent.name}</span>
+                              <span>{item.project}</span>
+                            </div>
+                          </div>
+                          <div style={{ textAlign: 'right' }}>
+                            <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                              {new Date(item.timestamp).toLocaleDateString()}
+                            </div>
+                            <div style={{ fontSize: '12px', color: '#64748b' }}>
+                              {new Date(item.timestamp).toLocaleTimeString()}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+          </div>
+
+          {/* Footer */}
+          <div style={{
+            padding: '16px 24px',
+            borderTop: '1px solid #334155',
+            background: '#1e293b',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            fontSize: '12px',
+            color: '#64748b'
+          }}>
+            <div>AI-SDLC Framework v2.1 • Auto-refresh: 3s • Registry: {registry ? '✅ Connected' : '⚠️ Not Connected'}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Zap size={14} style={{ color: '#22c55e' }} />
+              <span>Speed • Clarity • Control</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Render the app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<SDLCControlCenter />);
+  </script>
+</body>
+</html>

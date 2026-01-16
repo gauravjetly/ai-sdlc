@@ -1,0 +1,75 @@
+{
+  "version": "2.1.0",
+  "releaseDate": "2025-01-15",
+  "minUpgradeFrom": "1.0.0",
+  
+  "agents": {
+    "current": [
+      "conductor.md",
+      "ba-agent.md",
+      "architect-jets.md",
+      "software-engineer.md",
+      "security-agent.md",
+      "qa-agent.md",
+      "atlas-agent.md",
+      "customer-agent.md",
+      "tracker-agent.md"
+    ],
+    "deprecated": [
+      {
+        "file": "devops-sre-agent.md",
+        "replacedBy": "atlas-agent.md",
+        "version": "2.1.0",
+        "reason": "Renamed for clarity"
+      },
+      {
+        "file": "deployment-agent.md",
+        "replacedBy": "atlas-agent.md",
+        "version": "2.0.0",
+        "reason": "Old naming convention"
+      }
+    ]
+  },
+  
+  "commands": {
+    "current": [
+      "sdlc-start.md",
+      "sdlc-status.md",
+      "sdlc-review.md",
+      "sdlc-deploy.md",
+      "sdlc-requirements.md",
+      "sdlc-architecture.md",
+      "sdlc-security.md"
+    ],
+    "deprecated": []
+  },
+  
+  "scripts": {
+    "current": [
+      "sdlc-registry",
+      "sdlc-update"
+    ],
+    "deprecated": []
+  },
+  
+  "migrations": [
+    {
+      "fromVersion": "1.x",
+      "toVersion": "2.x",
+      "steps": [
+        "Security Agent no longer handles deployment",
+        "Atlas Agent now handles all deployments",
+        "Customer Agent now tests post-deployment"
+      ]
+    },
+    {
+      "fromVersion": "2.0.x",
+      "toVersion": "2.1.x",
+      "steps": [
+        "devops-sre-agent.md renamed to atlas-agent.md",
+        "Registry system added",
+        "Control Center dashboard added"
+      ]
+    }
+  ]
+}

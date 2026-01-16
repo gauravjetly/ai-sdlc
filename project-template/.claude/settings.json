@@ -1,0 +1,15 @@
+{
+  "model": "claude-sonnet-4-20250514",
+  "customInstructions": "This project uses the AI-SDLC framework. Use /sdlc-start for new features.",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Write",
+      "Edit",
+      "Bash",
+      "Glob",
+      "Grep",
+      "Task"
+    ]
+  }
+}
