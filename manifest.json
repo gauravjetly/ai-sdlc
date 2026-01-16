@@ -1,8 +1,8 @@
 {
-  "version": "2.1.0",
-  "releaseDate": "2025-01-15",
+  "version": "2.1.1",
+  "releaseDate": "2026-01-16",
   "minUpgradeFrom": "1.0.0",
-  
+
   "agents": {
     "current": [
       "conductor.md",
@@ -13,7 +13,8 @@
       "qa-agent.md",
       "atlas-agent.md",
       "customer-agent.md",
-      "tracker-agent.md"
+      "tracker-agent.md",
+      "finops-agent.md"
     ],
     "deprecated": [
       {
@@ -47,7 +48,8 @@
   "scripts": {
     "current": [
       "sdlc-registry",
-      "sdlc-update"
+      "sdlc-update",
+      "finops-track-costs"
     ],
     "deprecated": []
   },
@@ -64,11 +66,26 @@
     },
     {
       "fromVersion": "2.0.x",
-      "toVersion": "2.1.x",
+      "toVersion": "2.1.0",
       "steps": [
         "devops-sre-agent.md renamed to atlas-agent.md",
         "Registry system added",
         "Control Center dashboard added"
+      ]
+    },
+    {
+      "fromVersion": "2.1.0",
+      "toVersion": "2.1.1",
+      "steps": [
+        "FinOps Agent added for automatic cost tracking",
+        "Conductor updated with mandatory FinOps integration",
+        "Cost tracking script added (~/.claude/finops/track-costs.sh)",
+        "AI token costs tracked automatically (Opus/Sonnet/Haiku)",
+        "Infrastructure cost estimation added",
+        "Budget management with automatic alerts (75%, 90%, 100%)",
+        "Cost optimization recommendations built-in",
+        "Cost reports generated at docs/sdlc/costs/COST-*.md",
+        "Registry updated to track costs in real-time"
       ]
     }
   ]
