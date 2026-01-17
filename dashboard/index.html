@@ -58,6 +58,7 @@
       { id: 'qa', name: 'QA Agent', icon: '🧪', color: '#f59e0b', model: 'Sonnet', role: 'Testing' },
       { id: 'atlas', name: 'Atlas', icon: '🚀', color: '#8b5cf6', model: 'Sonnet', role: 'Deployment' },
       { id: 'customer', name: 'Customer', icon: '✅', color: '#22c55e', model: 'Sonnet', role: 'Acceptance' },
+      { id: 'ask-tom', name: 'Ask Tom', icon: '⚡', color: '#c084fc', model: 'Opus', role: 'Problem Solver' },
       { id: 'finops', name: 'FinOps', icon: '💰', color: '#fbbf24', model: 'Haiku', role: 'Cost Tracking' },
       { id: 'tracker', name: 'Tracker', icon: '📊', color: '#64748b', model: 'Haiku', role: 'Monitoring' },
     ];
@@ -363,7 +364,7 @@
                 }}>
                   <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>Agent Workflow</h2>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', padding: '8px 0' }}>
-                    {AGENTS.filter(a => a.id !== 'tracker' && a.id !== 'finops').map((agent, i) => (
+                    {AGENTS.filter(a => a.id !== 'tracker' && a.id !== 'finops' && a.id !== 'ask-tom').map((agent, i) => (
                       <React.Fragment key={agent.id}>
                         <div style={{
                           background: agent.color,
@@ -376,7 +377,7 @@
                           <div style={{ fontSize: '12px', fontWeight: 600 }}>{agent.name}</div>
                           <div style={{ fontSize: '10px', opacity: 0.8 }}>{agent.model}</div>
                         </div>
-                        {i < AGENTS.filter(a => a.id !== 'tracker' && a.id !== 'finops').length - 1 && (
+                        {i < AGENTS.filter(a => a.id !== 'tracker' && a.id !== 'finops' && a.id !== 'ask-tom').length - 1 && (
                           <ChevronRight size={20} style={{ color: '#64748b', flexShrink: 0 }} />
                         )}
                       </React.Fragment>
@@ -405,6 +406,32 @@
                     </div>
                     <div style={{ flex: 1, color: '#94a3b8' }}>
                       Tracks costs across all agents • Real-time budget monitoring • Optimization recommendations
+                    </div>
+                  </div>
+                  <div style={{
+                    marginTop: '8px',
+                    padding: '12px',
+                    background: '#0f172a',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '12px',
+                    border: '1px solid #c084fc'
+                  }}>
+                    <div style={{
+                      background: '#c084fc',
+                      borderRadius: '6px',
+                      padding: '8px 12px',
+                      minWidth: '80px',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{ fontSize: '20px', marginBottom: '2px' }}>⚡</div>
+                      <div style={{ fontSize: '11px', fontWeight: 600 }}>Ask Tom</div>
+                      <div style={{ fontSize: '9px', opacity: 0.8 }}>Opus</div>
+                    </div>
+                    <div style={{ flex: 1, color: '#94a3b8' }}>
+                      On-demand problem solver • Root cause analysis • Never gives up until solved • Coordinates with all agents
                     </div>
                   </div>
                 </div>

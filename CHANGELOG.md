@@ -2,6 +2,32 @@
 
 All notable changes to the AI-SDLC Framework.
 
+## [2.2.0] - 2026-01-16
+
+### Added
+- **Ask Tom Agent** - Elite problem-solving specialist for root cause analysis (Opus model)
+- **Ask Tom Command** - `/sdlc-ask-tom` for direct problem-solving invocation
+- **Automatic Problem Resolution** - Conductor auto-invokes Ask Tom on blockers
+- **Root Cause Analysis** - 5 Whys, Fishbone diagrams, and Fault Tree methodologies
+- **Agent Coordination** - Ask Tom can invoke any agent for specialized expertise
+- **Problem Documentation** - Creates detailed reports at `docs/sdlc/problems/PROBLEM-*.md`
+- **Prevention Measures** - Implements safeguards to prevent issue recurrence
+- **Dashboard Integration** - Ask Tom appears in dashboard with special on-demand section
+
+### Changed
+- Agent count increased from 10 to 11 (added Ask Tom)
+- Conductor now auto-invokes Ask Tom on: blockers, 3+ phase failures, >2hr no progress
+- README.md updated with Ask Tom documentation and usage examples
+- Dashboard workflow visualization includes Ask Tom as on-demand agent
+- Output directories now include `docs/sdlc/problems/` folder
+- Registry integration supports `ask-tom` agent tracking
+
+### Enhanced
+- **Conductor Blocker Handling** - Step 5 now includes Ask Tom invocation criteria
+- **Quality Standards** - Never-give-up criteria ensures complete problem resolution
+- **Documentation** - Comprehensive problem resolution reports with lessons learned
+- **Dashboard UI** - Purple-highlighted Ask Tom section with lightning bolt icon ⚡
+
 ## [2.1.1] - 2025-01-15
 
 ### Added

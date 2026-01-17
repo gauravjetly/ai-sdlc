@@ -1,5 +1,5 @@
 {
-  "version": "2.1.1",
+  "version": "2.2.0",
   "releaseDate": "2026-01-16",
   "minUpgradeFrom": "1.0.0",
 
@@ -14,7 +14,8 @@
       "atlas-agent.md",
       "customer-agent.md",
       "tracker-agent.md",
-      "finops-agent.md"
+      "finops-agent.md",
+      "ask-tom-agent.md"
     ],
     "deprecated": [
       {
@@ -40,7 +41,8 @@
       "sdlc-deploy.md",
       "sdlc-requirements.md",
       "sdlc-architecture.md",
-      "sdlc-security.md"
+      "sdlc-security.md",
+      "sdlc-ask-tom.md"
     ],
     "deprecated": []
   },

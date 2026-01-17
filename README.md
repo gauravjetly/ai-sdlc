@@ -84,7 +84,7 @@
 
 ---
 
-## The 10 Agents
+## The 11 Agents
 
 | Agent | Model | Role | Key Output |
 |-------|-------|------|------------|
@@ -96,6 +96,7 @@
 | **QA Agent** | Sonnet | Pre-deployment testing | TEST-REPORT-*.md |
 | **Atlas Agent** | Sonnet | Deployment & operations | DEPLOY-*.md |
 | **Customer Agent** | Sonnet | Post-deployment UAT | UAT-*.md |
+| **Ask Tom Agent** | Opus | Problem-solving & root cause analysis | PROBLEM-*.md |
 | **FinOps Agent** | Haiku | Cost tracking & optimization | Cost reports, budget alerts |
 | **Tracker Agent** | Haiku | Progress monitoring | Status reports |
 
@@ -119,6 +120,16 @@
 - Validates acceptance criteria in live environment
 - Confirms business value delivered
 - Final gate before production sign-off
+
+### Ask Tom Agent (Problem Solver)
+- **On-demand** problem-solving specialist
+- Automatically invoked on blockers or repeated failures
+- Performs deep root cause analysis using 5 Whys, Fishbone, and Fault Tree methods
+- Coordinates with all agents to gather expertise
+- **Never gives up** until problem is completely resolved
+- Provides permanent solutions, not workarounds
+- Documents lessons learned and prevention measures
+- Can be manually invoked with `/sdlc-ask-tom [problem description]`
 
 ---
 
@@ -270,6 +281,11 @@ cd aisdlc-2.1.0
 # Check status
 /sdlc-status
 
+# Problem solving (when blocked or for complex issues)
+/sdlc-ask-tom Build fails in CI but passes locally
+/sdlc-ask-tom Security agent blocked - need to understand vulnerability
+/sdlc-ask-tom Tests failing intermittently
+
 # Deploy (after security + QA pass)
 /sdlc-deploy staging
 /sdlc-deploy production
@@ -294,7 +310,7 @@ aisdlc-2.1.0/
 ├── manifest.json                # Release config (deprecations, versions)
 ├── install.sh                   # One-command installer
 │
-├── agents/                      # 9 SDLC Agents
+├── agents/                      # 11 SDLC Agents
 │   ├── conductor.md             # Orchestrator (Opus)
 │   ├── ba-agent.md              # Business Analyst (Sonnet)
 │   ├── architect-jets.md        # Jets - Architect (Opus)
@@ -303,6 +319,8 @@ aisdlc-2.1.0/
 │   ├── qa-agent.md              # QA Testing (Sonnet)
 │   ├── atlas-agent.md           # Atlas - Deployment (Sonnet)
 │   ├── customer-agent.md        # Post-Deploy UAT (Sonnet)
+│   ├── ask-tom-agent.md         # Ask Tom - Problem Solver (Opus)
+│   ├── finops-agent.md          # FinOps - Cost Tracking (Haiku)
 │   └── tracker-agent.md         # Monitoring (Haiku)
 │
 ├── commands/                    # Slash Commands
@@ -312,7 +330,8 @@ aisdlc-2.1.0/
 │   ├── sdlc-deploy.md           # Deployment
 │   ├── sdlc-requirements.md     # Requirements only
 │   ├── sdlc-architecture.md     # Architecture only
-│   └── sdlc-security.md         # Security only
+│   ├── sdlc-security.md         # Security only
+│   └── sdlc-ask-tom.md          # Problem solver
 │
 ├── dashboard/                   # Control Center UI
 │   ├── server.js                # Node.js server with FinOps API
@@ -368,6 +387,7 @@ docs/sdlc/
 ├── testing/         # TEST-REPORT-*.md
 ├── deployments/     # DEPLOY-*.md
 ├── acceptance/      # UAT-*.md
+├── problems/        # PROBLEM-*.md (Ask Tom problem resolutions)
 └── tracking/        # SDLC-*.md
 ```
 

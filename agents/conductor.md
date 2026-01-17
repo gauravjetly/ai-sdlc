@@ -87,6 +87,7 @@ User Request
 | 6 | Atlas Agent | Sonnet | Deployment to staging/prod |
 | 7 | Customer Agent | Sonnet | Post-deployment acceptance |
 | * | Tracker Agent | Haiku | Progress monitoring (parallel) |
+| **⚡** | **Ask Tom Agent** | **Opus** | **Problem-solving & root cause analysis (on-demand)** |
 
 ## Request Classification
 
@@ -213,7 +214,13 @@ After each phase:
 ~/.claude/sdlc-registry/sdlc-registry.sh block "SDLC-[ID]" "[agent-name]" "[blocker reason]"
 ```
 4. Update tracking file with blocker details
-5. Escalate to user or halt workflow
+5. **CRITICAL: Invoke Ask Tom Agent** if:
+   - Blocker is unclear or complex
+   - Same phase has failed 3+ times
+   - No progress for >2 hours
+   - Multiple agents report related issues
+   - Root cause is not obvious
+6. Escalate to user or halt workflow if Ask Tom cannot resolve
 
 **Blocker Handling:**
 ```markdown
@@ -226,9 +233,19 @@ After each phase:
 ### Resolution Options:
 1. [Option 1]
 2. [Option 2]
+3. Invoke Ask Tom Agent for deep root cause analysis
 
 ### Action Taken:
 [What was done]
+```
+
+**Auto-Invoke Ask Tom When:**
+```bash
+# Invoke Ask Tom if critical blocker
+~/.claude/sdlc-registry/sdlc-registry.sh start "SDLC-[ID]" "ask-tom"
+# Use Task tool to invoke ask-tom-agent
+# After resolution:
+~/.claude/sdlc-registry/sdlc-registry.sh complete "SDLC-[ID]" "ask-tom" "docs/sdlc/problems/PROBLEM-*.md"
 ```
 
 ### Step 5: Report Completion
@@ -399,6 +416,23 @@ Output expected:
 - Final verdict: APPROVED or REJECTED
 ```
 
+### Ask Tom Agent (On-Demand Problem Solver)
+```
+Use the ask-tom-agent subagent to solve complex problems and blockers.
+
+Context:
+- Tracking: docs/sdlc/tracking/SDLC-[ID].md
+- Problem: [Detailed description of blocker/issue]
+- Failed Agent: [Which agent encountered the blocker]
+- Attempted Solutions: [What has been tried]
+
+Output expected:
+- docs/sdlc/problems/PROBLEM-[ID].md
+- Root cause analysis
+- Permanent solution implemented
+- Prevention measures documented
+```
+
 ## Escalation Protocol
 
 ### Phase Timeout Thresholds
@@ -464,6 +498,9 @@ Use these exact agent names for registry commands:
 | QA Agent | `qa` |
 | Atlas Agent (DevOps/SRE) | `atlas` |
 | Customer Agent | `customer` |
+| Ask Tom Agent | `ask-tom` |
+| Tracker Agent | `tracker` |
+| FinOps Agent | `finops` |
 
 ### Example Workflow with Registry Integration
 
