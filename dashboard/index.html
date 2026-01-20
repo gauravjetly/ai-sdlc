@@ -10,8 +10,11 @@
        Professional enterprise styling with Value-Based Outcomes
        ================================================================ */
 
+    /* Google Fonts - Figtree (Official Deltek Typography) */
+    @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap');
+
     :root {
-      /* Deltek Color Palette - Official Brand Colors */
+      /* Deltek Color Palette - Official Brand Colors (from theme1.xml) */
       --bg-primary: #F1F5FA;
       --bg-secondary: #ffffff;
       --bg-tertiary: #eef2f7;
@@ -22,18 +25,22 @@
       --text-secondary: #4A4A4A;
       --text-muted: #8a9bac;
 
-      /* Deltek Official Brand Colors */
-      --deltek-blue: #4462c9;
-      --deltek-marine: #4462c9;
-      --deltek-navy: #2d3e8c;
-      --deltek-dark: #1e2a5e;
+      /* Deltek Official Brand Colors (from PPT Theme) */
+      --deltek-blue: #1742F6;       /* Primary Blue - Accent 1 */
+      --deltek-marine: #1742F6;
+      --deltek-navy: #081581;       /* Dark Navy - Dark 2 */
+      --deltek-dark: #3C454E;       /* Dark Gray - Accent 2 */
       --deltek-light: #e8ecf8;
 
-      /* Dela AI Lifecycle Gradient Colors */
-      --dela-cyan: #40d1f5;
-      --dela-blue: #4462c9;
-      --dela-purple: #7b5fc7;
-      --dela-magenta: #c44ec4;
+      /* Dela AI Lifecycle Gradient Colors (from official gradient) */
+      --dela-cyan: #08E9EB;         /* Gradient start */
+      --dela-blue: #3895FF;         /* Accent 6 */
+      --dela-purple: #6D18F1;       /* Accent 5 */
+      --dela-magenta: #C200CC;      /* Accent 4 */
+
+      /* Additional Brand Colors */
+      --deltek-teal: #00B6C3;       /* Accent 3 */
+      --deltek-gradient: linear-gradient(90deg, #08E9EB 0%, #FF5DF2 34%, #3895FF 72%, #7A62FF 94%);
 
       --accent-green: #00875a;
       --accent-green-light: #e6f4ef;
@@ -41,14 +48,15 @@
       --accent-yellow-light: #fff4e5;
       --accent-red: #d32f2f;
       --accent-red-light: #fdeaea;
-      --accent-purple: #7b5fc7;
+      --accent-purple: #6D18F1;
       --accent-purple-light: #f3e5f5;
-      --accent-cyan: #40d1f5;
+      --accent-cyan: #08E9EB;
 
       --border-color: #dde3eb;
       --border-light: #eef2f7;
 
-      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      /* Official Deltek Typography - Figtree */
+      --font-sans: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'SF Mono', Consolas, monospace;
 
       --space-xs: 4px;
@@ -164,8 +172,20 @@
 
     .sidebar-header {
       padding: var(--space-lg);
-      border-bottom: 1px solid var(--border-color);
-      background: linear-gradient(135deg, var(--deltek-navy) 0%, var(--deltek-marine) 50%, var(--dela-cyan) 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: var(--deltek-navy);
+      position: relative;
+    }
+
+    /* Gradient accent bar using official Deltek gradient */
+    .sidebar-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #08E9EB 0%, #FF5DF2 34%, #3895FF 72%, #7A62FF 94%);
     }
 
     .sidebar-logo {
@@ -175,39 +195,6 @@
       font-size: 18px;
       font-weight: 700;
       color: white;
-    }
-
-    .sidebar-logo-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--dela-cyan) 0%, var(--dela-blue) 35%, var(--dela-purple) 70%, var(--dela-magenta) 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      color: white;
-      font-weight: 800;
-      position: relative;
-      box-shadow: 0 2px 8px rgba(64, 209, 245, 0.4);
-    }
-
-    .sidebar-logo-icon::after {
-      content: '';
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: white;
-      border-radius: 50%;
-      bottom: 2px;
-      right: 2px;
-      box-shadow: 0 0 8px rgba(255,255,255,0.8);
-      animation: spark-glow 2s ease-in-out infinite;
-    }
-
-    @keyframes spark-glow {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.7; transform: scale(1.2); }
     }
 
     .sidebar-nav {
@@ -902,11 +889,11 @@
         <div className="app-shell">
           <aside className="sidebar">
             <div className="sidebar-header">
-              <div className="sidebar-logo">
-                <div className="sidebar-logo-icon">D</div>
-                <div>
-                  <div style={{ fontSize: '18px', fontWeight: 700 }}>Deltek AI-SDLC</div>
-                  <div style={{ fontSize: '10px', opacity: 0.8, letterSpacing: '1px' }}>SPEED. CLARITY. CONTROL.</div>
+              <div className="sidebar-logo" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
+                <img src="assets/brand/deltek-logo-white.svg" alt="Deltek" style={{ height: '24px', width: 'auto' }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600, opacity: 0.95 }}>AI-SDLC</span>
+                  <span style={{ fontSize: '9px', opacity: 0.7, letterSpacing: '1px', background: 'rgba(255,255,255,0.15)', padding: '2px 6px', borderRadius: '4px' }}>CONTROL CENTER</span>
                 </div>
               </div>
             </div>
