@@ -2312,6 +2312,7 @@
             {[
               { id: 'release', label: '📋 Release Notes' },
               { id: 'architecture', label: '🏗️ Architecture' },
+              { id: 'security', label: '🔒 Security & Compliance' },
               { id: 'scripts', label: '⚡ Commands & Scripts' },
               { id: 'readme', label: '📖 Getting Started' }
             ].map(tab => (
@@ -2445,6 +2446,137 @@
                           <span style={{ fontSize: '11px', color: 'var(--deltek-blue)' }}>{agent.role}</span>
                         </div>
                         <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{agent.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Security & Compliance Tab */}
+          {activeTab === 'security' && (
+            <div>
+              <div className="section-header mb-lg">
+                <div>
+                  <h3 className="section-title">Security & Compliance</h3>
+                  <p className="section-subtitle">Deltek Cloud security architecture and compliance frameworks</p>
+                </div>
+                <a href="../docs/SECURITY-ARCHITECTURE.md" target="_blank" className="btn btn-secondary" style={{ fontSize: '12px' }}>
+                  📄 Full Documentation
+                </a>
+              </div>
+
+              {/* Compliance Frameworks Overview */}
+              <div className="card mb-xl">
+                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>Compliance Frameworks</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                  {[
+                    { name: 'SOC 2 Type 2', status: 'Certified', icon: '✅', color: 'var(--accent-green)', desc: 'Trust Services Criteria (CC1-CC9)', controls: '64+ controls' },
+                    { name: 'FedRAMP Moderate', status: 'Ready', icon: '🏛️', color: 'var(--deltek-blue)', desc: 'Federal Risk Authorization', controls: '325 controls' },
+                    { name: 'ISO 27001:2022', status: 'Certified', icon: '🌐', color: 'var(--accent-purple)', desc: 'International Security Standard', controls: '93 Annex A controls' },
+                    { name: 'NIST 800-171', status: 'Implemented', icon: '📋', color: '#ff9800', desc: 'CUI Protection', controls: '110 requirements' },
+                    { name: 'CMMC 2.0', status: 'Ready', icon: '🛡️', color: 'var(--accent-cyan)', desc: 'Defense Cybersecurity Maturity', controls: 'Level 2 practices' },
+                    { name: 'CIS Controls v8', status: 'Implemented', icon: '🔐', color: '#9c27b0', desc: 'Critical Security Controls', controls: '153 safeguards' }
+                  ].map((fw, i) => (
+                    <div key={i} style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '12px', borderLeft: `4px solid ${fw.color}` }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '20px' }}>{fw.icon}</span>
+                        <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--text-primary)' }}>{fw.name}</span>
+                      </div>
+                      <span className="badge" style={{ background: `${fw.color}20`, color: fw.color, marginBottom: '8px', display: 'inline-block' }}>{fw.status}</span>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>{fw.desc}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{fw.controls}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Security Architecture */}
+              <div className="grid-2 mb-xl">
+                <div className="card">
+                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>🏗️ Security Architecture</h4>
+                  <div style={{ display: 'grid', gap: '12px' }}>
+                    {[
+                      { layer: 'Network Security', items: ['AWS VPC isolation', 'WAF & Shield', 'NACLs & Security Groups', 'PrivateLink endpoints'] },
+                      { layer: 'Identity & Access', items: ['Okta SSO + MFA', 'RBAC + ABAC', 'Just-in-time access', 'Privileged access management'] },
+                      { layer: 'Data Protection', items: ['AES-256 encryption at rest', 'TLS 1.3 in transit', 'Customer-managed keys', 'Field-level encryption'] },
+                      { layer: 'Application Security', items: ['SAST/DAST scanning', 'Container security', 'API gateway protection', 'Rate limiting'] }
+                    ].map((section, i) => (
+                      <div key={i} style={{ background: 'var(--bg-tertiary)', padding: '12px', borderRadius: '8px' }}>
+                        <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--deltek-blue)', marginBottom: '8px' }}>{section.layer}</div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                          {section.items.map((item, j) => (
+                            <span key={j} style={{ background: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', color: 'var(--text-secondary)' }}>{item}</span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="card">
+                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>📊 SOC 2 Trust Services Criteria</h4>
+                  <div style={{ display: 'grid', gap: '8px' }}>
+                    {[
+                      { id: 'CC1', name: 'Control Environment', status: 'compliant' },
+                      { id: 'CC2', name: 'Communication & Information', status: 'compliant' },
+                      { id: 'CC3', name: 'Risk Assessment', status: 'compliant' },
+                      { id: 'CC4', name: 'Monitoring Activities', status: 'compliant' },
+                      { id: 'CC5', name: 'Control Activities', status: 'compliant' },
+                      { id: 'CC6', name: 'Logical & Physical Access', status: 'compliant' },
+                      { id: 'CC7', name: 'System Operations', status: 'compliant' },
+                      { id: 'CC8', name: 'Change Management', status: 'compliant' },
+                      { id: 'CC9', name: 'Risk Mitigation', status: 'compliant' }
+                    ].map((cc, i) => (
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', background: 'var(--bg-tertiary)', borderRadius: '6px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ background: 'var(--deltek-light)', color: 'var(--deltek-blue)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>{cc.id}</span>
+                          <span style={{ fontSize: '12px', color: 'var(--text-primary)' }}>{cc.name}</span>
+                        </div>
+                        <span className="badge badge-success" style={{ fontSize: '10px' }}>✓ Compliant</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Defense Requirements */}
+              <div className="card mb-xl">
+                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>🛡️ Defense & Government Requirements</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+                  {[
+                    { name: 'DFARS 252.204-7012', desc: 'Safeguarding CUI', status: 'Compliant' },
+                    { name: 'ITAR/EAR', desc: 'Export controls', status: 'Compliant' },
+                    { name: 'NIST 800-53', desc: 'Security controls', status: 'Moderate baseline' },
+                    { name: 'FedRAMP GCCM', desc: 'GovCloud ready', status: 'Moderate Ready' }
+                  ].map((req, i) => (
+                    <div key={i} style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                      <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)', marginBottom: '4px' }}>{req.name}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px' }}>{req.desc}</div>
+                      <span className="badge badge-info" style={{ fontSize: '10px' }}>{req.status}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Reference */}
+              <div className="card">
+                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>📚 Security Documentation</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                  {[
+                    { name: 'Security Architecture', file: 'SECURITY-ARCHITECTURE.md', icon: '🏗️' },
+                    { name: 'Compliance Matrix', file: 'docs/compliance/', icon: '📋' },
+                    { name: 'Audit Trail', file: '~/.claude/audit-trail/', icon: '📊' },
+                    { name: 'Incident Response', file: 'runbooks/incident-response.md', icon: '🚨' },
+                    { name: 'Access Control', file: 'docs/access-control.md', icon: '🔑' },
+                    { name: 'Data Classification', file: 'docs/data-classification.md', icon: '📁' }
+                  ].map((doc, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                      <span style={{ fontSize: '20px' }}>{doc.icon}</span>
+                      <div>
+                        <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>{doc.name}</div>
+                        <code style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{doc.file}</code>
                       </div>
                     </div>
                   ))}
