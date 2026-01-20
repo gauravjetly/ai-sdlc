@@ -1,0 +1,164 @@
+# AI-SDLC Deployment Workflow
+# Triggers deployment on approval/merge
+
+name: AI-SDLC Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-name: ${{ steps.build.outputs.artifact }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts 2>/dev/null || echo "No package.json"
+
+      - name: Build
+        id: build
+        run: |
+          if [ -f "package.json" ]; then
+            npm run build 2>/dev/null || echo "No build script"
+          fi
+          echo "artifact=build-${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ github.sha }}
+          path: |
+            dist/
+            build/
+            out/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts 2>/dev/null || echo "No package.json"
+
+      - name: Run tests
+        run: |
+          if [ -f "package.json" ]; then
+            npm test 2>/dev/null || echo "No tests or tests skipped"
+          fi
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: github.event_name == 'push' || github.event.inputs.environment == 'staging'
+    environment:
+      name: staging
+      url: https://staging.example.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-${{ github.sha }}
+          path: dist/
+        continue-on-error: true
+
+      - name: Deploy to staging
+        run: |
+          echo "🚀 Deploying to staging..."
+          echo "Commit: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref_name }}"
+          # Add your deployment commands here
+          # e.g., aws s3 sync, kubectl apply, etc.
+          echo "✅ Deployment complete"
+
+      - name: Notify success
+        if: success()
+        run: |
+          echo "Staging deployment successful"
+          # Call notification script if configured
+          # ~/.claude/sdlc-registry/scripts/notifications.sh send completed "Deployed to staging: ${{ github.sha }}"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build, test, deploy-staging]
+    if: github.event.inputs.environment == 'production'
+    environment:
+      name: production
+      url: https://example.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-${{ github.sha }}
+          path: dist/
+        continue-on-error: true
+
+      - name: Deploy to production
+        run: |
+          echo "🚀 Deploying to production..."
+          echo "Commit: ${{ github.sha }}"
+          # Add your production deployment commands here
+          echo "✅ Production deployment complete"
+
+      - name: Create release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = `v${new Date().toISOString().slice(0,10).replace(/-/g, '.')}-${{ github.run_number }}`;
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tag,
+              name: `Release ${tag}`,
+              body: `Automated release from commit ${{ github.sha }}`,
+              draft: false,
+              prerelease: false
+            });

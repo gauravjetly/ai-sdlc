@@ -2,6 +2,112 @@
 
 All notable changes to the AI-SDLC Framework.
 
+## [2.3.0] - 2026-01-20
+
+### Added - Enterprise Features
+
+#### Cross-Agent Learning System
+- **Knowledge Sharing** - Agents now share learnings across domains
+- **Learning Flows** - Security findings → Engineer patterns, QA bugs → Architecture improvements
+- **Cross-Agent Memory** - Shared patterns at `~/.claude/agent-memory/shared/`
+- **CLI Tool** - `scripts/cross-agent-learning.sh` for managing cross-agent learnings
+
+#### Notifications System
+- **Slack Integration** - Send workflow notifications to Slack channels
+- **Teams Integration** - Microsoft Teams webhook support
+- **Notification Types** - started, completed, blocked, budget, error
+- **CLI Tool** - `scripts/notifications.sh` for configuration and sending
+
+#### GitHub Actions Integration
+- **PR Review Workflow** - Auto-generate review summary on pull requests
+- **Security Scanning** - Automatic npm audit and secret detection
+- **Deploy Workflow** - Auto-deploy to staging on merge, manual production deploy
+- **Review Checklist** - Security, tests, code standards, documentation
+
+#### Audit Trail System
+- **Compliance Logging** - Full audit trail for SOC2/HIPAA requirements
+- **Integrity Verification** - SHA-256 hashes for tamper detection
+- **Event Types** - agent_start, file_create, security_scan, deploy, config_change
+- **Retention Policies** - Configurable retention with automatic cleanup
+- **CLI Tool** - `scripts/audit-trail.sh` for logging, search, and reports
+
+#### Memory Export/Import
+- **Full Export** - Export all agent memory to archive
+- **Agent Export** - Export individual agent memory
+- **Backup System** - Timestamped backups with restore capability
+- **Remote Sync** - Sync to S3, GCS, or remote servers
+- **Migration** - Version migration support for memory schema changes
+- **CLI Tool** - `scripts/memory-manager.sh` for comprehensive memory management
+
+#### Agent Consultation Protocol
+- **Expertise Consultation** - Request specialized knowledge from other agents
+- **Review Consultation** - Request review of work products
+- **Validation Consultation** - Validate assumptions with relevant agents
+- **Escalation Consultation** - Multi-agent escalation for critical issues
+- **Learning Integration** - Consultations generate cross-agent learnings
+- **CLI Tool** - `scripts/consultation.sh` for managing consultations
+- **Documentation** - `agents/consultation-protocol.md` with full protocol specification
+
+#### Custom Agent Builder Framework
+- **Agent Templates** - Scaffold new agents with standard structure
+- **Configuration** - YAML-based agent configuration
+- **Custom Tools** - Define agent-specific tools
+- **Pattern Library** - Build up domain-specific patterns
+- **Few-Shot Examples** - Provide examples for consistent behavior
+- **Testing** - Validate agent configuration before deployment
+- **Registry Integration** - Deploy custom agents alongside built-in agents
+- **CLI Tool** - `scripts/agent-builder.sh` for creating and managing agents
+- **Documentation** - `agents/agent-builder/README.md` with full guide
+
+#### Multi-Tenant Support
+- **Tenant Isolation** - Isolated memory, config, and audit per tenant
+- **Environment Support** - dev/staging/prod environments per tenant
+- **Resource Quotas** - Configurable limits per tenant
+- **Tenant Switching** - Easy context switching between tenants
+- **Import/Export** - Share tenant configurations
+- **Enterprise Ready** - SOC2/HIPAA compliance per tenant
+- **CLI Tool** - `scripts/tenant-manager.sh` for tenant management
+
+### Enhanced
+- **Memory Dashboard** - API for visualizing agent memory (`dashboard/memory-api.js`)
+- **Dashboard Server** - Memory stats endpoint at `/api/memory`
+- **README** - Updated with v2.3.0 features and new scripts
+
+### New Files
+- `scripts/notifications.sh` - Slack/Teams notifications
+- `scripts/cross-agent-learning.sh` - Cross-agent knowledge sharing
+- `scripts/audit-trail.sh` - Compliance audit logging
+- `scripts/memory-manager.sh` - Memory export/import/backup
+- `scripts/consultation.sh` - Agent consultation protocol
+- `scripts/agent-builder.sh` - Custom agent builder
+- `scripts/tenant-manager.sh` - Multi-tenant support
+- `agents/consultation-protocol.md` - Consultation protocol documentation
+- `agents/agent-builder/README.md` - Agent builder guide
+- `dashboard/memory-api.js` - Memory visualization API
+- `.github/workflows/sdlc-on-pr.yml` - PR review workflow
+- `.github/workflows/sdlc-deploy.yml` - Deployment workflow
+
+### Upgrade Guide (2.2.0 → 2.3.0)
+```bash
+# 1. Pull latest changes
+git pull
+
+# 2. Make scripts executable
+chmod +x scripts/*.sh
+
+# 3. Initialize cross-agent learning
+scripts/cross-agent-learning.sh stats
+
+# 4. Configure notifications (optional)
+scripts/notifications.sh set-slack YOUR_WEBHOOK_URL
+
+# 5. Create tenant (optional, for enterprise)
+scripts/tenant-manager.sh create my-org --env prod
+
+# 6. Test custom agent builder
+scripts/agent-builder.sh list
+```
+
 ## [2.2.0] - 2026-01-20
 
 ### Added

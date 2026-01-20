@@ -2,10 +2,22 @@
 
 ## Complete Enterprise Software Development Automation
 
-**Version**: 2.2.0
+**Version**: 2.3.0
 **Author**: Deltek Cloud Engineering
 
 ---
+
+## What's New in v2.3.0
+
+- **Cross-Agent Learning** - Agents share knowledge (security findings → code patterns)
+- **Memory Dashboard** - Visualize agent memory and learnings
+- **Slack/Teams Notifications** - Real-time alerts to your channels
+- **GitHub Actions Integration** - Auto-review PRs and deploy on merge
+- **Audit Trail** - Full compliance logging for SOC2/HIPAA
+- **Memory Export/Import** - Share knowledge across teams
+- **Agent Consultation Protocol** - Formal knowledge sharing between agents
+- **Custom Agent Builder** - Create your own specialized agents
+- **Multi-Tenant Support** - Isolated environments for enterprise
 
 ## What's New in v2.2.0
 
@@ -350,9 +362,20 @@ aisdlc-2.1.0/
 │   ├── sdlc-registry.sh         # Registry CLI
 │   ├── sdlc-update.sh           # Update manager
 │   ├── release.sh               # Release builder
+│   ├── notifications.sh         # Slack/Teams notifications
+│   ├── cross-agent-learning.sh  # Cross-agent knowledge sharing
+│   ├── audit-trail.sh           # Compliance audit logging
+│   ├── memory-manager.sh        # Memory export/import/backup
+│   ├── consultation.sh          # Agent consultation protocol
+│   ├── agent-builder.sh         # Custom agent builder
+│   ├── tenant-manager.sh        # Multi-tenant support
 │   ├── install-agents.sh
 │   ├── install-commands.sh
 │   └── setup-project.sh
+│
+├── .github/workflows/           # GitHub Actions
+│   ├── sdlc-on-pr.yml           # Auto-review PRs
+│   └── sdlc-deploy.yml          # Deploy on merge
 │
 ├── docs/                        # Reference Documentation
 │   ├── AI-SDLC-Framework.md
@@ -471,6 +494,7 @@ When you add a deprecation, it's automatically:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.3.0 | 2026-01-20 | Cross-agent learning, notifications, GitHub Actions, audit trail, multi-tenant |
 | 2.2.0 | 2026-01-20 | Self-learning memory for ALL agents, Ask Tom, Jets enhancements |
 | 2.1.1 | 2025-01-15 | FinOps integration, cost tracking, production dashboard |
 | 2.1.0 | 2025-01-15 | Control Center, Registry, Update Manager |
