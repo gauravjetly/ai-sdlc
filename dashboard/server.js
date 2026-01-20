@@ -16,6 +16,42 @@ const REGISTRY_FILE = path.join(REGISTRY_DIR, 'registry.json');
 const PROJECTS_DIR = path.join(REGISTRY_DIR, 'projects');
 const ACTIVITY_LOG = path.join(REGISTRY_DIR, 'activity.log');
 const FINOPS_DIR = path.join(process.env.HOME, '.claude', 'finops-registry', 'costs');
+const REGISTRY_SCRIPT = path.join(REGISTRY_DIR, 'sdlc-registry.sh');
+
+// Auto-fix stalled projects - runs the registry autofix command
+function runAutofix() {
+  return new Promise((resolve, reject) => {
+    if (!fs.existsSync(REGISTRY_SCRIPT)) {
+      console.log('  ⚠️  Registry script not found, skipping autofix');
+      resolve({ fixed: 0, checked: 0 });
+      return;
+    }
+
+    exec(`bash "${REGISTRY_SCRIPT}" autofix`, (error, stdout, stderr) => {
+      if (error) {
+        console.error('  ⚠️  Autofix error:', error.message);
+        resolve({ fixed: 0, checked: 0, error: error.message });
+        return;
+      }
+
+      // Parse output to get counts
+      const fixedMatch = stdout.match(/fixed (\d+) stalled projects/);
+      const checkedMatch = stdout.match(/Checked (\d+) projects/);
+
+      const result = {
+        fixed: fixedMatch ? parseInt(fixedMatch[1]) : 0,
+        checked: checkedMatch ? parseInt(checkedMatch[1]) : 0,
+        output: stdout.trim()
+      };
+
+      if (result.fixed > 0) {
+        console.log(`  ✅ Auto-fixed ${result.fixed} stalled projects`);
+      }
+
+      resolve(result);
+    });
+  });
+}
 
 // Read registry data
 function getRegistryData() {
@@ -253,6 +289,18 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // API endpoint for autofix - manually trigger project status reconciliation
+  if (req.url === '/api/autofix') {
+    runAutofix().then(result => {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(result));
+    }).catch(error => {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: error.message }));
+    });
+    return;
+  }
+
   // Serve the dashboard HTML
   if (req.url === '/' || req.url === '/index.html') {
     const htmlPath = path.join(__dirname, 'index.html');
@@ -304,20 +352,34 @@ const server = http.createServer((req, res) => {
   res.end('Not found');
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, async () => {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
   console.log('║           AI-SDLC Control Center - LIVE                      ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
-  console.log(`  🌐 Dashboard:     http://localhost:${PORT}`);
-  console.log(`  📊 API Registry:  http://localhost:${PORT}/api/registry`);
-  console.log(`  📁 API Projects:  http://localhost:${PORT}/api/projects`);
-  console.log(`  💰 API Costs:     http://localhost:${PORT}/api/costs`);
-  console.log(`  📝 API Activity:  http://localhost:${PORT}/api/activity`);
+  console.log(`  Dashboard:     http://localhost:${PORT}`);
+  console.log(`  API Registry:  http://localhost:${PORT}/api/registry`);
+  console.log(`  API Projects:  http://localhost:${PORT}/api/projects`);
+  console.log(`  API Costs:     http://localhost:${PORT}/api/costs`);
+  console.log(`  API Activity:  http://localhost:${PORT}/api/activity`);
+  console.log(`  API Autofix:   http://localhost:${PORT}/api/autofix`);
   console.log('');
-  console.log('  Registry: ' + (fs.existsSync(REGISTRY_FILE) ? '✅ Connected' : '⚠️  Not initialized'));
-  console.log('  FinOps:   ' + (fs.existsSync(FINOPS_DIR) ? '✅ Connected' : '⚠️  No cost data'));
+  console.log('  Registry: ' + (fs.existsSync(REGISTRY_FILE) ? 'Connected' : 'Not initialized'));
+  console.log('  FinOps:   ' + (fs.existsSync(FINOPS_DIR) ? 'Connected' : 'No cost data'));
+  console.log('');
+
+  // Run autofix on startup to reconcile any stalled projects
+  console.log('  Running project status autofix...');
+  await runAutofix();
+  console.log('');
+
+  // Set up periodic autofix every 60 seconds
+  setInterval(() => {
+    runAutofix().catch(err => console.error('  Periodic autofix error:', err.message));
+  }, 60000);
+
+  console.log('  Auto-fix: Enabled (runs every 60s)');
   console.log('');
   console.log('  Press Ctrl+C to stop');
   console.log('');

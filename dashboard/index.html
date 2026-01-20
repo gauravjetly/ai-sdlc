@@ -239,7 +239,31 @@
       font-weight: 600;
     }
 
-    .nav-item-icon { font-size: 18px; }
+    .nav-item-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .nav-item-icon img {
+      width: 18px;
+      height: 18px;
+      /* Convert white icons to dark gray for visibility on white sidebar */
+      filter: brightness(0) saturate(100%) invert(30%) sepia(10%) saturate(500%) hue-rotate(180deg);
+      opacity: 0.7;
+      transition: all 0.2s ease;
+    }
+    .nav-item:hover .nav-item-icon img {
+      filter: brightness(0) saturate(100%) invert(18%) sepia(95%) saturate(4500%) hue-rotate(230deg) brightness(95%);
+      opacity: 0.9;
+    }
+    .nav-item.active .nav-item-icon img {
+      /* Convert white icons to Deltek blue (#1742F6) */
+      filter: brightness(0) saturate(100%) invert(18%) sepia(95%) saturate(4500%) hue-rotate(230deg) brightness(95%);
+      opacity: 1;
+    }
     .nav-item-badge {
       margin-left: auto;
       background: var(--accent-green);
@@ -720,18 +744,32 @@
     const { useState, useEffect, useRef, useCallback } = React;
 
     const AGENTS = [
-      { id: 'conductor', name: 'Conductor', icon: '🎭', color: '#0066cc', model: 'Opus', role: 'Orchestrator' },
-      { id: 'ba', name: 'BA Agent', icon: '📋', color: '#0066cc', model: 'Sonnet', role: 'Requirements' },
-      { id: 'jets', name: 'Jets', icon: '🏗️', color: '#7b1fa2', model: 'Opus', role: 'Architecture' },
-      { id: 'engineer', name: 'Engineer', icon: '💻', color: '#0097a7', model: 'Sonnet', role: 'Development' },
-      { id: 'security', name: 'Security', icon: '🔒', color: '#d32f2f', model: 'Sonnet', role: 'Security' },
-      { id: 'qa', name: 'QA Agent', icon: '🧪', color: '#ff9800', model: 'Sonnet', role: 'Testing' },
-      { id: 'atlas', name: 'Atlas', icon: '🚀', color: '#7b1fa2', model: 'Sonnet', role: 'Deploy' },
-      { id: 'customer', name: 'Customer', icon: '✅', color: '#00875a', model: 'Sonnet', role: 'UAT' },
-      { id: 'ask-tom', name: 'Ask Tom', icon: '⚡', color: '#9c27b0', model: 'Opus', role: 'Problem Solver' },
-      { id: 'finops', name: 'FinOps', icon: '💰', color: '#ff9800', model: 'Haiku', role: 'Costs' },
-      { id: 'tracker', name: 'Tracker', icon: '📊', color: '#607d8b', model: 'Haiku', role: 'Monitor' },
+      { id: 'conductor', name: 'Conductor', icon: 'assets/brand/icons/team-workflow.svg', color: '#0066cc', model: 'Opus', role: 'Orchestrator' },
+      { id: 'ba', name: 'BA Agent', icon: 'assets/brand/icons/checklist.svg', color: '#0066cc', model: 'Sonnet', role: 'Requirements' },
+      { id: 'jets', name: 'Jets', icon: 'assets/brand/icons/building-governance.svg', color: '#7b1fa2', model: 'Opus', role: 'Architecture' },
+      { id: 'engineer', name: 'Engineer', icon: 'assets/brand/icons/ai-chip.svg', color: '#0097a7', model: 'Sonnet', role: 'Development' },
+      { id: 'security', name: 'Security', icon: 'assets/brand/icons/compliance.svg', color: '#d32f2f', model: 'Sonnet', role: 'Security' },
+      { id: 'qa', name: 'QA Agent', icon: 'assets/brand/icons/data-workflow.svg', color: '#ff9800', model: 'Sonnet', role: 'Testing' },
+      { id: 'atlas', name: 'Atlas', icon: 'assets/brand/icons/network-activity.svg', color: '#7b1fa2', model: 'Sonnet', role: 'Deploy' },
+      { id: 'customer', name: 'Customer', icon: 'assets/brand/icons/checkmark-badge.svg', color: '#00875a', model: 'Sonnet', role: 'UAT' },
+      { id: 'ask-tom', name: 'Ask Tom', icon: 'assets/brand/icons/brain-lightbulb.svg', color: '#9c27b0', model: 'Opus', role: 'Problem Solver' },
+      { id: 'finops', name: 'FinOps', icon: 'assets/brand/icons/calculator.svg', color: '#ff9800', model: 'Haiku', role: 'Costs' },
+      { id: 'tracker', name: 'Tracker', icon: 'assets/brand/icons/data-flow.svg', color: '#607d8b', model: 'Haiku', role: 'Monitor' },
     ];
+
+    // Helper component for rendering agent icons
+    const AgentIcon = ({ src, size = 18, style = {} }) => (
+      <img
+        src={src}
+        alt=""
+        style={{
+          width: size,
+          height: size,
+          filter: 'brightness(0) saturate(100%) invert(30%) sepia(10%) saturate(500%) hue-rotate(180deg)',
+          ...style
+        }}
+      />
+    );
 
     const PIPELINE_AGENTS = ['ba', 'jets', 'engineer', 'security', 'qa', 'atlas', 'customer'];
 
@@ -915,7 +953,7 @@
                     className={`nav-item ${activeView === nav.id ? 'active' : ''}`}
                     onClick={() => setActiveView(nav.id)}
                   >
-                    <span className="nav-item-icon"><img src={nav.icon} alt="" style={{ width: '18px', height: '18px', filter: 'brightness(0) invert(1)', opacity: 0.9 }} /></span>
+                    <span className="nav-item-icon"><img src={nav.icon} alt="" /></span>
                     {nav.label}
                     {nav.badge && <span className="nav-item-badge">{nav.badge}</span>}
                   </div>
@@ -1046,7 +1084,7 @@
             <div className="card">
               <div className="section-header"><h3 className="section-title">Recent Projects</h3></div>
               {projects.length === 0 ? (
-                <div className="empty-state"><div className="empty-state-icon">📁</div><div className="empty-state-title">No projects yet</div><p>Run /sdlc-start to begin</p></div>
+                <div className="empty-state"><div className="empty-state-icon"><AgentIcon src="assets/brand/icons/data-workflow.svg" size={32} /></div><div className="empty-state-title">No projects yet</div><p>Run /sdlc-start to begin</p></div>
               ) : projects.slice(0, 4).map(p => <ProjectMini key={p.id} project={p} costs={costs} />)}
             </div>
             <div className="card">
@@ -1128,12 +1166,12 @@
           {/* Section Navigation */}
           <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', background: 'var(--bg-tertiary)', padding: '8px', borderRadius: '12px', overflowX: 'auto' }}>
             {[
-              { id: 'summary', label: '📊 Executive Summary' },
-              { id: 'methodology', label: '📐 How We Calculate' },
-              { id: 'costs', label: '💰 Cost Analysis' },
-              { id: 'time', label: '⏱️ Time Savings' },
-              { id: 'quality', label: '✨ Quality Impact' },
-              { id: 'goals', label: '🎯 Goals & KPIs' }
+              { id: 'summary', label: 'Executive Summary' },
+              { id: 'methodology', label: 'How We Calculate' },
+              { id: 'costs', label: 'Cost Analysis' },
+              { id: 'time', label: 'Time Savings' },
+              { id: 'quality', label: 'Quality Impact' },
+              { id: 'goals', label: 'Goals & KPIs' }
             ].map(section => (
               <button key={section.id} style={sectionStyle(activeSection === section.id)} onClick={() => setActiveSection(section.id)}>
                 {section.label}
@@ -1211,10 +1249,10 @@
 
               {/* The Story */}
               <div className="card mb-xl">
-                <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>📖 The Value Story</h3>
+                <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>The Value Story</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
                   <div style={{ padding: '20px', background: 'var(--accent-red-light)', borderRadius: '12px' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--accent-red)', marginBottom: '8px' }}>❌ WITHOUT AI-SDLC</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--accent-red)', marginBottom: '8px' }}>WITHOUT AI-SDLC</div>
                     <ul style={{ fontSize: '13px', color: 'var(--text-secondary)', listStyle: 'none', padding: 0, margin: 0 }}>
                       <li style={{ marginBottom: '6px' }}>• 40+ hours per feature</li>
                       <li style={{ marginBottom: '6px' }}>• $3,400 labor cost per feature</li>
@@ -1232,7 +1270,7 @@
                     </div>
                   </div>
                   <div style={{ padding: '20px', background: 'var(--accent-green-light)', borderRadius: '12px' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--accent-green)', marginBottom: '8px' }}>✓ WITH AI-SDLC</div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--accent-green)', marginBottom: '8px' }}>WITH AI-SDLC</div>
                     <ul style={{ fontSize: '13px', color: 'var(--text-secondary)', listStyle: 'none', padding: 0, margin: 0 }}>
                       <li style={{ marginBottom: '6px' }}>• 4 hours per feature</li>
                       <li style={{ marginBottom: '6px' }}>• ~$0.50 AI cost per feature</li>
@@ -1258,7 +1296,7 @@
 
                 {/* Benchmarks Used */}
                 <div style={{ background: 'var(--bg-tertiary)', borderRadius: '12px', padding: '20px', marginBottom: '24px' }}>
-                  <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--deltek-blue)', marginBottom: '16px' }}>📊 Industry Benchmarks Applied</h4>
+                  <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--deltek-blue)', marginBottom: '16px' }}>Industry Benchmarks Applied</h4>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                     {[
                       { label: 'Average Developer Hourly Rate', value: '$85/hour', source: 'Bureau of Labor Statistics' },
@@ -1330,7 +1368,7 @@
                 {/* Traditional Cost Breakdown */}
                 <div className="card">
                   <h4 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--accent-red)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '20px' }}>❌</span> Traditional Development Costs
+                    Traditional Development Costs
                   </h4>
                   <div style={{ fontSize: '32px', fontWeight: 700, color: 'var(--accent-red)', marginBottom: '16px' }}>
                     ${detailedMetrics.traditionalLaborCost.toLocaleString()}
@@ -1363,7 +1401,7 @@
                 {/* AI-SDLC Cost Breakdown */}
                 <div className="card">
                   <h4 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--accent-green)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '20px' }}>✓</span> AI-SDLC Costs
+                    AI-SDLC Costs
                   </h4>
                   <div style={{ fontSize: '32px', fontWeight: 700, color: 'var(--accent-green)', marginBottom: '16px' }}>
                     ${detailedMetrics.aiTokenCost.toFixed(2)}
@@ -1398,7 +1436,7 @@
               <div className="card" style={{ background: 'linear-gradient(135deg, var(--accent-green-light), white)', border: '2px solid var(--accent-green)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                   <div>
-                    <div style={{ fontSize: '14px', color: 'var(--accent-green)', fontWeight: 600, marginBottom: '4px' }}>💰 TOTAL COST SAVINGS</div>
+                    <div style={{ fontSize: '14px', color: 'var(--accent-green)', fontWeight: 600, marginBottom: '4px' }}>TOTAL COST SAVINGS</div>
                     <div style={{ fontSize: '36px', fontWeight: 700, color: 'var(--accent-green)' }}>${detailedMetrics.laborSavings.toLocaleString()}</div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
@@ -1414,23 +1452,23 @@
           {activeSection === 'time' && (
             <div>
               <div className="card mb-xl">
-                <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '24px', color: 'var(--text-primary)' }}>⏱️ Phase-by-Phase Time Analysis</h3>
+                <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '24px', color: 'var(--text-primary)' }}>Phase-by-Phase Time Analysis</h3>
 
                 <div style={{ display: 'grid', gap: '16px' }}>
                   {[
-                    { phase: 'Requirements Gathering', icon: '📋', traditional: 8, ai: 0.5, agent: 'BA Agent', reason: 'AI extracts requirements from natural language, auto-generates user stories and acceptance criteria' },
-                    { phase: 'Architecture Design', icon: '🏗️', traditional: 16, ai: 1, agent: 'Jets (Architect)', reason: 'AI evaluates patterns, generates ADRs, and designs scalable architecture based on requirements' },
-                    { phase: 'Development', icon: '💻', traditional: 24, ai: 2, agent: 'Software Engineer', reason: 'AI generates production-ready code following SOLID principles with comprehensive error handling' },
-                    { phase: 'Security Review', icon: '🔒', traditional: 8, ai: 0.3, agent: 'Security Agent', reason: 'Automated SAST, DAST, dependency scanning - no manual code review needed' },
-                    { phase: 'Testing & QA', icon: '🧪', traditional: 16, ai: 0.5, agent: 'QA Agent', reason: 'Auto-generated unit, integration, and E2E tests with 92%+ coverage' },
-                    { phase: 'Deployment', icon: '🚀', traditional: 4, ai: 0.2, agent: 'Atlas (DevOps)', reason: 'Automated CI/CD pipeline setup, infrastructure provisioning, rollback procedures' },
+                    { phase: 'Requirements Gathering', icon: 'assets/brand/icons/checklist.svg', traditional: 8, ai: 0.5, agent: 'BA Agent', reason: 'AI extracts requirements from natural language, auto-generates user stories and acceptance criteria' },
+                    { phase: 'Architecture Design', icon: 'assets/brand/icons/building-governance.svg', traditional: 16, ai: 1, agent: 'Jets (Architect)', reason: 'AI evaluates patterns, generates ADRs, and designs scalable architecture based on requirements' },
+                    { phase: 'Development', icon: 'assets/brand/icons/ai-chip.svg', traditional: 24, ai: 2, agent: 'Software Engineer', reason: 'AI generates production-ready code following SOLID principles with comprehensive error handling' },
+                    { phase: 'Security Review', icon: 'assets/brand/icons/compliance.svg', traditional: 8, ai: 0.3, agent: 'Security Agent', reason: 'Automated SAST, DAST, dependency scanning - no manual code review needed' },
+                    { phase: 'Testing & QA', icon: 'assets/brand/icons/data-workflow.svg', traditional: 16, ai: 0.5, agent: 'QA Agent', reason: 'Auto-generated unit, integration, and E2E tests with 92%+ coverage' },
+                    { phase: 'Deployment', icon: 'assets/brand/icons/network-activity.svg', traditional: 4, ai: 0.2, agent: 'Atlas (DevOps)', reason: 'Automated CI/CD pipeline setup, infrastructure provisioning, rollback procedures' },
                   ].map((phase, i) => {
                     const savings = ((phase.traditional - phase.ai) / phase.traditional * 100).toFixed(0);
                     return (
                       <div key={i} style={{ padding: '20px', background: 'var(--bg-tertiary)', borderRadius: '12px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <span style={{ fontSize: '24px' }}>{phase.icon}</span>
+                            <span style={{ fontSize: '24px' }}><AgentIcon src={phase.icon} size={24} /></span>
                             <div>
                               <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>{phase.phase}</div>
                               <div style={{ fontSize: '12px', color: 'var(--deltek-blue)' }}>Handled by: {phase.agent}</div>
@@ -1453,7 +1491,7 @@
                           </div>
                         </div>
                         <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
-                          💡 {phase.reason}
+                          {phase.reason}
                         </div>
                       </div>
                     );
@@ -1509,7 +1547,7 @@
                 </div>
 
                 <div className="card">
-                  <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '20px', color: 'var(--text-primary)' }}>✨ Quality Metrics Achieved</h4>
+                  <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '20px', color: 'var(--text-primary)' }}>Quality Metrics Achieved</h4>
 
                   {[
                     { label: 'Test Coverage', traditional: 60, ai: 92, unit: '%' },
@@ -1534,18 +1572,18 @@
 
               {/* How Quality is Achieved */}
               <div className="card">
-                <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '20px', color: 'var(--text-primary)' }}>🔄 How AI-SDLC Achieves Superior Quality</h4>
+                <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '20px', color: 'var(--text-primary)' }}>How AI-SDLC Achieves Superior Quality</h4>
                 <div className="grid-3">
                   {[
-                    { icon: '📋', title: 'Clear Requirements', desc: 'BA Agent ensures requirements are complete and unambiguous before development starts' },
-                    { icon: '🏗️', title: 'Solid Architecture', desc: 'Jets designs scalable, maintainable architecture following proven patterns' },
-                    { icon: '💻', title: 'Clean Code', desc: 'Engineer follows SOLID principles, writes comprehensive error handling' },
-                    { icon: '🔒', title: 'Security-First', desc: 'Security Agent scans for vulnerabilities before any code is merged' },
-                    { icon: '🧪', title: 'Test-Driven', desc: 'QA Agent generates comprehensive tests achieving 92%+ coverage' },
-                    { icon: '⚡', title: 'Problem Solving', desc: 'Ask Tom resolves any blockers with root cause analysis' },
+                    { icon: 'assets/brand/icons/checklist.svg', title: 'Clear Requirements', desc: 'BA Agent ensures requirements are complete and unambiguous before development starts' },
+                    { icon: 'assets/brand/icons/building-governance.svg', title: 'Solid Architecture', desc: 'Jets designs scalable, maintainable architecture following proven patterns' },
+                    { icon: 'assets/brand/icons/ai-chip.svg', title: 'Clean Code', desc: 'Engineer follows SOLID principles, writes comprehensive error handling' },
+                    { icon: 'assets/brand/icons/compliance.svg', title: 'Security-First', desc: 'Security Agent scans for vulnerabilities before any code is merged' },
+                    { icon: 'assets/brand/icons/data-workflow.svg', title: 'Test-Driven', desc: 'QA Agent generates comprehensive tests achieving 92%+ coverage' },
+                    { icon: 'assets/brand/icons/brain-lightbulb.svg', title: 'Problem Solving', desc: 'Ask Tom resolves any blockers with root cause analysis' },
                   ].map((item, i) => (
                     <div key={i} style={{ padding: '16px', background: 'var(--bg-tertiary)', borderRadius: '12px' }}>
-                      <div style={{ fontSize: '24px', marginBottom: '8px' }}>{item.icon}</div>
+                      <div style={{ fontSize: '24px', marginBottom: '8px' }}><AgentIcon src={item.icon} size={24} /></div>
                       <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>{item.title}</div>
                       <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{item.desc}</div>
                     </div>
@@ -1700,7 +1738,7 @@
       const bg = bgColors[project.status] || '#fff4e5';
       return (
         <div className="activity-item">
-          <div className="activity-icon" style={{ background: bg, color }}>📁</div>
+          <div className="activity-icon" style={{ background: bg, color }}><AgentIcon src="assets/brand/icons/data-workflow.svg" size={14} style={{ filter: 'brightness(0) invert(1)' }} /></div>
           <div className="activity-content">
             <div className="activity-text">{project.description || project.id}</div>
             <div className="activity-time">{project.status}{cost ? ` • $${(cost.total_cost || 0).toFixed(2)}` : ''}</div>
@@ -1710,7 +1748,7 @@
     }
 
     function Projects({ projects, costs }) {
-      if (projects.length === 0) return <div className="empty-state"><div className="empty-state-icon">📁</div><div className="empty-state-title">No Projects</div><p>Run /sdlc-start to begin</p></div>;
+      if (projects.length === 0) return <div className="empty-state"><div className="empty-state-icon"><AgentIcon src="assets/brand/icons/data-workflow.svg" size={32} /></div><div className="empty-state-title">No Projects</div><p>Run /sdlc-start to begin</p></div>;
       return <div>{projects.map(p => <ProjectCard key={p.id} project={p} costs={costs} />)}</div>;
     }
 
@@ -1779,7 +1817,7 @@
               return (
                 <React.Fragment key={id}>
                   <div className="pipeline-agent">
-                    <div className={`pipeline-icon ${status}`}>{agent?.icon}</div>
+                    <div className={`pipeline-icon ${status}`}><AgentIcon src={agent?.icon} size={16} /></div>
                     <span className="pipeline-name">{agent?.role}</span>
                   </div>
                   {i < PIPELINE_AGENTS.length - 1 && <div className={`pipeline-connector ${status === 'completed' ? 'completed' : ''}`}></div>}
@@ -1904,7 +1942,7 @@
       const bg = bgColors[agent.color] || '#e6f0fa';
       return (
         <div className="agent-card">
-          <div className="agent-avatar" style={{ background: bg, color: agent.color }}>{agent.icon}</div>
+          <div className="agent-avatar" style={{ background: bg, color: agent.color }}><AgentIcon src={agent.icon} size={20} /></div>
           <div className="agent-info">
             <div className="agent-name">{agent.name}</div>
             <div className="agent-role">{agent.role} • {agent.model}</div>
@@ -1941,25 +1979,25 @@
           { title: 'Testing Strategy', prompt: 'Create a testing strategy for [FEATURE] covering unit, integration, and e2e tests. Critical paths: [LIST].', tip: 'Identify critical user journeys' },
         ],
         tips: [
-          { icon: '🎯', title: 'Be Specific', content: 'The more specific your requirements, the better the output. Include tech stack, constraints, and success criteria.' },
-          { icon: '🔄', title: 'Iterate', content: 'Start with a minimal viable request, then iterate. Use /sdlc-status to check progress and provide feedback.' },
-          { icon: '⚡', title: 'Use Ask Tom', content: 'When stuck on any problem, use /sdlc-ask-tom. It never gives up and will coordinate with all agents to find a solution.' },
-          { icon: '📊', title: 'Track Value', content: 'Check the Value & ROI tab regularly to see time saved, cost efficiency, and quality improvements.' },
-          { icon: '🔒', title: 'Security First', content: 'Security Agent runs automatically. Review its findings carefully - it catches vulnerabilities early.' },
-          { icon: '🧪', title: 'Trust the Process', content: 'Let the SDLC pipeline complete. Each agent adds value: requirements → architecture → code → security → QA → deploy → UAT.' },
+          { icon: 'assets/brand/icons/checkmark-badge.svg', title: 'Be Specific', content: 'The more specific your requirements, the better the output. Include tech stack, constraints, and success criteria.' },
+          { icon: 'assets/brand/icons/data-workflow.svg', title: 'Iterate', content: 'Start with a minimal viable request, then iterate. Use /sdlc-status to check progress and provide feedback.' },
+          { icon: 'assets/brand/icons/brain-lightbulb.svg', title: 'Use Ask Tom', content: 'When stuck on any problem, use /sdlc-ask-tom. It never gives up and will coordinate with all agents to find a solution.' },
+          { icon: 'assets/brand/icons/data-flow.svg', title: 'Track Value', content: 'Check the Value & ROI tab regularly to see time saved, cost efficiency, and quality improvements.' },
+          { icon: 'assets/brand/icons/compliance.svg', title: 'Security First', content: 'Security Agent runs automatically. Review its findings carefully - it catches vulnerabilities early.' },
+          { icon: 'assets/brand/icons/team-workflow.svg', title: 'Trust the Process', content: 'Let the SDLC pipeline complete. Each agent adds value: requirements → architecture → code → security → QA → deploy → UAT.' },
         ],
         agents: [
-          { name: 'Conductor', icon: '🎭', model: 'Opus', desc: 'Orchestrates the entire SDLC workflow. Coordinates all agents and handles blockers.', when: 'Automatically invoked when you run /sdlc-start' },
-          { name: 'BA Agent', icon: '📋', model: 'Sonnet', desc: 'Gathers requirements, creates user stories, defines acceptance criteria.', when: 'First phase of any new feature or change' },
-          { name: 'Jets (Architect)', icon: '🏗️', model: 'Opus', desc: 'Designs system architecture, creates ADRs, evaluates technology choices.', when: 'After requirements are clear, before coding begins' },
-          { name: 'Software Engineer', icon: '💻', model: 'Sonnet', desc: 'Implements features following clean architecture and SOLID principles.', when: 'After architecture is approved' },
-          { name: 'Security Agent', icon: '🔒', model: 'Sonnet', desc: 'SAST, DAST, dependency audit, compliance validation.', when: 'After code is written, before QA' },
-          { name: 'QA Agent', icon: '🧪', model: 'Sonnet', desc: 'Integration testing, E2E testing, performance validation.', when: 'After security review passes' },
-          { name: 'Atlas (DevOps)', icon: '🚀', model: 'Sonnet', desc: 'Deployment, infrastructure, operational readiness.', when: 'After QA passes, ready for deployment' },
-          { name: 'Customer Agent', icon: '✅', model: 'Sonnet', desc: 'Post-deployment UAT and validation.', when: 'After deployment, validates user acceptance' },
-          { name: 'Ask Tom', icon: '⚡', model: 'Opus', desc: 'Elite problem-solver. Root cause analysis, permanent solutions.', when: 'When any blocker occurs or problem is complex' },
-          { name: 'FinOps Agent', icon: '💰', model: 'Haiku', desc: 'Tracks AI costs, budget optimization.', when: 'Continuously monitors spending' },
-          { name: 'Tracker Agent', icon: '📊', model: 'Haiku', desc: 'Progress monitoring and status reports.', when: 'On-demand via /sdlc-status' },
+          { name: 'Conductor', icon: 'assets/brand/icons/team-workflow.svg', model: 'Opus', desc: 'Orchestrates the entire SDLC workflow. Coordinates all agents and handles blockers.', when: 'Automatically invoked when you run /sdlc-start' },
+          { name: 'BA Agent', icon: 'assets/brand/icons/checklist.svg', model: 'Sonnet', desc: 'Gathers requirements, creates user stories, defines acceptance criteria.', when: 'First phase of any new feature or change' },
+          { name: 'Jets (Architect)', icon: 'assets/brand/icons/building-governance.svg', model: 'Opus', desc: 'Designs system architecture, creates ADRs, evaluates technology choices.', when: 'After requirements are clear, before coding begins' },
+          { name: 'Software Engineer', icon: 'assets/brand/icons/ai-chip.svg', model: 'Sonnet', desc: 'Implements features following clean architecture and SOLID principles.', when: 'After architecture is approved' },
+          { name: 'Security Agent', icon: 'assets/brand/icons/compliance.svg', model: 'Sonnet', desc: 'SAST, DAST, dependency audit, compliance validation.', when: 'After code is written, before QA' },
+          { name: 'QA Agent', icon: 'assets/brand/icons/data-workflow.svg', model: 'Sonnet', desc: 'Integration testing, E2E testing, performance validation.', when: 'After security review passes' },
+          { name: 'Atlas (DevOps)', icon: 'assets/brand/icons/network-activity.svg', model: 'Sonnet', desc: 'Deployment, infrastructure, operational readiness.', when: 'After QA passes, ready for deployment' },
+          { name: 'Customer Agent', icon: 'assets/brand/icons/checkmark-badge.svg', model: 'Sonnet', desc: 'Post-deployment UAT and validation.', when: 'After deployment, validates user acceptance' },
+          { name: 'Ask Tom', icon: 'assets/brand/icons/brain-lightbulb.svg', model: 'Opus', desc: 'Elite problem-solver. Root cause analysis, permanent solutions.', when: 'When any blocker occurs or problem is complex' },
+          { name: 'FinOps Agent', icon: 'assets/brand/icons/calculator.svg', model: 'Haiku', desc: 'Tracks AI costs, budget optimization.', when: 'Continuously monitors spending' },
+          { name: 'Tracker Agent', icon: 'assets/brand/icons/data-flow.svg', model: 'Haiku', desc: 'Progress monitoring and status reports.', when: 'On-demand via /sdlc-status' },
         ],
         bestPractices: [
           { category: 'Requirements', items: ['Define clear acceptance criteria', 'Include non-functional requirements', 'Specify edge cases and error handling', 'List integration points'] },
@@ -1988,11 +2026,11 @@
           {/* Tabs */}
           <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', background: 'var(--bg-tertiary)', padding: '8px', borderRadius: 'var(--radius-lg)' }}>
             {[
-              { id: 'commands', label: '⚡ Commands' },
-              { id: 'prompts', label: '💬 Prompt Templates' },
-              { id: 'agents', label: '🤖 Agent Guide' },
-              { id: 'tips', label: '💡 Pro Tips' },
-              { id: 'practices', label: '📋 Best Practices' }
+              { id: 'commands', label: 'Commands' },
+              { id: 'prompts', label: 'Prompt Templates' },
+              { id: 'agents', label: 'Agent Guide' },
+              { id: 'tips', label: 'Pro Tips' },
+              { id: 'practices', label: 'Best Practices' }
             ].map(tab => (
               <button key={tab.id} style={tabStyle(activeTab === tab.id)} onClick={() => setActiveTab(tab.id)}>
                 {tab.label}
@@ -2020,7 +2058,7 @@
                         onClick={() => navigator.clipboard.writeText(cmd.cmd)}
                         style={{ background: 'var(--bg-tertiary)', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }}
                       >
-                        📋 Copy
+                        Copy
                       </button>
                     </div>
                     <p style={{ color: 'var(--text-primary)', marginBottom: '8px', fontWeight: 500 }}>{cmd.desc}</p>
@@ -2049,13 +2087,13 @@
                         onClick={() => navigator.clipboard.writeText(p.prompt)}
                         style={{ background: 'var(--deltek-light)', color: 'var(--deltek-blue)', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 500 }}
                       >
-                        📋 Copy
+                        Copy
                       </button>
                     </div>
                     <div style={{ background: 'var(--bg-tertiary)', padding: '12px', borderRadius: '6px', fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px', fontFamily: 'var(--font-mono)' }}>
                       {p.prompt}
                     </div>
-                    <p style={{ fontSize: '12px', color: 'var(--accent-green)' }}>💡 {p.tip}</p>
+                    <p style={{ fontSize: '12px', color: 'var(--accent-green)' }}>{p.tip}</p>
                   </div>
                 ))}
               </div>
@@ -2080,7 +2118,7 @@
                                   agent.model === 'Sonnet' ? 'linear-gradient(135deg, var(--dela-blue), var(--dela-cyan))' :
                                   'linear-gradient(135deg, var(--accent-green), #00a86b)'
                     }}>
-                      {agent.icon}
+                      <AgentIcon src={agent.icon} size={24} style={{ filter: 'brightness(0) invert(1)' }} />
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
@@ -2090,7 +2128,7 @@
                         </span>
                       </div>
                       <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{agent.desc}</p>
-                      <p style={{ fontSize: '12px', color: 'var(--deltek-blue)' }}>🕐 {agent.when}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--deltek-blue)' }}><AgentIcon src="assets/brand/icons/gear-integration.svg" size={12} style={{ marginRight: '4px', verticalAlign: 'middle' }} /> {agent.when}</p>
                     </div>
                   </div>
                 ))}
@@ -2114,7 +2152,7 @@
                       width: '48px', height: '48px', borderRadius: '12px', background: 'linear-gradient(135deg, var(--dela-cyan), var(--dela-blue))',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0
                     }}>
-                      {tip.icon}
+                      <AgentIcon src={tip.icon} size={24} style={{ filter: 'brightness(0) invert(1)' }} />
                     </div>
                     <div>
                       <h4 style={{ fontWeight: 600, fontSize: '15px', color: 'var(--text-primary)', marginBottom: '4px' }}>{tip.title}</h4>
@@ -2147,7 +2185,7 @@
                     <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                       {bp.items.map((item, j) => (
                         <li key={j} style={{ padding: '8px 0', borderBottom: j < bp.items.length - 1 ? '1px solid var(--border-light)' : 'none', fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ color: 'var(--accent-green)' }}>✓</span> {item}
+                          <span style={{ color: 'var(--accent-green)', fontWeight: 700 }}>•</span> {item}
                         </li>
                       ))}
                     </ul>
@@ -2297,11 +2335,11 @@
           {/* Tabs */}
           <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', background: 'var(--bg-tertiary)', padding: '8px', borderRadius: 'var(--radius-lg)' }}>
             {[
-              { id: 'release', label: '📋 Release Notes' },
-              { id: 'architecture', label: '🏗️ Architecture' },
-              { id: 'security', label: '🔒 Security & Compliance' },
-              { id: 'scripts', label: '⚡ Commands & Scripts' },
-              { id: 'readme', label: '📖 Getting Started' }
+              { id: 'release', label: 'Release Notes' },
+              { id: 'architecture', label: 'Architecture' },
+              { id: 'security', label: 'Security & Compliance' },
+              { id: 'scripts', label: 'Commands & Scripts' },
+              { id: 'readme', label: 'Getting Started' }
             ].map(tab => (
               <button key={tab.id} style={tabStyle(activeTab === tab.id)} onClick={() => setActiveTab(tab.id)}>
                 {tab.label}
@@ -2334,7 +2372,7 @@
                       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                         {release.highlights.map((h, j) => (
                           <li key={j} style={{ padding: '6px 0', fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                            <span style={{ color: 'var(--accent-green)', marginTop: '2px' }}>✓</span> {h}
+                            <span style={{ color: 'var(--accent-green)', marginTop: '2px', fontWeight: 700 }}>•</span> {h}
                           </li>
                         ))}
                       </ul>
@@ -2419,10 +2457,19 @@
                                     agent.model === 'Sonnet' ? 'linear-gradient(135deg, var(--dela-blue), var(--dela-cyan))' :
                                     'linear-gradient(135deg, var(--accent-green), #00a86b)'
                       }}>
-                        {agent.name === 'Conductor' ? '🎭' : agent.name === 'BA Agent' ? '📋' : agent.name === 'Architect (Jets)' ? '🏗️' :
-                         agent.name === 'Software Engineer' ? '💻' : agent.name === 'Security Agent' ? '🔒' : agent.name === 'QA Agent' ? '🧪' :
-                         agent.name === 'Atlas Agent' ? '🚀' : agent.name === 'Customer Agent' ? '✅' : agent.name === 'Ask Tom' ? '⚡' :
-                         agent.name === 'FinOps Agent' ? '💰' : '📊'}
+                        <AgentIcon src={
+                          agent.name === 'Conductor' ? 'assets/brand/icons/team-workflow.svg' :
+                          agent.name === 'BA Agent' ? 'assets/brand/icons/checklist.svg' :
+                          agent.name === 'Architect (Jets)' ? 'assets/brand/icons/building-governance.svg' :
+                          agent.name === 'Software Engineer' ? 'assets/brand/icons/ai-chip.svg' :
+                          agent.name === 'Security Agent' ? 'assets/brand/icons/compliance.svg' :
+                          agent.name === 'QA Agent' ? 'assets/brand/icons/data-workflow.svg' :
+                          agent.name === 'Atlas Agent' ? 'assets/brand/icons/network-activity.svg' :
+                          agent.name === 'Customer Agent' ? 'assets/brand/icons/checkmark-badge.svg' :
+                          agent.name === 'Ask Tom' ? 'assets/brand/icons/brain-lightbulb.svg' :
+                          agent.name === 'FinOps Agent' ? 'assets/brand/icons/calculator.svg' :
+                          'assets/brand/icons/data-flow.svg'
+                        } size={18} style={{ filter: 'brightness(0) invert(1)' }} />
                       </span>
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -2450,7 +2497,7 @@
                   <p className="section-subtitle">Deltek Cloud security architecture and compliance frameworks</p>
                 </div>
                 <a href="../docs/SECURITY-ARCHITECTURE.md" target="_blank" className="btn btn-secondary" style={{ fontSize: '12px' }}>
-                  📄 Full Documentation
+                  Full Documentation
                 </a>
               </div>
 
@@ -2459,16 +2506,16 @@
                 <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>Compliance Frameworks</h4>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
                   {[
-                    { name: 'SOC 2 Type 2', status: 'Certified', icon: '✅', color: 'var(--accent-green)', desc: 'Trust Services Criteria (CC1-CC9)', controls: '64+ controls' },
-                    { name: 'FedRAMP Moderate', status: 'Ready', icon: '🏛️', color: 'var(--deltek-blue)', desc: 'Federal Risk Authorization', controls: '325 controls' },
-                    { name: 'ISO 27001:2022', status: 'Certified', icon: '🌐', color: 'var(--accent-purple)', desc: 'International Security Standard', controls: '93 Annex A controls' },
-                    { name: 'NIST 800-171', status: 'Implemented', icon: '📋', color: '#ff9800', desc: 'CUI Protection', controls: '110 requirements' },
-                    { name: 'CMMC 2.0', status: 'Ready', icon: '🛡️', color: 'var(--accent-cyan)', desc: 'Defense Cybersecurity Maturity', controls: 'Level 2 practices' },
-                    { name: 'CIS Controls v8', status: 'Implemented', icon: '🔐', color: '#9c27b0', desc: 'Critical Security Controls', controls: '153 safeguards' }
+                    { name: 'SOC 2 Type 2', status: 'Certified', icon: 'assets/brand/icons/checkmark-badge.svg', color: 'var(--accent-green)', desc: 'Trust Services Criteria (CC1-CC9)', controls: '64+ controls' },
+                    { name: 'FedRAMP Moderate', status: 'Ready', icon: 'assets/brand/icons/building-governance.svg', color: 'var(--deltek-blue)', desc: 'Federal Risk Authorization', controls: '325 controls' },
+                    { name: 'ISO 27001:2022', status: 'Certified', icon: 'assets/brand/icons/global.svg', color: 'var(--accent-purple)', desc: 'International Security Standard', controls: '93 Annex A controls' },
+                    { name: 'NIST 800-171', status: 'Implemented', icon: 'assets/brand/icons/checklist.svg', color: '#ff9800', desc: 'CUI Protection', controls: '110 requirements' },
+                    { name: 'CMMC 2.0', status: 'Ready', icon: 'assets/brand/icons/compliance.svg', color: 'var(--accent-cyan)', desc: 'Defense Cybersecurity Maturity', controls: 'Level 2 practices' },
+                    { name: 'CIS Controls v8', status: 'Implemented', icon: 'assets/brand/icons/gear-integration.svg', color: '#9c27b0', desc: 'Critical Security Controls', controls: '153 safeguards' }
                   ].map((fw, i) => (
                     <div key={i} style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '12px', borderLeft: `4px solid ${fw.color}` }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                        <span style={{ fontSize: '20px' }}>{fw.icon}</span>
+                        <AgentIcon src={fw.icon} size={20} />
                         <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--text-primary)' }}>{fw.name}</span>
                       </div>
                       <span className="badge" style={{ background: `${fw.color}20`, color: fw.color, marginBottom: '8px', display: 'inline-block' }}>{fw.status}</span>
@@ -2482,7 +2529,7 @@
               {/* Security Architecture */}
               <div className="grid-2 mb-xl">
                 <div className="card">
-                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>🏗️ Security Architecture</h4>
+                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>Security Architecture</h4>
                   <div style={{ display: 'grid', gap: '12px' }}>
                     {[
                       { layer: 'Network Security', items: ['AWS VPC isolation', 'WAF & Shield', 'NACLs & Security Groups', 'PrivateLink endpoints'] },
@@ -2503,7 +2550,7 @@
                 </div>
 
                 <div className="card">
-                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>📊 SOC 2 Trust Services Criteria</h4>
+                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>SOC 2 Trust Services Criteria</h4>
                   <div style={{ display: 'grid', gap: '8px' }}>
                     {[
                       { id: 'CC1', name: 'Control Environment', status: 'compliant' },
@@ -2521,7 +2568,7 @@
                           <span style={{ background: 'var(--deltek-light)', color: 'var(--deltek-blue)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>{cc.id}</span>
                           <span style={{ fontSize: '12px', color: 'var(--text-primary)' }}>{cc.name}</span>
                         </div>
-                        <span className="badge badge-success" style={{ fontSize: '10px' }}>✓ Compliant</span>
+                        <span className="badge badge-success" style={{ fontSize: '10px' }}>Compliant</span>
                       </div>
                     ))}
                   </div>
@@ -2530,7 +2577,7 @@
 
               {/* Defense Requirements */}
               <div className="card mb-xl">
-                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>🛡️ Defense & Government Requirements</h4>
+                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>Defense & Government Requirements</h4>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
                   {[
                     { name: 'DFARS 252.204-7012', desc: 'Safeguarding CUI', status: 'Compliant' },
@@ -2549,18 +2596,18 @@
 
               {/* Quick Reference */}
               <div className="card">
-                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>📚 Security Documentation</h4>
+                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>Security Documentation</h4>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
                   {[
-                    { name: 'Security Architecture', file: 'SECURITY-ARCHITECTURE.md', icon: '🏗️' },
-                    { name: 'Compliance Matrix', file: 'docs/compliance/', icon: '📋' },
-                    { name: 'Audit Trail', file: '~/.claude/audit-trail/', icon: '📊' },
-                    { name: 'Incident Response', file: 'runbooks/incident-response.md', icon: '🚨' },
-                    { name: 'Access Control', file: 'docs/access-control.md', icon: '🔑' },
-                    { name: 'Data Classification', file: 'docs/data-classification.md', icon: '📁' }
+                    { name: 'Security Architecture', file: 'SECURITY-ARCHITECTURE.md', icon: 'assets/brand/icons/building-governance.svg' },
+                    { name: 'Compliance Matrix', file: 'docs/compliance/', icon: 'assets/brand/icons/checklist.svg' },
+                    { name: 'Audit Trail', file: '~/.claude/audit-trail/', icon: 'assets/brand/icons/data-flow.svg' },
+                    { name: 'Incident Response', file: 'runbooks/incident-response.md', icon: 'assets/brand/icons/network-activity.svg' },
+                    { name: 'Access Control', file: 'docs/access-control.md', icon: 'assets/brand/icons/gear-integration.svg' },
+                    { name: 'Data Classification', file: 'docs/data-classification.md', icon: 'assets/brand/icons/data-workflow.svg' }
                   ].map((doc, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
-                      <span style={{ fontSize: '20px' }}>{doc.icon}</span>
+                      <AgentIcon src={doc.icon} size={20} />
                       <div>
                         <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>{doc.name}</div>
                         <code style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{doc.file}</code>
@@ -2618,7 +2665,7 @@
 
               <div className="grid-2 mb-xl">
                 <div className="card">
-                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>🚀 Quick Start</h4>
+                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>Quick Start</h4>
                   <ol style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                     {[
                       { step: '1', title: 'Start a new feature', code: '/sdlc-start Build user authentication with OAuth 2.0' },
@@ -2642,7 +2689,7 @@
                 </div>
 
                 <div className="card">
-                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>📁 Output Structure</h4>
+                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>Output Structure</h4>
                   <div style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-secondary)' }}>
                     <pre style={{ margin: 0 }}>{`docs/sdlc/
 ├── requirements/    # REQ-*.md
@@ -2666,20 +2713,20 @@
               </div>
 
               <div className="card">
-                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>📋 Requirements</h4>
+                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>Requirements</h4>
                 <div className="grid-3">
                   <div style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>💻</div>
+                    <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center' }}><AgentIcon src="assets/brand/icons/ai-chip.svg" size={24} /></div>
                     <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>Claude Code</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Latest version</div>
                   </div>
                   <div style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>⭐</div>
+                    <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center' }}><AgentIcon src="assets/brand/icons/checkmark-badge.svg" size={24} /></div>
                     <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>Pro or Max</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Required for subagents</div>
                   </div>
                   <div style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>💾</div>
+                    <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center' }}><AgentIcon src="assets/brand/icons/data-workflow.svg" size={24} /></div>
                     <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>~1MB Disk</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>For agent files</div>
                   </div>
@@ -2809,7 +2856,7 @@
                           fontSize: '16px',
                           flexShrink: 0
                         }}>
-                          {agent.icon}
+                          <AgentIcon src={agent.icon} size={16} />
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ fontSize: '13px', color: 'var(--text-primary)', marginBottom: '2px' }}>
@@ -2835,19 +2882,19 @@
     }
 
     function ActivityView({ activity }) {
-      if (!activity.length) return <div className="empty-state"><div className="empty-state-icon">🕐</div><div className="empty-state-title">No Activity</div><p>Activity will appear as agents work</p></div>;
+      if (!activity.length) return <div className="empty-state"><div className="empty-state-icon"><AgentIcon src="assets/brand/icons/gear-integration.svg" size={48} /></div><div className="empty-state-title">No Activity</div><p>Activity will appear as agents work</p></div>;
       return <div className="card">{activity.map((a, i) => <ActivityItem key={i} item={a} />)}</div>;
     }
 
     function ActivityItem({ item }) {
-      const agent = AGENTS.find(a => a.id === item.agent) || { icon: '🔄', color: '#607d8b' };
+      const agent = AGENTS.find(a => a.id === item.agent) || { icon: 'assets/brand/icons/data-workflow.svg', color: '#607d8b' };
       const actionColors = { start: '#0066cc', complete: '#00875a', block: '#d32f2f' };
       const color = actionColors[item.action] || agent.color;
       const bgColors = { '#0066cc': '#e6f0fa', '#00875a': '#e6f4ef', '#d32f2f': '#fdeaea' };
       const bg = bgColors[color] || '#f5f7fa';
       return (
         <div className="activity-item">
-          <div className="activity-icon" style={{ background: bg, color }}>{agent.icon}</div>
+          <div className="activity-icon" style={{ background: bg, color }}><AgentIcon src={agent.icon} size={18} /></div>
           <div className="activity-content">
             <div className="activity-text"><strong>{agent.name || item.agent}</strong> {item.action}{item.project_id && <span className="text-muted"> on {item.project_id}</span>}</div>
             <div className="activity-time">{item.timestamp && new Date(item.timestamp).toLocaleString()}</div>
