@@ -2,10 +2,11 @@
 
 All notable changes to the AI-SDLC Framework.
 
-## [2.2.0] - 2026-01-16
+## [2.2.0] - 2026-01-20
 
 ### Added
-- **Ask Tom Agent** - Elite problem-solving specialist for root cause analysis (Opus model)
+- **Self-Learning Memory for ALL Agents** - Unified memory architecture at `~/.claude/agent-memory/`
+- **Ask Tom Agent** - Elite problem-solving specialist with E.L.I.M.I.N.A.T.E. framework (Opus model)
 - **Ask Tom Command** - `/sdlc-ask-tom` for direct problem-solving invocation
 - **Automatic Problem Resolution** - Conductor auto-invokes Ask Tom on blockers
 - **Root Cause Analysis** - 5 Whys, Fishbone diagrams, and Fault Tree methodologies
@@ -14,19 +15,34 @@ All notable changes to the AI-SDLC Framework.
 - **Prevention Measures** - Implements safeguards to prevent issue recurrence
 - **Dashboard Integration** - Ask Tom appears in dashboard with special on-demand section
 
+### Self-Learning Memory System
+Every agent now has persistent memory:
+- **BA Agent**: Requirements patterns, stakeholder knowledge, domain glossaries
+- **Software Engineer**: Code patterns, bug fixes, performance solutions
+- **Security Agent**: Vulnerability signatures, secure patterns, compliance rules
+- **QA Agent**: Test patterns, flaky test solutions, performance baselines
+- **Atlas Agent**: Deployment patterns, incident resolutions, scaling strategies
+- **Customer Agent**: Acceptance patterns, user feedback, journey templates
+- **Conductor**: Workflow patterns, blocker resolutions, estimation models
+- **FinOps Agent**: Cost patterns, budget models, optimization strategies
+- **Tracker Agent**: Duration patterns, early warning signs, reporting templates
+
 ### Changed
 - Agent count increased from 10 to 11 (added Ask Tom)
+- All agents now load memory BEFORE tasks and save learnings AFTER
 - Conductor now auto-invokes Ask Tom on: blockers, 3+ phase failures, >2hr no progress
+- Architect (Jets) enhanced as "World's Best Architect" for ANY system + Deltek specialty
 - README.md updated with Ask Tom documentation and usage examples
 - Dashboard workflow visualization includes Ask Tom as on-demand agent
 - Output directories now include `docs/sdlc/problems/` folder
 - Registry integration supports `ask-tom` agent tracking
 
 ### Enhanced
+- **Architect (Jets)** - Universal architecture expertise with Deltek product specialty
 - **Conductor Blocker Handling** - Step 5 now includes Ask Tom invocation criteria
 - **Quality Standards** - Never-give-up criteria ensures complete problem resolution
 - **Documentation** - Comprehensive problem resolution reports with lessons learned
-- **Dashboard UI** - Purple-highlighted Ask Tom section with lightning bolt icon ⚡
+- **Dashboard UI** - Purple-highlighted Ask Tom section with lightning bolt icon
 
 ## [2.1.1] - 2025-01-15
 
@@ -123,6 +139,15 @@ All notable changes to the AI-SDLC Framework.
 3. **Access**: Open `http://localhost:3030` to see new Costs tab
 4. **Note**: FinOps Agent automatically tracks costs to `~/.claude/finops-registry/costs/`
 5. **Note**: Dashboard is now a Node.js server (not JSX artifact)
+
+### From 2.1.1 to 2.2.0
+
+1. **Update**: `sdlc-update /path/to/aisdlc-2.2.0.zip`
+2. **Memory directories created automatically** at `~/.claude/agent-memory/`
+3. **All agents enhanced** with self-learning capabilities
+4. **Ask Tom available** via `/sdlc-ask-tom [problem]`
+5. **Note**: Agents now learn from every task - patterns, solutions, and learnings persist
+6. **Note**: Jets is now "World's Best Architect" for ANY system (not just Deltek)
 
 ---
 

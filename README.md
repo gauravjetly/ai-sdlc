@@ -2,10 +2,19 @@
 
 ## Complete Enterprise Software Development Automation
 
-**Version**: 2.1.1
+**Version**: 2.2.0
 **Author**: Deltek Cloud Engineering
 
 ---
+
+## What's New in v2.2.0
+
+- **Self-Learning Memory for ALL Agents** - Every agent now learns from each task
+- **Unified Memory Architecture** - Shared patterns, solutions, and learnings at `~/.claude/agent-memory/`
+- **Project Memory** - Per-project context preserved for intelligent future work
+- **Ask Tom Agent** - Elite problem-solver with E.L.I.M.I.N.A.T.E. framework
+- **World's Best Architect (Jets)** - Universal architecture expertise + Deltek specialty
+- **Continuous Improvement** - Agents get smarter with every project
 
 ## What's New in v2.1.1
 
@@ -462,6 +471,7 @@ When you add a deprecation, it's automatically:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.2.0 | 2026-01-20 | Self-learning memory for ALL agents, Ask Tom, Jets enhancements |
 | 2.1.1 | 2025-01-15 | FinOps integration, cost tracking, production dashboard |
 | 2.1.0 | 2025-01-15 | Control Center, Registry, Update Manager |
 | 2.0.0 | 2025-01-15 | Atlas agent, post-deploy UAT |
