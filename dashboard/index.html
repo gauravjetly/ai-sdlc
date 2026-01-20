@@ -11,21 +11,29 @@
        ================================================================ */
 
     :root {
-      /* Deltek Color Palette - Light & Professional */
-      --bg-primary: #f5f7fa;
+      /* Deltek Color Palette - Official Brand Colors */
+      --bg-primary: #F1F5FA;
       --bg-secondary: #ffffff;
       --bg-tertiary: #eef2f7;
       --bg-card: #ffffff;
       --bg-hover: #f0f4f8;
 
       --text-primary: #1a2b3c;
-      --text-secondary: #5a6b7c;
+      --text-secondary: #4A4A4A;
       --text-muted: #8a9bac;
 
-      /* Deltek Brand Colors */
-      --deltek-blue: #0066cc;
-      --deltek-dark: #004a99;
-      --deltek-light: #e6f0fa;
+      /* Deltek Official Brand Colors */
+      --deltek-blue: #4462c9;
+      --deltek-marine: #4462c9;
+      --deltek-navy: #2d3e8c;
+      --deltek-dark: #1e2a5e;
+      --deltek-light: #e8ecf8;
+
+      /* Dela AI Lifecycle Gradient Colors */
+      --dela-cyan: #40d1f5;
+      --dela-blue: #4462c9;
+      --dela-purple: #7b5fc7;
+      --dela-magenta: #c44ec4;
 
       --accent-green: #00875a;
       --accent-green-light: #e6f4ef;
@@ -33,9 +41,9 @@
       --accent-yellow-light: #fff4e5;
       --accent-red: #d32f2f;
       --accent-red-light: #fdeaea;
-      --accent-purple: #7b1fa2;
+      --accent-purple: #7b5fc7;
       --accent-purple-light: #f3e5f5;
-      --accent-cyan: #0097a7;
+      --accent-cyan: #40d1f5;
 
       --border-color: #dde3eb;
       --border-light: #eef2f7;
@@ -157,7 +165,7 @@
     .sidebar-header {
       padding: var(--space-lg);
       border-bottom: 1px solid var(--border-color);
-      background: var(--deltek-blue);
+      background: linear-gradient(135deg, var(--deltek-navy) 0%, var(--deltek-marine) 50%, var(--dela-cyan) 100%);
     }
 
     .sidebar-logo {
@@ -170,15 +178,36 @@
     }
 
     .sidebar-logo-icon {
-      width: 36px;
-      height: 36px;
-      background: white;
-      border-radius: var(--radius-md);
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--dela-cyan) 0%, var(--dela-blue) 35%, var(--dela-purple) 70%, var(--dela-magenta) 100%);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      color: var(--deltek-blue);
+      font-size: 22px;
+      color: white;
+      font-weight: 800;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(64, 209, 245, 0.4);
+    }
+
+    .sidebar-logo-icon::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      bottom: 2px;
+      right: 2px;
+      box-shadow: 0 0 8px rgba(255,255,255,0.8);
+      animation: spark-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes spark-glow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.2); }
     }
 
     .sidebar-nav {
@@ -874,8 +903,11 @@
           <aside className="sidebar">
             <div className="sidebar-header">
               <div className="sidebar-logo">
-                <div className="sidebar-logo-icon">⚡</div>
-                <span>AI-SDLC</span>
+                <div className="sidebar-logo-icon">D</div>
+                <div>
+                  <div style={{ fontSize: '18px', fontWeight: 700 }}>Deltek AI-SDLC</div>
+                  <div style={{ fontSize: '10px', opacity: 0.8, letterSpacing: '1px' }}>SPEED. CLARITY. CONTROL.</div>
+                </div>
               </div>
             </div>
             <nav className="sidebar-nav">
@@ -883,10 +915,11 @@
                 <div className="nav-section-title">Dashboard</div>
                 {[
                   { id: 'executive', icon: '📊', label: 'Executive' },
-                  { id: 'value', icon: '🎯', label: 'Value & ROI', badge: 'NEW' },
+                  { id: 'value', icon: '🎯', label: 'Value & ROI' },
                   { id: 'projects', icon: '📁', label: 'Projects' },
                   { id: 'analytics', icon: '📈', label: 'Analytics' },
                   { id: 'agents', icon: '🤖', label: 'Agents' },
+                  { id: 'learning', icon: '🧠', label: 'AI Learning', badge: 'NEW' },
                   { id: 'activity', icon: '🕐', label: 'Activity' }
                 ].map(nav => (
                   <div
@@ -912,7 +945,7 @@
           <main className="main-content">
             <div className="top-bar">
               <h1 className="page-title">
-                {{ executive: 'Executive Dashboard', value: 'Value & ROI', projects: 'Projects', analytics: 'Analytics', agents: 'Agents', activity: 'Activity' }[activeView]}
+                {{ executive: 'Executive Dashboard', value: 'Value & ROI', projects: 'Projects', analytics: 'Analytics', agents: 'Agents', learning: 'AI Learning & Cheat Codes', activity: 'Activity' }[activeView]}
               </h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <span style={{ fontSize: '13px', color: '#5a6b7c' }}>Last updated: {lastUpdate.toLocaleTimeString()}</span>
@@ -934,6 +967,7 @@
               {activeView === 'projects' && <Projects projects={projects} costs={costs} />}
               {activeView === 'analytics' && <Analytics costs={costs} projects={projects} />}
               {activeView === 'agents' && <Agents costs={costs} />}
+              {activeView === 'learning' && <AILearning />}
               {activeView === 'activity' && <ActivityView activity={activity} />}
             </div>
           </main>
@@ -1535,6 +1569,249 @@
             <div className="agent-invocations">{data?.invocations || 0}</div>
             <div className="agent-cost">${(data?.cost || 0).toFixed(2)}</div>
           </div>
+        </div>
+      );
+    }
+
+    // AI Learning & Cheat Codes Component
+    function AILearning() {
+      const [activeTab, setActiveTab] = useState('commands');
+
+      const cheatCodes = {
+        commands: [
+          { cmd: '/sdlc-start [description]', desc: 'Start full autonomous SDLC workflow', example: '/sdlc-start Build a user authentication system with OAuth 2.0' },
+          { cmd: '/sdlc-status', desc: 'Check status of all SDLC work items', example: '/sdlc-status' },
+          { cmd: '/sdlc-review [path]', desc: 'Run comprehensive code review', example: '/sdlc-review src/auth/' },
+          { cmd: '/sdlc-deploy [env]', desc: 'Deploy using DevOps/SRE Agent', example: '/sdlc-deploy staging' },
+          { cmd: '/sdlc-ask-tom [problem]', desc: 'Elite problem-solving for root cause analysis', example: '/sdlc-ask-tom Tests failing intermittently in CI' },
+          { cmd: '/sdlc-requirements', desc: 'Run requirements gathering phase only', example: '/sdlc-requirements' },
+          { cmd: '/sdlc-architecture', desc: 'Run architecture design phase only', example: '/sdlc-architecture' },
+          { cmd: '/sdlc-security', desc: 'Run security review only', example: '/sdlc-security' },
+        ],
+        prompts: [
+          { title: 'Feature Request', prompt: 'I need to build [FEATURE]. Requirements: [LIST]. Tech stack: [STACK]. Please start the SDLC workflow.', tip: 'Be specific about requirements to get better architecture decisions' },
+          { title: 'Bug Fix', prompt: 'There is a bug where [DESCRIBE BUG]. Expected: [EXPECTED]. Actual: [ACTUAL]. Please investigate and fix.', tip: 'Include error messages and steps to reproduce' },
+          { title: 'Code Review', prompt: 'Please review the code in [PATH] for security, performance, and best practices. Focus on [AREAS].', tip: 'Specify focus areas for more targeted feedback' },
+          { title: 'Refactoring', prompt: 'Refactor [COMPONENT] to improve [GOAL]. Current issues: [LIST]. Constraints: [CONSTRAINTS].', tip: 'Define clear goals and constraints' },
+          { title: 'Documentation', prompt: 'Generate comprehensive documentation for [COMPONENT] including API docs, usage examples, and architecture notes.', tip: 'Specify the audience (developers, end-users, ops)' },
+          { title: 'Testing Strategy', prompt: 'Create a testing strategy for [FEATURE] covering unit, integration, and e2e tests. Critical paths: [LIST].', tip: 'Identify critical user journeys' },
+        ],
+        tips: [
+          { icon: '🎯', title: 'Be Specific', content: 'The more specific your requirements, the better the output. Include tech stack, constraints, and success criteria.' },
+          { icon: '🔄', title: 'Iterate', content: 'Start with a minimal viable request, then iterate. Use /sdlc-status to check progress and provide feedback.' },
+          { icon: '⚡', title: 'Use Ask Tom', content: 'When stuck on any problem, use /sdlc-ask-tom. It never gives up and will coordinate with all agents to find a solution.' },
+          { icon: '📊', title: 'Track Value', content: 'Check the Value & ROI tab regularly to see time saved, cost efficiency, and quality improvements.' },
+          { icon: '🔒', title: 'Security First', content: 'Security Agent runs automatically. Review its findings carefully - it catches vulnerabilities early.' },
+          { icon: '🧪', title: 'Trust the Process', content: 'Let the SDLC pipeline complete. Each agent adds value: requirements → architecture → code → security → QA → deploy → UAT.' },
+        ],
+        agents: [
+          { name: 'Conductor', icon: '🎭', model: 'Opus', desc: 'Orchestrates the entire SDLC workflow. Coordinates all agents and handles blockers.', when: 'Automatically invoked when you run /sdlc-start' },
+          { name: 'BA Agent', icon: '📋', model: 'Sonnet', desc: 'Gathers requirements, creates user stories, defines acceptance criteria.', when: 'First phase of any new feature or change' },
+          { name: 'Jets (Architect)', icon: '🏗️', model: 'Opus', desc: 'Designs system architecture, creates ADRs, evaluates technology choices.', when: 'After requirements are clear, before coding begins' },
+          { name: 'Software Engineer', icon: '💻', model: 'Sonnet', desc: 'Implements features following clean architecture and SOLID principles.', when: 'After architecture is approved' },
+          { name: 'Security Agent', icon: '🔒', model: 'Sonnet', desc: 'SAST, DAST, dependency audit, compliance validation.', when: 'After code is written, before QA' },
+          { name: 'QA Agent', icon: '🧪', model: 'Sonnet', desc: 'Integration testing, E2E testing, performance validation.', when: 'After security review passes' },
+          { name: 'Atlas (DevOps)', icon: '🚀', model: 'Sonnet', desc: 'Deployment, infrastructure, operational readiness.', when: 'After QA passes, ready for deployment' },
+          { name: 'Customer Agent', icon: '✅', model: 'Sonnet', desc: 'Post-deployment UAT and validation.', when: 'After deployment, validates user acceptance' },
+          { name: 'Ask Tom', icon: '⚡', model: 'Opus', desc: 'Elite problem-solver. Root cause analysis, permanent solutions.', when: 'When any blocker occurs or problem is complex' },
+          { name: 'FinOps Agent', icon: '💰', model: 'Haiku', desc: 'Tracks AI costs, budget optimization.', when: 'Continuously monitors spending' },
+          { name: 'Tracker Agent', icon: '📊', model: 'Haiku', desc: 'Progress monitoring and status reports.', when: 'On-demand via /sdlc-status' },
+        ],
+        bestPractices: [
+          { category: 'Requirements', items: ['Define clear acceptance criteria', 'Include non-functional requirements', 'Specify edge cases and error handling', 'List integration points'] },
+          { category: 'Architecture', items: ['Review ADRs before approving', 'Question technology choices', 'Consider scalability early', 'Plan for observability'] },
+          { category: 'Development', items: ['Review generated code carefully', 'Run tests locally before committing', 'Check for hardcoded values', 'Verify error handling'] },
+          { category: 'Security', items: ['Never skip security reviews', 'Address all HIGH/CRITICAL findings', 'Validate input sanitization', 'Check authentication/authorization'] },
+          { category: 'Testing', items: ['Ensure coverage > 80%', 'Test critical user paths', 'Include performance tests', 'Verify rollback procedures'] },
+          { category: 'Deployment', items: ['Use staging environments first', 'Have rollback plan ready', 'Monitor metrics post-deploy', 'Document changes'] },
+        ]
+      };
+
+      const tabStyle = (isActive) => ({
+        padding: '12px 20px',
+        background: isActive ? 'var(--deltek-blue)' : 'transparent',
+        color: isActive ? 'white' : 'var(--text-secondary)',
+        border: 'none',
+        borderRadius: 'var(--radius-md)',
+        cursor: 'pointer',
+        fontWeight: 600,
+        fontSize: '14px',
+        transition: 'all 0.2s ease'
+      });
+
+      return (
+        <div>
+          {/* Tabs */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', background: 'var(--bg-tertiary)', padding: '8px', borderRadius: 'var(--radius-lg)' }}>
+            {[
+              { id: 'commands', label: '⚡ Commands' },
+              { id: 'prompts', label: '💬 Prompt Templates' },
+              { id: 'agents', label: '🤖 Agent Guide' },
+              { id: 'tips', label: '💡 Pro Tips' },
+              { id: 'practices', label: '📋 Best Practices' }
+            ].map(tab => (
+              <button key={tab.id} style={tabStyle(activeTab === tab.id)} onClick={() => setActiveTab(tab.id)}>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Commands Tab */}
+          {activeTab === 'commands' && (
+            <div>
+              <div className="section-header mb-lg">
+                <div>
+                  <h3 className="section-title">SDLC Commands</h3>
+                  <p className="section-subtitle">Quick commands to control the AI-SDLC workflow</p>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gap: '16px' }}>
+                {cheatCodes.commands.map((cmd, i) => (
+                  <div key={i} className="card" style={{ padding: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                      <code style={{ background: 'var(--deltek-light)', color: 'var(--deltek-blue)', padding: '8px 16px', borderRadius: '6px', fontWeight: 600, fontSize: '14px' }}>
+                        {cmd.cmd}
+                      </code>
+                      <button
+                        onClick={() => navigator.clipboard.writeText(cmd.cmd)}
+                        style={{ background: 'var(--bg-tertiary)', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }}
+                      >
+                        📋 Copy
+                      </button>
+                    </div>
+                    <p style={{ color: 'var(--text-primary)', marginBottom: '8px', fontWeight: 500 }}>{cmd.desc}</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Example: <code style={{ background: 'var(--bg-tertiary)', padding: '2px 6px', borderRadius: '4px' }}>{cmd.example}</code></p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Prompt Templates Tab */}
+          {activeTab === 'prompts' && (
+            <div>
+              <div className="section-header mb-lg">
+                <div>
+                  <h3 className="section-title">Prompt Templates</h3>
+                  <p className="section-subtitle">Copy and customize these prompts for common tasks</p>
+                </div>
+              </div>
+              <div className="grid-2">
+                {cheatCodes.prompts.map((p, i) => (
+                  <div key={i} className="card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                      <h4 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>{p.title}</h4>
+                      <button
+                        onClick={() => navigator.clipboard.writeText(p.prompt)}
+                        style={{ background: 'var(--deltek-light)', color: 'var(--deltek-blue)', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 500 }}
+                      >
+                        📋 Copy
+                      </button>
+                    </div>
+                    <div style={{ background: 'var(--bg-tertiary)', padding: '12px', borderRadius: '6px', fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px', fontFamily: 'var(--font-mono)' }}>
+                      {p.prompt}
+                    </div>
+                    <p style={{ fontSize: '12px', color: 'var(--accent-green)' }}>💡 {p.tip}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Agent Guide Tab */}
+          {activeTab === 'agents' && (
+            <div>
+              <div className="section-header mb-lg">
+                <div>
+                  <h3 className="section-title">Agent Guide</h3>
+                  <p className="section-subtitle">Understand when and how each agent is used</p>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gap: '12px' }}>
+                {cheatCodes.agents.map((agent, i) => (
+                  <div key={i} className="card" style={{ padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                    <div style={{
+                      width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0,
+                      background: agent.model === 'Opus' ? 'linear-gradient(135deg, var(--dela-purple), var(--dela-magenta))' :
+                                  agent.model === 'Sonnet' ? 'linear-gradient(135deg, var(--dela-blue), var(--dela-cyan))' :
+                                  'linear-gradient(135deg, var(--accent-green), #00a86b)'
+                    }}>
+                      {agent.icon}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                        <span style={{ fontWeight: 600, fontSize: '15px', color: 'var(--text-primary)' }}>{agent.name}</span>
+                        <span className={`badge ${agent.model === 'Opus' ? 'badge-purple' : agent.model === 'Sonnet' ? 'badge-info' : 'badge-success'}`} style={{ fontSize: '10px', padding: '2px 8px' }}>
+                          {agent.model}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{agent.desc}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--deltek-blue)' }}>🕐 {agent.when}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Pro Tips Tab */}
+          {activeTab === 'tips' && (
+            <div>
+              <div className="section-header mb-lg">
+                <div>
+                  <h3 className="section-title">Pro Tips</h3>
+                  <p className="section-subtitle">Get the most out of AI-SDLC</p>
+                </div>
+              </div>
+              <div className="grid-2">
+                {cheatCodes.tips.map((tip, i) => (
+                  <div key={i} className="card" style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                    <div style={{
+                      width: '48px', height: '48px', borderRadius: '12px', background: 'linear-gradient(135deg, var(--dela-cyan), var(--dela-blue))',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0
+                    }}>
+                      {tip.icon}
+                    </div>
+                    <div>
+                      <h4 style={{ fontWeight: 600, fontSize: '15px', color: 'var(--text-primary)', marginBottom: '4px' }}>{tip.title}</h4>
+                      <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{tip.content}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Best Practices Tab */}
+          {activeTab === 'practices' && (
+            <div>
+              <div className="section-header mb-lg">
+                <div>
+                  <h3 className="section-title">Best Practices</h3>
+                  <p className="section-subtitle">Follow these practices for optimal results</p>
+                </div>
+              </div>
+              <div className="grid-3">
+                {cheatCodes.bestPractices.map((bp, i) => (
+                  <div key={i} className="card">
+                    <h4 style={{ fontWeight: 600, fontSize: '15px', color: 'var(--deltek-blue)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ width: '24px', height: '24px', background: 'var(--deltek-light)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
+                        {i + 1}
+                      </span>
+                      {bp.category}
+                    </h4>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                      {bp.items.map((item, j) => (
+                        <li key={j} style={{ padding: '8px 0', borderBottom: j < bp.items.length - 1 ? '1px solid var(--border-light)' : 'none', fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ color: 'var(--accent-green)' }}>✓</span> {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       );
     }
