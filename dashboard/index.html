@@ -6,41 +6,43 @@
   <title>AI-SDLC Control Center</title>
   <style>
     /* ================================================================
-       DELTEK HARMONY DESIGN SYSTEM
-       Layer 1: Foundation (colors, typography, spacing)
-       Layer 2: Components (cards, buttons, badges)
-       Layer 3: Layouts (navigation, grids)
-       Layer 4: Views (executive, projects, analytics)
+       DELTEK HARMONY DESIGN SYSTEM - Light Theme
+       Professional enterprise styling inspired by Deltek
        ================================================================ */
 
-    /* === LAYER 1: FOUNDATION === */
     :root {
-      /* Color Palette - Professional & Calm */
-      --bg-primary: #0a0f1a;
-      --bg-secondary: #111827;
-      --bg-tertiary: #1f2937;
-      --bg-card: #1a2332;
-      --bg-hover: #243044;
+      /* Deltek Color Palette - Light & Professional */
+      --bg-primary: #f5f7fa;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #eef2f7;
+      --bg-card: #ffffff;
+      --bg-hover: #f0f4f8;
 
-      --text-primary: #f9fafb;
-      --text-secondary: #9ca3af;
-      --text-muted: #6b7280;
+      --text-primary: #1a2b3c;
+      --text-secondary: #5a6b7c;
+      --text-muted: #8a9bac;
 
-      --accent-blue: #3b82f6;
-      --accent-green: #10b981;
-      --accent-yellow: #f59e0b;
-      --accent-red: #ef4444;
-      --accent-purple: #8b5cf6;
-      --accent-cyan: #06b6d4;
+      /* Deltek Brand Colors */
+      --deltek-blue: #0066cc;
+      --deltek-dark: #004a99;
+      --deltek-light: #e6f0fa;
 
-      --border-color: #374151;
-      --border-light: #1f2937;
+      --accent-green: #00875a;
+      --accent-green-light: #e6f4ef;
+      --accent-yellow: #ff9800;
+      --accent-yellow-light: #fff4e5;
+      --accent-red: #d32f2f;
+      --accent-red-light: #fdeaea;
+      --accent-purple: #7b1fa2;
+      --accent-purple-light: #f3e5f5;
+      --accent-cyan: #0097a7;
 
-      /* Typography */
+      --border-color: #dde3eb;
+      --border-light: #eef2f7;
+
       --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'SF Mono', 'Fira Code', monospace;
+      --font-mono: 'SF Mono', Consolas, monospace;
 
-      /* Spacing Scale */
       --space-xs: 4px;
       --space-sm: 8px;
       --space-md: 16px;
@@ -48,23 +50,17 @@
       --space-xl: 32px;
       --space-2xl: 48px;
 
-      /* Border Radius */
-      --radius-sm: 6px;
-      --radius-md: 8px;
-      --radius-lg: 12px;
-      --radius-xl: 16px;
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --radius-xl: 12px;
 
-      /* Shadows */
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
-      --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
-      --shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 2px 8px rgba(0,0,0,0.1);
+      --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: var(--font-sans);
@@ -74,89 +70,78 @@
       min-height: 100vh;
     }
 
-    /* === LAYER 2: COMPONENTS === */
-
-    /* Cards */
+    /* === COMPONENTS === */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       padding: var(--space-lg);
+      box-shadow: var(--shadow-sm);
     }
 
-    /* Metric Cards */
     .metric-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       padding: var(--space-lg);
+      box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
-      gap: var(--space-sm);
+      gap: var(--space-xs);
     }
 
     .metric-label {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-secondary);
-      font-weight: 500;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .metric-value {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 700;
-      line-height: 1;
+      line-height: 1.1;
     }
 
     .metric-change {
       font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: var(--space-xs);
+      color: var(--text-muted);
     }
 
-    /* Badges */
     .badge {
       display: inline-flex;
       align-items: center;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 600;
     }
 
-    .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
-    .badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--accent-yellow); }
-    .badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
-    .badge-info { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
-    .badge-purple { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+    .badge-success { background: var(--accent-green-light); color: var(--accent-green); }
+    .badge-warning { background: var(--accent-yellow-light); color: #b36b00; }
+    .badge-danger { background: var(--accent-red-light); color: var(--accent-red); }
+    .badge-info { background: var(--deltek-light); color: var(--deltek-blue); }
+    .badge-purple { background: var(--accent-purple-light); color: var(--accent-purple); }
 
-    /* Progress Bar */
     .progress-bar {
-      height: 6px;
+      height: 8px;
       background: var(--bg-tertiary);
-      border-radius: 3px;
+      border-radius: 4px;
       overflow: hidden;
     }
 
     .progress-fill {
       height: 100%;
-      border-radius: 3px;
+      border-radius: 4px;
       transition: width 0.3s ease;
     }
 
-    /* === LAYER 3: LAYOUT === */
+    /* === LAYOUT === */
+    .app-shell { display: flex; min-height: 100vh; }
 
-    /* App Shell */
-    .app-shell {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    /* Sidebar Navigation */
     .sidebar {
-      width: 220px;
+      width: 240px;
       background: var(--bg-secondary);
       border-right: 1px solid var(--border-color);
       display: flex;
@@ -169,6 +154,7 @@
     .sidebar-header {
       padding: var(--space-lg);
       border-bottom: 1px solid var(--border-color);
+      background: var(--deltek-blue);
     }
 
     .sidebar-logo {
@@ -177,27 +163,28 @@
       gap: var(--space-sm);
       font-size: 18px;
       font-weight: 700;
+      color: white;
     }
 
     .sidebar-logo-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      width: 36px;
+      height: 36px;
+      background: white;
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 20px;
+      color: var(--deltek-blue);
     }
 
     .sidebar-nav {
       flex: 1;
       padding: var(--space-md);
+      overflow-y: auto;
     }
 
-    .nav-section {
-      margin-bottom: var(--space-lg);
-    }
+    .nav-section { margin-bottom: var(--space-lg); }
 
     .nav-section-title {
       font-size: 11px;
@@ -206,13 +193,14 @@
       letter-spacing: 1px;
       padding: var(--space-sm) var(--space-md);
       margin-bottom: var(--space-xs);
+      font-weight: 600;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
       gap: var(--space-sm);
-      padding: var(--space-sm) var(--space-md);
+      padding: 10px var(--space-md);
       border-radius: var(--radius-md);
       color: var(--text-secondary);
       cursor: pointer;
@@ -227,22 +215,17 @@
     }
 
     .nav-item.active {
-      background: rgba(59, 130, 246, 0.15);
-      color: var(--accent-blue);
+      background: var(--deltek-light);
+      color: var(--deltek-blue);
+      font-weight: 600;
     }
 
-    .nav-item-icon {
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
+    .nav-item-icon { font-size: 18px; }
 
     .sidebar-footer {
       padding: var(--space-md);
       border-top: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
     }
 
     .status-indicator {
@@ -258,22 +241,14 @@
       height: 8px;
       border-radius: 50%;
       background: var(--accent-green);
-      animation: pulse 2s infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    /* Main Content */
     .main-content {
       flex: 1;
-      margin-left: 220px;
+      margin-left: 240px;
       min-height: 100vh;
     }
 
-    /* Top Bar */
     .top-bar {
       background: var(--bg-secondary);
       border-bottom: 1px solid var(--border-color);
@@ -284,24 +259,20 @@
       position: sticky;
       top: 0;
       z-index: 50;
+      box-shadow: var(--shadow-sm);
     }
 
     .page-title {
       font-size: 20px;
       font-weight: 600;
-    }
-
-    .top-bar-actions {
-      display: flex;
-      align-items: center;
-      gap: var(--space-md);
+      color: var(--text-primary);
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
       gap: var(--space-sm);
-      padding: var(--space-sm) var(--space-md);
+      padding: 8px 16px;
       border-radius: var(--radius-md);
       font-size: 14px;
       font-weight: 500;
@@ -316,36 +287,24 @@
       border: 1px solid var(--border-color);
     }
 
-    .btn-secondary:hover {
-      background: var(--bg-hover);
+    .btn-secondary:hover { background: var(--bg-hover); }
+
+    .btn-primary {
+      background: var(--deltek-blue);
+      color: white;
     }
 
-    /* Content Area */
+    .btn-primary:hover { background: var(--deltek-dark); }
+
     .content-area {
       padding: var(--space-xl);
       max-width: 1400px;
     }
 
-    /* Grid Layouts */
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-lg);
-    }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg); }
 
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-lg);
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-lg);
-    }
-
-    /* Section Headers */
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -365,9 +324,7 @@
       margin-top: 2px;
     }
 
-    /* === LAYER 4: VIEW-SPECIFIC STYLES === */
-
-    /* Health Indicator */
+    /* === HEALTH INDICATOR === */
     .health-indicator {
       display: flex;
       align-items: center;
@@ -377,6 +334,7 @@
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       margin-bottom: var(--space-xl);
+      box-shadow: var(--shadow-sm);
     }
 
     .health-score {
@@ -391,27 +349,16 @@
       flex-shrink: 0;
     }
 
-    .health-score.excellent { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); border: 3px solid var(--accent-green); }
-    .health-score.good { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); border: 3px solid var(--accent-blue); }
-    .health-score.warning { background: rgba(245, 158, 11, 0.2); color: var(--accent-yellow); border: 3px solid var(--accent-yellow); }
-    .health-score.critical { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 3px solid var(--accent-red); }
+    .health-score.excellent { background: var(--accent-green-light); color: var(--accent-green); border: 3px solid var(--accent-green); }
+    .health-score.good { background: var(--deltek-light); color: var(--deltek-blue); border: 3px solid var(--deltek-blue); }
+    .health-score.warning { background: var(--accent-yellow-light); color: #b36b00; border: 3px solid var(--accent-yellow); }
+    .health-score.critical { background: var(--accent-red-light); color: var(--accent-red); border: 3px solid var(--accent-red); }
 
-    .health-details {
-      flex: 1;
-    }
+    .health-details { flex: 1; }
+    .health-title { font-size: 18px; font-weight: 600; margin-bottom: var(--space-xs); color: var(--text-primary); }
+    .health-message { color: var(--text-secondary); font-size: 14px; }
 
-    .health-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: var(--space-xs);
-    }
-
-    .health-message {
-      color: var(--text-secondary);
-      font-size: 14px;
-    }
-
-    /* Project Cards */
+    /* === PROJECT CARDS === */
     .project-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
@@ -419,10 +366,12 @@
       overflow: hidden;
       transition: all 0.2s ease;
       margin-bottom: var(--space-lg);
+      box-shadow: var(--shadow-sm);
     }
 
     .project-card:hover {
-      border-color: var(--accent-blue);
+      border-color: var(--deltek-blue);
+      box-shadow: var(--shadow-md);
     }
 
     .project-header {
@@ -433,17 +382,8 @@
       align-items: flex-start;
     }
 
-    .project-name {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: var(--space-xs);
-    }
-
-    .project-id {
-      font-size: 12px;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-    }
+    .project-name { font-size: 16px; font-weight: 600; margin-bottom: var(--space-xs); color: var(--text-primary); }
+    .project-id { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
 
     .project-meta {
       display: flex;
@@ -452,19 +392,15 @@
       gap: var(--space-xs);
     }
 
-    .project-cost {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--accent-cyan);
-    }
+    .project-cost { font-size: 18px; font-weight: 600; color: var(--deltek-blue); }
 
-    /* Agent Pipeline */
+    /* === AGENT PIPELINE === */
     .agent-pipeline {
       padding: var(--space-md) var(--space-lg);
       background: var(--bg-tertiary);
       display: flex;
       align-items: center;
-      gap: 2px;
+      gap: 4px;
       overflow-x: auto;
     }
 
@@ -473,37 +409,31 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      min-width: 56px;
+      min-width: 60px;
     }
 
     .pipeline-icon {
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 20px;
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
     }
 
-    .pipeline-icon.completed { background: rgba(16, 185, 129, 0.2); border: 2px solid var(--accent-green); }
-    .pipeline-icon.active { background: rgba(59, 130, 246, 0.2); border: 2px solid var(--accent-blue); animation: pulse 1.5s infinite; }
-    .pipeline-icon.pending { background: var(--bg-secondary); border: 2px solid var(--border-color); opacity: 0.5; }
-    .pipeline-icon.blocked { background: rgba(239, 68, 68, 0.2); border: 2px solid var(--accent-red); }
+    .pipeline-icon.completed { background: var(--accent-green-light); border-color: var(--accent-green); }
+    .pipeline-icon.active { background: var(--deltek-light); border-color: var(--deltek-blue); animation: pulse 1.5s infinite; }
+    .pipeline-icon.pending { opacity: 0.5; }
+    .pipeline-icon.blocked { background: var(--accent-red-light); border-color: var(--accent-red); }
 
-    .pipeline-name {
-      font-size: 9px;
-      color: var(--text-secondary);
-      text-align: center;
-    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-    .pipeline-connector {
-      width: 16px;
-      height: 2px;
-      background: var(--border-color);
-      flex-shrink: 0;
-    }
+    .pipeline-name { font-size: 10px; color: var(--text-secondary); text-align: center; font-weight: 500; }
 
+    .pipeline-connector { width: 20px; height: 2px; background: var(--border-color); flex-shrink: 0; }
     .pipeline-connector.completed { background: var(--accent-green); }
 
     .project-footer {
@@ -513,25 +443,11 @@
       align-items: center;
     }
 
-    .project-progress {
-      flex: 1;
-      margin-right: var(--space-lg);
-    }
+    .project-progress { flex: 1; margin-right: var(--space-lg); }
+    .progress-label { font-size: 12px; color: var(--text-secondary); margin-bottom: var(--space-xs); display: flex; justify-content: space-between; }
+    .project-time { font-size: 12px; color: var(--text-muted); }
 
-    .progress-label {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: var(--space-xs);
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .project-time {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    /* Agent Cards */
+    /* === AGENT CARDS === */
     .agent-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
@@ -541,53 +457,31 @@
       align-items: center;
       gap: var(--space-md);
       transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
     }
 
-    .agent-card:hover {
-      border-color: var(--accent-blue);
-    }
+    .agent-card:hover { border-color: var(--deltek-blue); box-shadow: var(--shadow-md); }
 
     .agent-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-md);
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 24px;
       flex-shrink: 0;
     }
 
-    .agent-info {
-      flex: 1;
-    }
+    .agent-info { flex: 1; }
+    .agent-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; color: var(--text-primary); }
+    .agent-role { font-size: 13px; color: var(--text-secondary); }
 
-    .agent-name {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
+    .agent-stats { text-align: right; }
+    .agent-invocations { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+    .agent-cost { font-size: 13px; color: var(--deltek-blue); font-weight: 500; }
 
-    .agent-role {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-
-    .agent-stats {
-      text-align: right;
-    }
-
-    .agent-invocations {
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .agent-cost {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    /* Activity Feed */
+    /* === ACTIVITY === */
     .activity-item {
       display: flex;
       gap: var(--space-md);
@@ -595,97 +489,54 @@
       border-bottom: 1px solid var(--border-light);
     }
 
-    .activity-item:last-child {
-      border-bottom: none;
-    }
+    .activity-item:last-child { border-bottom: none; }
 
     .activity-icon {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 16px;
       flex-shrink: 0;
     }
 
-    .activity-content {
-      flex: 1;
-    }
+    .activity-content { flex: 1; }
+    .activity-text { font-size: 14px; margin-bottom: 2px; color: var(--text-primary); }
+    .activity-time { font-size: 12px; color: var(--text-muted); }
 
-    .activity-text {
-      font-size: 14px;
-      margin-bottom: 2px;
-    }
+    /* === EMPTY STATE === */
+    .empty-state { text-align: center; padding: var(--space-2xl); color: var(--text-secondary); }
+    .empty-state-icon { font-size: 48px; margin-bottom: var(--space-md); opacity: 0.4; }
+    .empty-state-title { font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-xs); }
 
-    .activity-time {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: var(--space-2xl);
-      color: var(--text-secondary);
-    }
-
-    .empty-state-icon {
-      font-size: 48px;
-      margin-bottom: var(--space-md);
-      opacity: 0.5;
-    }
-
-    .empty-state-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: var(--space-xs);
-    }
-
-    /* Charts */
+    /* === CHARTS === */
     .chart-container {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       padding: var(--space-lg);
+      box-shadow: var(--shadow-sm);
     }
 
-    .chart-header {
-      margin-bottom: var(--space-lg);
-    }
+    .chart-header { margin-bottom: var(--space-lg); }
+    .chart-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
 
-    .chart-title {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    /* Responsive */
-    @media (max-width: 1200px) {
-      .grid-4 { grid-template-columns: repeat(2, 1fr); }
-    }
-
+    /* === RESPONSIVE === */
+    @media (max-width: 1200px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .main-content { margin-left: 0; }
       .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
     }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-    /* Utilities */
+    /* === UTILITIES === */
     .mb-xl { margin-bottom: var(--space-xl); }
     .mb-lg { margin-bottom: var(--space-lg); }
     .text-green { color: var(--accent-green); }
-    .text-yellow { color: var(--accent-yellow); }
+    .text-blue { color: var(--deltek-blue); }
     .text-red { color: var(--accent-red); }
-    .text-blue { color: var(--accent-blue); }
-    .text-purple { color: var(--accent-purple); }
     .text-muted { color: var(--text-muted); }
   </style>
 </head>
@@ -699,24 +550,22 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // Agent Definitions
     const AGENTS = [
-      { id: 'conductor', name: 'Conductor', icon: '🎭', color: '#6366f1', model: 'Opus', role: 'Orchestrator' },
-      { id: 'ba', name: 'BA Agent', icon: '📋', color: '#3b82f6', model: 'Sonnet', role: 'Requirements' },
-      { id: 'jets', name: 'Jets', icon: '🏗️', color: '#8b5cf6', model: 'Opus', role: 'Architecture' },
-      { id: 'engineer', name: 'Engineer', icon: '💻', color: '#06b6d4', model: 'Sonnet', role: 'Development' },
-      { id: 'security', name: 'Security', icon: '🔒', color: '#ef4444', model: 'Sonnet', role: 'Security' },
-      { id: 'qa', name: 'QA Agent', icon: '🧪', color: '#f59e0b', model: 'Sonnet', role: 'Testing' },
-      { id: 'atlas', name: 'Atlas', icon: '🚀', color: '#8b5cf6', model: 'Sonnet', role: 'Deploy' },
-      { id: 'customer', name: 'Customer', icon: '✅', color: '#10b981', model: 'Sonnet', role: 'UAT' },
-      { id: 'ask-tom', name: 'Ask Tom', icon: '⚡', color: '#c084fc', model: 'Opus', role: 'Problem Solver' },
-      { id: 'finops', name: 'FinOps', icon: '💰', color: '#fbbf24', model: 'Haiku', role: 'Costs' },
-      { id: 'tracker', name: 'Tracker', icon: '📊', color: '#64748b', model: 'Haiku', role: 'Monitor' },
+      { id: 'conductor', name: 'Conductor', icon: '🎭', color: '#0066cc', model: 'Opus', role: 'Orchestrator' },
+      { id: 'ba', name: 'BA Agent', icon: '📋', color: '#0066cc', model: 'Sonnet', role: 'Requirements' },
+      { id: 'jets', name: 'Jets', icon: '🏗️', color: '#7b1fa2', model: 'Opus', role: 'Architecture' },
+      { id: 'engineer', name: 'Engineer', icon: '💻', color: '#0097a7', model: 'Sonnet', role: 'Development' },
+      { id: 'security', name: 'Security', icon: '🔒', color: '#d32f2f', model: 'Sonnet', role: 'Security' },
+      { id: 'qa', name: 'QA Agent', icon: '🧪', color: '#ff9800', model: 'Sonnet', role: 'Testing' },
+      { id: 'atlas', name: 'Atlas', icon: '🚀', color: '#7b1fa2', model: 'Sonnet', role: 'Deploy' },
+      { id: 'customer', name: 'Customer', icon: '✅', color: '#00875a', model: 'Sonnet', role: 'UAT' },
+      { id: 'ask-tom', name: 'Ask Tom', icon: '⚡', color: '#9c27b0', model: 'Opus', role: 'Problem Solver' },
+      { id: 'finops', name: 'FinOps', icon: '💰', color: '#ff9800', model: 'Haiku', role: 'Costs' },
+      { id: 'tracker', name: 'Tracker', icon: '📊', color: '#607d8b', model: 'Haiku', role: 'Monitor' },
     ];
 
     const PIPELINE_AGENTS = ['ba', 'jets', 'engineer', 'security', 'qa', 'atlas', 'customer'];
 
-    // Main App
     function App() {
       const [activeView, setActiveView] = useState('executive');
       const [projects, setProjects] = useState([]);
@@ -752,13 +601,12 @@
       }, []);
 
       const totalCost = costs.reduce((s, c) => s + (c.total_cost || 0), 0);
-      const totalBudget = costs.reduce((s, c) => s + (c.budget || 0), 0);
 
       const getHealth = () => {
-        if (stats.blockedProjects > 0) return { score: 'C', class: 'warning', title: 'Needs Attention', message: `${stats.blockedProjects} blocked` };
-        if (stats.totalProjects === 0) return { score: 'A', class: 'excellent', title: 'Ready', message: 'Start with /sdlc-start' };
-        if (stats.completedProjects === stats.totalProjects) return { score: 'A+', class: 'excellent', title: 'All Complete', message: 'Great work!' };
-        return { score: 'A', class: 'excellent', title: 'Operational', message: `${stats.activeProjects} active` };
+        if (stats.blockedProjects > 0) return { score: 'C', class: 'warning', title: 'Needs Attention', message: `${stats.blockedProjects} project(s) blocked` };
+        if (stats.totalProjects === 0) return { score: 'A', class: 'excellent', title: 'Ready to Start', message: 'Run /sdlc-start to begin' };
+        if (stats.completedProjects === stats.totalProjects) return { score: 'A+', class: 'excellent', title: 'All Complete', message: 'All projects completed successfully' };
+        return { score: 'A', class: 'excellent', title: 'All Systems Operational', message: `${stats.activeProjects} project(s) in progress` };
       };
 
       const health = getHealth();
@@ -774,7 +622,7 @@
             </div>
             <nav className="sidebar-nav">
               <div className="nav-section">
-                <div className="nav-section-title">Views</div>
+                <div className="nav-section-title">Dashboard</div>
                 {[
                   { id: 'executive', icon: '📊', label: 'Executive' },
                   { id: 'projects', icon: '📁', label: 'Projects' },
@@ -796,7 +644,7 @@
             <div className="sidebar-footer">
               <div className="status-indicator">
                 <div className="status-dot"></div>
-                <span>v2.2.0 • {lastUpdate.toLocaleTimeString()}</span>
+                <span>v2.2.0 • Live</span>
               </div>
             </div>
           </aside>
@@ -806,7 +654,10 @@
               <h1 className="page-title">
                 {{ executive: 'Executive Dashboard', projects: 'Projects', analytics: 'Analytics', agents: 'Agents', activity: 'Activity' }[activeView]}
               </h1>
-              <button className="btn btn-secondary" onClick={fetchData}>↻ Refresh</button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <span style={{ fontSize: '13px', color: '#5a6b7c' }}>Last updated: {lastUpdate.toLocaleTimeString()}</span>
+                <button className="btn btn-secondary" onClick={fetchData}>↻ Refresh</button>
+              </div>
             </div>
 
             <div className="content-area">
@@ -821,7 +672,6 @@
       );
     }
 
-    // Executive View
     function Executive({ stats, health, totalCost, projects, activity, costs }) {
       const successRate = stats.totalProjects > 0 ? Math.round((stats.completedProjects / stats.totalProjects) * 100) : 100;
 
@@ -833,29 +683,29 @@
               <div className="health-title">{health.title}</div>
               <div className="health-message">{health.message}</div>
             </div>
-            <span className="badge badge-success">v2.2.0</span>
+            <span className="badge badge-info">v2.2.0</span>
           </div>
 
           <div className="grid-4 mb-xl">
             <div className="metric-card">
-              <span className="metric-label">Projects</span>
+              <span className="metric-label">Total Projects</span>
               <span className="metric-value text-blue">{stats.totalProjects}</span>
-              <span className="metric-change text-muted">Total</span>
+              <span className="metric-change">All time</span>
             </div>
             <div className="metric-card">
               <span className="metric-label">Success Rate</span>
               <span className="metric-value text-green">{successRate}%</span>
-              <span className="metric-change text-muted">{stats.completedProjects} done</span>
+              <span className="metric-change">{stats.completedProjects} completed</span>
             </div>
             <div className="metric-card">
-              <span className="metric-label">Spent</span>
-              <span className="metric-value" style={{color:'#06b6d4'}}>${totalCost.toFixed(2)}</span>
-              <span className="metric-change text-muted">All projects</span>
+              <span className="metric-label">Total Spent</span>
+              <span className="metric-value text-blue">${totalCost.toFixed(2)}</span>
+              <span className="metric-change">Across all projects</span>
             </div>
             <div className="metric-card">
-              <span className="metric-label">Active</span>
-              <span className="metric-value text-purple">{stats.activeProjects}</span>
-              <span className="metric-change">{stats.blockedProjects > 0 ? <span className="text-red">{stats.blockedProjects} blocked</span> : <span className="text-muted">No blockers</span>}</span>
+              <span className="metric-label">Active Now</span>
+              <span className="metric-value" style={{ color: '#7b1fa2' }}>{stats.activeProjects}</span>
+              <span className="metric-change">{stats.blockedProjects > 0 ? <span className="text-red">{stats.blockedProjects} blocked</span> : 'No blockers'}</span>
             </div>
           </div>
 
@@ -863,13 +713,13 @@
             <div className="card">
               <div className="section-header"><h3 className="section-title">Recent Projects</h3></div>
               {projects.length === 0 ? (
-                <div className="empty-state"><div className="empty-state-icon">📁</div><div className="empty-state-title">No projects</div><p>Run /sdlc-start</p></div>
+                <div className="empty-state"><div className="empty-state-icon">📁</div><div className="empty-state-title">No projects yet</div><p>Run /sdlc-start to begin</p></div>
               ) : projects.slice(0, 4).map(p => <ProjectMini key={p.id} project={p} costs={costs} />)}
             </div>
             <div className="card">
               <div className="section-header"><h3 className="section-title">Recent Activity</h3></div>
               {activity.length === 0 ? (
-                <div className="empty-state"><div className="empty-state-icon">🕐</div><div className="empty-state-title">No activity</div></div>
+                <div className="empty-state"><div className="empty-state-icon">🕐</div><div className="empty-state-title">No activity yet</div><p>Activity will appear here</p></div>
               ) : activity.slice(0, 5).map((a, i) => <ActivityItem key={i} item={a} />)}
             </div>
           </div>
@@ -879,10 +729,13 @@
 
     function ProjectMini({ project, costs }) {
       const cost = costs.find(c => c.project_id === project.id);
-      const color = { completed: '#10b981', active: '#3b82f6', in_progress: '#3b82f6', blocked: '#ef4444' }[project.status] || '#f59e0b';
+      const colors = { completed: '#00875a', active: '#0066cc', in_progress: '#0066cc', blocked: '#d32f2f' };
+      const color = colors[project.status] || '#ff9800';
+      const bgColors = { completed: '#e6f4ef', active: '#e6f0fa', in_progress: '#e6f0fa', blocked: '#fdeaea' };
+      const bg = bgColors[project.status] || '#fff4e5';
       return (
         <div className="activity-item">
-          <div className="activity-icon" style={{ background: `${color}20`, color }}>📁</div>
+          <div className="activity-icon" style={{ background: bg, color }}>📁</div>
           <div className="activity-content">
             <div className="activity-text">{project.description || project.id}</div>
             <div className="activity-time">{project.status}{cost ? ` • $${(cost.total_cost || 0).toFixed(2)}` : ''}</div>
@@ -891,10 +744,8 @@
       );
     }
 
-    // Projects View
     function Projects({ projects, costs }) {
-      if (projects.length === 0) return <div className="empty-state"><div className="empty-state-icon">📁</div><div className="empty-state-title">No Projects</div><p>/sdlc-start to begin</p></div>;
-
+      if (projects.length === 0) return <div className="empty-state"><div className="empty-state-icon">📁</div><div className="empty-state-title">No Projects</div><p>Run /sdlc-start to begin</p></div>;
       return <div>{projects.map(p => <ProjectCard key={p.id} project={p} costs={costs} />)}</div>;
     }
 
@@ -912,7 +763,13 @@
         return 'pending';
       };
 
-      const badge = { completed: ['badge-success', 'Done'], active: ['badge-info', 'Active'], in_progress: ['badge-info', 'Active'], blocked: ['badge-danger', 'Blocked'] }[project.status] || ['badge-warning', 'Pending'];
+      const badges = {
+        completed: ['badge-success', 'Completed'],
+        active: ['badge-info', 'In Progress'],
+        in_progress: ['badge-info', 'In Progress'],
+        blocked: ['badge-danger', 'Blocked']
+      };
+      const badge = badges[project.status] || ['badge-warning', 'Pending'];
 
       return (
         <div className="project-card">
@@ -947,7 +804,7 @@
             <div className="project-progress">
               <div className="progress-label"><span>Progress</span><span>{progress}%</span></div>
               <div className="progress-bar">
-                <div className="progress-fill" style={{ width: `${progress}%`, background: project.status === 'blocked' ? '#ef4444' : progress === 100 ? '#10b981' : 'linear-gradient(90deg, #3b82f6, #8b5cf6)' }}></div>
+                <div className="progress-fill" style={{ width: `${progress}%`, background: project.status === 'blocked' ? '#d32f2f' : progress === 100 ? '#00875a' : '#0066cc' }}></div>
               </div>
             </div>
             <div className="project-time">{project.created_at && new Date(project.created_at).toLocaleDateString()}</div>
@@ -956,7 +813,6 @@
       );
     }
 
-    // Analytics View
     function Analytics({ costs, projects }) {
       const agentCosts = {};
       costs.forEach(c => (c.breakdown_by_agent || []).forEach(a => {
@@ -975,27 +831,27 @@
       return (
         <div>
           <div className="grid-4 mb-xl">
-            <div className="metric-card"><span className="metric-label">Total Spent</span><span className="metric-value" style={{color:'#06b6d4'}}>${totalCost.toFixed(2)}</span></div>
-            <div className="metric-card"><span className="metric-label">Tokens</span><span className="metric-value text-purple">{(totalTokens/1000).toFixed(1)}K</span></div>
-            <div className="metric-card"><span className="metric-label">Avg/Project</span><span className="metric-value text-blue">${projects.length ? (totalCost/projects.length).toFixed(2) : '0'}</span></div>
-            <div className="metric-card"><span className="metric-label">$/1K Tokens</span><span className="metric-value text-green">${totalTokens ? ((totalCost/totalTokens)*1000).toFixed(4) : '0'}</span></div>
+            <div className="metric-card"><span className="metric-label">Total Spent</span><span className="metric-value text-blue">${totalCost.toFixed(2)}</span></div>
+            <div className="metric-card"><span className="metric-label">Total Tokens</span><span className="metric-value" style={{color:'#7b1fa2'}}>{(totalTokens/1000).toFixed(1)}K</span></div>
+            <div className="metric-card"><span className="metric-label">Avg Cost/Project</span><span className="metric-value text-blue">${projects.length ? (totalCost/projects.length).toFixed(2) : '0.00'}</span></div>
+            <div className="metric-card"><span className="metric-label">Cost per 1K Tokens</span><span className="metric-value text-green">${totalTokens ? ((totalCost/totalTokens)*1000).toFixed(4) : '0.00'}</span></div>
           </div>
 
           <div className="grid-2 mb-xl">
             <div className="chart-container">
               <div className="chart-header"><h3 className="chart-title">Model Distribution</h3></div>
-              <div style={{padding:'var(--space-md)'}}>
+              <div style={{padding:'16px 0'}}>
                 {Object.entries(modelUsage).map(([m, c]) => {
                   const t = Object.values(modelUsage).reduce((a,b) => a+b, 0);
                   const p = t ? (c/t)*100 : 0;
-                  const col = m === 'Opus' ? '#8b5cf6' : m === 'Sonnet' ? '#3b82f6' : '#10b981';
+                  const colors = { Opus: '#7b1fa2', Sonnet: '#0066cc', Haiku: '#00875a' };
                   return (
-                    <div key={m} style={{marginBottom:'var(--space-md)'}}>
-                      <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
-                        <span style={{fontSize:'14px',fontWeight:500}}>{m}</span>
-                        <span style={{fontSize:'14px',color:'var(--text-secondary)'}}>{c} ({p.toFixed(0)}%)</span>
+                    <div key={m} style={{marginBottom:'16px'}}>
+                      <div style={{display:'flex',justifyContent:'space-between',marginBottom:'6px'}}>
+                        <span style={{fontSize:'14px',fontWeight:500,color:'#1a2b3c'}}>{m}</span>
+                        <span style={{fontSize:'14px',color:'#5a6b7c'}}>{c} calls ({p.toFixed(0)}%)</span>
                       </div>
-                      <div className="progress-bar"><div className="progress-fill" style={{width:`${p}%`,background:col}}></div></div>
+                      <div className="progress-bar"><div className="progress-fill" style={{width:`${p}%`,background:colors[m] || '#0066cc'}}></div></div>
                     </div>
                   );
                 })}
@@ -1004,18 +860,18 @@
 
             <div className="chart-container">
               <div className="chart-header"><h3 className="chart-title">Cost by Agent</h3></div>
-              <div style={{padding:'var(--space-md)'}}>
+              <div style={{padding:'16px 0'}}>
                 {Object.entries(agentCosts).sort((a,b) => b[1].cost - a[1].cost).slice(0,6).map(([id, d]) => {
                   const agent = AGENTS.find(a => a.id === id);
                   const max = Math.max(...Object.values(agentCosts).map(x => x.cost), 1);
                   const p = (d.cost/max)*100;
                   return (
-                    <div key={id} style={{marginBottom:'var(--space-md)'}}>
-                      <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
-                        <span style={{fontSize:'14px'}}>{agent?.icon} {agent?.name}</span>
-                        <span style={{fontSize:'14px',color:'#06b6d4'}}>${d.cost.toFixed(2)}</span>
+                    <div key={id} style={{marginBottom:'16px'}}>
+                      <div style={{display:'flex',justifyContent:'space-between',marginBottom:'6px'}}>
+                        <span style={{fontSize:'14px',color:'#1a2b3c'}}>{agent?.icon} {agent?.name}</span>
+                        <span style={{fontSize:'14px',color:'#0066cc',fontWeight:500}}>${d.cost.toFixed(2)}</span>
                       </div>
-                      <div className="progress-bar"><div className="progress-fill" style={{width:`${p}%`,background:agent?.color || '#3b82f6'}}></div></div>
+                      <div className="progress-bar"><div className="progress-fill" style={{width:`${p}%`,background:agent?.color || '#0066cc'}}></div></div>
                     </div>
                   );
                 })}
@@ -1026,7 +882,6 @@
       );
     }
 
-    // Agents View
     function Agents({ costs }) {
       const agentCosts = {};
       costs.forEach(c => (c.breakdown_by_agent || []).forEach(a => {
@@ -1040,19 +895,25 @@
 
       return (
         <div>
-          <div className="section-header"><h3 className="section-title">Pipeline Agents</h3><p className="section-subtitle">Core SDLC workflow</p></div>
+          <div className="section-header"><div><h3 className="section-title">Pipeline Agents</h3><p className="section-subtitle">Core SDLC workflow agents</p></div></div>
           <div className="grid-3 mb-xl">{core.map(a => <AgentCard key={a.id} agent={a} data={agentCosts[a.id]} />)}</div>
 
-          <div className="section-header"><h3 className="section-title">Support Agents</h3><p className="section-subtitle">On-demand specialists</p></div>
+          <div className="section-header"><div><h3 className="section-title">Support Agents</h3><p className="section-subtitle">On-demand specialist agents</p></div></div>
           <div className="grid-3">{support.map(a => <AgentCard key={a.id} agent={a} data={agentCosts[a.id]} />)}</div>
         </div>
       );
     }
 
     function AgentCard({ agent, data }) {
+      const bgColors = {
+        '#0066cc': '#e6f0fa', '#7b1fa2': '#f3e5f5', '#00875a': '#e6f4ef',
+        '#d32f2f': '#fdeaea', '#ff9800': '#fff4e5', '#0097a7': '#e0f7fa',
+        '#9c27b0': '#f3e5f5', '#607d8b': '#eceff1'
+      };
+      const bg = bgColors[agent.color] || '#e6f0fa';
       return (
         <div className="agent-card">
-          <div className="agent-avatar" style={{ background: `${agent.color}20`, color: agent.color }}>{agent.icon}</div>
+          <div className="agent-avatar" style={{ background: bg, color: agent.color }}>{agent.icon}</div>
           <div className="agent-info">
             <div className="agent-name">{agent.name}</div>
             <div className="agent-role">{agent.role} • {agent.model}</div>
@@ -1065,18 +926,20 @@
       );
     }
 
-    // Activity View
     function ActivityView({ activity }) {
-      if (!activity.length) return <div className="empty-state"><div className="empty-state-icon">🕐</div><div className="empty-state-title">No Activity</div></div>;
+      if (!activity.length) return <div className="empty-state"><div className="empty-state-icon">🕐</div><div className="empty-state-title">No Activity</div><p>Activity will appear as agents work</p></div>;
       return <div className="card">{activity.map((a, i) => <ActivityItem key={i} item={a} />)}</div>;
     }
 
     function ActivityItem({ item }) {
-      const agent = AGENTS.find(a => a.id === item.agent) || { icon: '🔄', color: '#64748b' };
-      const color = { start: '#3b82f6', complete: '#10b981', block: '#ef4444' }[item.action] || agent.color;
+      const agent = AGENTS.find(a => a.id === item.agent) || { icon: '🔄', color: '#607d8b' };
+      const actionColors = { start: '#0066cc', complete: '#00875a', block: '#d32f2f' };
+      const color = actionColors[item.action] || agent.color;
+      const bgColors = { '#0066cc': '#e6f0fa', '#00875a': '#e6f4ef', '#d32f2f': '#fdeaea' };
+      const bg = bgColors[color] || '#f5f7fa';
       return (
         <div className="activity-item">
-          <div className="activity-icon" style={{ background: `${color}20`, color }}>{agent.icon}</div>
+          <div className="activity-icon" style={{ background: bg, color }}>{agent.icon}</div>
           <div className="activity-content">
             <div className="activity-text"><strong>{agent.name || item.agent}</strong> {item.action}{item.project_id && <span className="text-muted"> on {item.project_id}</span>}</div>
             <div className="activity-time">{item.timestamp && new Date(item.timestamp).toLocaleString()}</div>
