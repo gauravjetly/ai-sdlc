@@ -4,1210 +4,1088 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI-SDLC Control Center</title>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
+    /* ================================================================
+       DELTEK HARMONY DESIGN SYSTEM
+       Layer 1: Foundation (colors, typography, spacing)
+       Layer 2: Components (cards, buttons, badges)
+       Layer 3: Layouts (navigation, grids)
+       Layer 4: Views (executive, projects, analytics)
+       ================================================================ */
+
+    /* === LAYER 1: FOUNDATION === */
+    :root {
+      /* Color Palette - Professional & Calm */
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-tertiary: #1f2937;
+      --bg-card: #1a2332;
+      --bg-hover: #243044;
+
+      --text-primary: #f9fafb;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-yellow: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+
+      --border-color: #374151;
+      --border-light: #1f2937;
+
+      /* Typography */
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', monospace;
+
+      /* Spacing Scale */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+
+      /* Border Radius */
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      overflow-x: hidden;
-    }
-    #root {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
       min-height: 100vh;
     }
+
+    /* === LAYER 2: COMPONENTS === */
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+    }
+
+    /* Metric Cards */
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .metric-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-value {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .metric-change {
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+    .badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--accent-yellow); }
+    .badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+    .badge-info { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+    .badge-purple { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+
+    /* Progress Bar */
+    .progress-bar {
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    /* === LAYER 3: LAYOUT === */
+
+    /* App Shell */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 220px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .sidebar-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: var(--space-md);
+    }
+
+    .nav-section {
+      margin-bottom: var(--space-lg);
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: var(--space-sm) var(--space-md);
+      margin-bottom: var(--space-xs);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .nav-item:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent-blue);
+    }
+
+    .nav-item-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .sidebar-footer {
+      padding: var(--space-md);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 220px;
+      min-height: 100vh;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: var(--space-md) var(--space-xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .top-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-hover);
+    }
+
+    /* Content Area */
+    .content-area {
+      padding: var(--space-xl);
+      max-width: 1400px;
+    }
+
+    /* Grid Layouts */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-lg);
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-lg);
+    }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* === LAYER 4: VIEW-SPECIFIC STYLES === */
+
+    /* Health Indicator */
+    .health-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      padding: var(--space-lg);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .health-score {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .health-score.excellent { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); border: 3px solid var(--accent-green); }
+    .health-score.good { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); border: 3px solid var(--accent-blue); }
+    .health-score.warning { background: rgba(245, 158, 11, 0.2); color: var(--accent-yellow); border: 3px solid var(--accent-yellow); }
+    .health-score.critical { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 3px solid var(--accent-red); }
+
+    .health-details {
+      flex: 1;
+    }
+
+    .health-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .health-message {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* Project Cards */
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all 0.2s ease;
+      margin-bottom: var(--space-lg);
+    }
+
+    .project-card:hover {
+      border-color: var(--accent-blue);
+    }
+
+    .project-header {
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .project-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .project-id {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .project-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-xs);
+    }
+
+    .project-cost {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent-cyan);
+    }
+
+    /* Agent Pipeline */
+    .agent-pipeline {
+      padding: var(--space-md) var(--space-lg);
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow-x: auto;
+    }
+
+    .pipeline-agent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 56px;
+    }
+
+    .pipeline-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .pipeline-icon.completed { background: rgba(16, 185, 129, 0.2); border: 2px solid var(--accent-green); }
+    .pipeline-icon.active { background: rgba(59, 130, 246, 0.2); border: 2px solid var(--accent-blue); animation: pulse 1.5s infinite; }
+    .pipeline-icon.pending { background: var(--bg-secondary); border: 2px solid var(--border-color); opacity: 0.5; }
+    .pipeline-icon.blocked { background: rgba(239, 68, 68, 0.2); border: 2px solid var(--accent-red); }
+
+    .pipeline-name {
+      font-size: 9px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .pipeline-connector {
+      width: 16px;
+      height: 2px;
+      background: var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .pipeline-connector.completed { background: var(--accent-green); }
+
+    .project-footer {
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .project-progress {
+      flex: 1;
+      margin-right: var(--space-lg);
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-xs);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .project-time {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Agent Cards */
+    .agent-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      transition: all 0.2s ease;
+    }
+
+    .agent-card:hover {
+      border-color: var(--accent-blue);
+    }
+
+    .agent-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .agent-info {
+      flex: 1;
+    }
+
+    .agent-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .agent-role {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .agent-stats {
+      text-align: right;
+    }
+
+    .agent-invocations {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .agent-cost {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Activity Feed */
+    .activity-item {
+      display: flex;
+      gap: var(--space-md);
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-text {
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .activity-time {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-2xl);
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: var(--space-md);
+      opacity: 0.5;
+    }
+
+    .empty-state-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    /* Charts */
+    .chart-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+    }
+
+    .chart-header {
+      margin-bottom: var(--space-lg);
+    }
+
+    .chart-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+    /* Utilities */
+    .mb-xl { margin-bottom: var(--space-xl); }
+    .mb-lg { margin-bottom: var(--space-lg); }
+    .text-green { color: var(--accent-green); }
+    .text-yellow { color: var(--accent-yellow); }
+    .text-red { color: var(--accent-red); }
+    .text-blue { color: var(--accent-blue); }
+    .text-purple { color: var(--accent-purple); }
+    .text-muted { color: var(--text-muted); }
   </style>
 </head>
 <body>
   <div id="root"></div>
 
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // Lucide icon components (simplified versions)
-    const Icon = ({ children, size = 16, ...props }) => (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-        {children}
-      </svg>
-    );
-
-    const CheckCircle = (props) => <Icon {...props}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></Icon>;
-    const XCircle = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></Icon>;
-    const Clock = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></Icon>;
-    const Play = (props) => <Icon {...props}><polygon points="5 3 19 12 5 21 5 3"></polygon></Icon>;
-    const Activity = (props) => <Icon {...props}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></Icon>;
-    const GitBranch = (props) => <Icon {...props}><line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></Icon>;
-    const Layers = (props) => <Icon {...props}><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></Icon>;
-    const RefreshCw = (props) => <Icon {...props}><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></Icon>;
-    const ChevronRight = (props) => <Icon {...props}><polyline points="9 18 15 12 9 6"></polyline></Icon>;
-    const Zap = (props) => <Icon {...props}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></Icon>;
-
-    // Agent definitions
+    // Agent Definitions
     const AGENTS = [
-      { id: 'conductor', name: 'Conductor', icon: '🎭', color: '#081581', model: 'Opus', role: 'Orchestrator' },
-      { id: 'ba', name: 'BA Agent', icon: '📋', color: '#1742F6', model: 'Sonnet', role: 'Requirements' },
-      { id: 'jets', name: 'Jets', icon: '🏗️', color: '#6D18F1', model: 'Opus', role: 'Architecture' },
-      { id: 'engineer', name: 'Engineer', icon: '💻', color: '#00B6C3', model: 'Sonnet', role: 'Development' },
-      { id: 'security', name: 'Security', icon: '🔒', color: '#ef4444', model: 'Sonnet', role: 'Security Review' },
+      { id: 'conductor', name: 'Conductor', icon: '🎭', color: '#6366f1', model: 'Opus', role: 'Orchestrator' },
+      { id: 'ba', name: 'BA Agent', icon: '📋', color: '#3b82f6', model: 'Sonnet', role: 'Requirements' },
+      { id: 'jets', name: 'Jets', icon: '🏗️', color: '#8b5cf6', model: 'Opus', role: 'Architecture' },
+      { id: 'engineer', name: 'Engineer', icon: '💻', color: '#06b6d4', model: 'Sonnet', role: 'Development' },
+      { id: 'security', name: 'Security', icon: '🔒', color: '#ef4444', model: 'Sonnet', role: 'Security' },
       { id: 'qa', name: 'QA Agent', icon: '🧪', color: '#f59e0b', model: 'Sonnet', role: 'Testing' },
-      { id: 'atlas', name: 'Atlas', icon: '🚀', color: '#8b5cf6', model: 'Sonnet', role: 'Deployment' },
-      { id: 'customer', name: 'Customer', icon: '✅', color: '#22c55e', model: 'Sonnet', role: 'Acceptance' },
+      { id: 'atlas', name: 'Atlas', icon: '🚀', color: '#8b5cf6', model: 'Sonnet', role: 'Deploy' },
+      { id: 'customer', name: 'Customer', icon: '✅', color: '#10b981', model: 'Sonnet', role: 'UAT' },
       { id: 'ask-tom', name: 'Ask Tom', icon: '⚡', color: '#c084fc', model: 'Opus', role: 'Problem Solver' },
-      { id: 'finops', name: 'FinOps', icon: '💰', color: '#fbbf24', model: 'Haiku', role: 'Cost Tracking' },
-      { id: 'tracker', name: 'Tracker', icon: '📊', color: '#64748b', model: 'Haiku', role: 'Monitoring' },
+      { id: 'finops', name: 'FinOps', icon: '💰', color: '#fbbf24', model: 'Haiku', role: 'Costs' },
+      { id: 'tracker', name: 'Tracker', icon: '📊', color: '#64748b', model: 'Haiku', role: 'Monitor' },
     ];
 
-    function SDLCControlCenter() {
-      const [activeTab, setActiveTab] = useState('dashboard');
-      const [selectedProject, setSelectedProject] = useState(null);
+    const PIPELINE_AGENTS = ['ba', 'jets', 'engineer', 'security', 'qa', 'atlas', 'customer'];
+
+    // Main App
+    function App() {
+      const [activeView, setActiveView] = useState('executive');
       const [projects, setProjects] = useState([]);
       const [activity, setActivity] = useState([]);
-      const [registry, setRegistry] = useState(null);
       const [costs, setCosts] = useState([]);
-      const [totalBudget, setTotalBudget] = useState(0);
-      const [totalSpent, setTotalSpent] = useState(0);
+      const [stats, setStats] = useState({ totalProjects: 0, completedProjects: 0, activeProjects: 0, blockedProjects: 0 });
       const [lastUpdate, setLastUpdate] = useState(new Date());
-      const [isLoading, setIsLoading] = useState(true);
 
-      // Fetch data from API
       const fetchData = async () => {
         try {
-          const [registryRes, projectsRes, activityRes, costsRes] = await Promise.all([
-            fetch('/api/registry'),
-            fetch('/api/projects'),
-            fetch('/api/activity?limit=50'),
-            fetch('/api/costs')
+          const [p, a, c] = await Promise.all([
+            fetch('/api/projects').then(r => r.json()).catch(() => []),
+            fetch('/api/activity?limit=20').then(r => r.json()).catch(() => []),
+            fetch('/api/costs').then(r => r.json()).catch(() => [])
           ]);
-
-          const registryData = await registryRes.json();
-          const projectsData = await projectsRes.json();
-          const activityData = await activityRes.json();
-          const costsData = await costsRes.json();
-
-          // Calculate total budget and spent
-          const budget = costsData.reduce((sum, cost) => sum + (cost.budget || 0), 0);
-          const spent = costsData.reduce((sum, cost) => sum + (cost.total_cost || 0), 0);
-
-          setRegistry(registryData);
-          setProjects(projectsData);
-          setActivity(activityData);
-          setCosts(costsData);
-          setTotalBudget(budget);
-          setTotalSpent(spent);
+          setProjects(p);
+          setActivity(a);
+          setCosts(c);
+          setStats({
+            totalProjects: p.length,
+            completedProjects: p.filter(x => x.status === 'completed').length,
+            activeProjects: p.filter(x => x.status === 'active' || x.status === 'in_progress').length,
+            blockedProjects: p.filter(x => x.status === 'blocked').length
+          });
           setLastUpdate(new Date());
-          setIsLoading(false);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          setIsLoading(false);
-        }
+        } catch (e) { console.error(e); }
       };
 
-      // Initial load and auto-refresh every 3 seconds
       useEffect(() => {
         fetchData();
-        const interval = setInterval(fetchData, 3000);
+        const interval = setInterval(fetchData, 5000);
         return () => clearInterval(interval);
       }, []);
 
-      const getStatusColor = (status) => {
-        switch (status) {
-          case 'complete': return '#22c55e';
-          case 'in_progress': return '#3b82f6';
-          case 'blocked': return '#ef4444';
-          case 'pending': return '#94a3b8';
-          default: return '#64748b';
-        }
+      const totalCost = costs.reduce((s, c) => s + (c.total_cost || 0), 0);
+      const totalBudget = costs.reduce((s, c) => s + (c.budget || 0), 0);
+
+      const getHealth = () => {
+        if (stats.blockedProjects > 0) return { score: 'C', class: 'warning', title: 'Needs Attention', message: `${stats.blockedProjects} blocked` };
+        if (stats.totalProjects === 0) return { score: 'A', class: 'excellent', title: 'Ready', message: 'Start with /sdlc-start' };
+        if (stats.completedProjects === stats.totalProjects) return { score: 'A+', class: 'excellent', title: 'All Complete', message: 'Great work!' };
+        return { score: 'A', class: 'excellent', title: 'Operational', message: `${stats.activeProjects} active` };
       };
 
-      const getStatusIcon = (status) => {
-        switch (status) {
-          case 'complete': return <CheckCircle size={16} />;
-          case 'in_progress': return <Play size={16} />;
-          case 'blocked': return <XCircle size={16} />;
-          case 'pending': return <Clock size={16} />;
-          default: return <Clock size={16} />;
-        }
-      };
-
-      const getAgent = (id) => AGENTS.find(a => a.id === id) || AGENTS[0];
-
-      // Helper function for budget status
-      const getBudgetStatus = (spent, budget) => {
-        if (!budget || budget === 0) {
-          return { color: '#64748b', indicator: '⚪', label: 'No Budget' };
-        }
-        const pct = (spent / budget) * 100;
-        if (pct >= 90) return { color: '#ef4444', indicator: '🔴', label: 'Critical' };
-        if (pct >= 50) return { color: '#f59e0b', indicator: '🟡', label: 'Warning' };
-        return { color: '#22c55e', indicator: '🟢', label: 'Healthy' };
-      };
-
-      // Helper function for currency formatting
-      const formatCost = (amount, currency = 'USD') => {
-        return new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: currency
-        }).format(amount || 0);
-      };
-
-      // Helper function for cost efficiency metrics
-      const calculateCostEfficiency = () => {
-        const totalTokens = costs.reduce((sum, cost) => sum + (cost.total_tokens || 0), 0);
-        const avgCostPerProject = costs.length > 0 ? totalSpent / costs.length : 0;
-        const costPer1KTokens = totalTokens > 0 ? (totalSpent / totalTokens) * 1000 : 0;
-        return { totalTokens, avgCostPerProject, costPer1KTokens };
-      };
-
-      const stats = registry ? registry.stats : {
-        totalProjects: 0,
-        completedProjects: 0,
-        activeProjects: 0,
-        blockedProjects: 0
-      };
-
-      if (isLoading) {
-        return (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100vh',
-            flexDirection: 'column',
-            gap: '16px'
-          }}>
-            <RefreshCw size={48} style={{ animation: 'spin 1s linear infinite' }} />
-            <div style={{ fontSize: '18px', color: '#94a3b8' }}>Loading Control Center...</div>
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-          </div>
-        );
-      }
+      const health = getHealth();
 
       return (
-        <div style={{
-          fontFamily: 'system-ui, -apple-system, sans-serif',
-          background: '#0f172a',
-          minHeight: '100vh',
-          color: '#e2e8f0'
-        }}>
-          {/* Header */}
-          <div style={{
-            background: 'linear-gradient(135deg, #081581 0%, #1742F6 50%, #6D18F1 100%)',
-            padding: '20px 24px',
-            borderBottom: '1px solid #334155'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <Layers size={28} />
-                  AI-SDLC Control Center
-                </h1>
-                <p style={{ margin: '4px 0 0 0', fontSize: '14px', opacity: 0.8 }}>
-                  Real-time agent workflow monitoring • Last update: {lastUpdate.toLocaleTimeString()}
-                </p>
+        <div className="app-shell">
+          <aside className="sidebar">
+            <div className="sidebar-header">
+              <div className="sidebar-logo">
+                <div className="sidebar-logo-icon">⚡</div>
+                <span>AI-SDLC</span>
               </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  onClick={fetchData}
-                  style={{
-                    background: 'rgba(255,255,255,0.1)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    borderRadius: '6px',
-                    padding: '8px 16px',
-                    color: '#fff',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '14px'
-                  }}
-                >
-                  <RefreshCw size={16} />
-                  Refresh Now
-                </button>
+            </div>
+            <nav className="sidebar-nav">
+              <div className="nav-section">
+                <div className="nav-section-title">Views</div>
+                {[
+                  { id: 'executive', icon: '📊', label: 'Executive' },
+                  { id: 'projects', icon: '📁', label: 'Projects' },
+                  { id: 'analytics', icon: '📈', label: 'Analytics' },
+                  { id: 'agents', icon: '🤖', label: 'Agents' },
+                  { id: 'activity', icon: '🕐', label: 'Activity' }
+                ].map(nav => (
+                  <div
+                    key={nav.id}
+                    className={`nav-item ${activeView === nav.id ? 'active' : ''}`}
+                    onClick={() => setActiveView(nav.id)}
+                  >
+                    <span className="nav-item-icon">{nav.icon}</span>
+                    {nav.label}
+                  </div>
+                ))}
               </div>
+            </nav>
+            <div className="sidebar-footer">
+              <div className="status-indicator">
+                <div className="status-dot"></div>
+                <span>v2.2.0 • {lastUpdate.toLocaleTimeString()}</span>
+              </div>
+            </div>
+          </aside>
+
+          <main className="main-content">
+            <div className="top-bar">
+              <h1 className="page-title">
+                {{ executive: 'Executive Dashboard', projects: 'Projects', analytics: 'Analytics', agents: 'Agents', activity: 'Activity' }[activeView]}
+              </h1>
+              <button className="btn btn-secondary" onClick={fetchData}>↻ Refresh</button>
+            </div>
+
+            <div className="content-area">
+              {activeView === 'executive' && <Executive stats={stats} health={health} totalCost={totalCost} projects={projects} activity={activity} costs={costs} />}
+              {activeView === 'projects' && <Projects projects={projects} costs={costs} />}
+              {activeView === 'analytics' && <Analytics costs={costs} projects={projects} />}
+              {activeView === 'agents' && <Agents costs={costs} />}
+              {activeView === 'activity' && <ActivityView activity={activity} />}
+            </div>
+          </main>
+        </div>
+      );
+    }
+
+    // Executive View
+    function Executive({ stats, health, totalCost, projects, activity, costs }) {
+      const successRate = stats.totalProjects > 0 ? Math.round((stats.completedProjects / stats.totalProjects) * 100) : 100;
+
+      return (
+        <div>
+          <div className="health-indicator">
+            <div className={`health-score ${health.class}`}>{health.score}</div>
+            <div className="health-details">
+              <div className="health-title">{health.title}</div>
+              <div className="health-message">{health.message}</div>
+            </div>
+            <span className="badge badge-success">v2.2.0</span>
+          </div>
+
+          <div className="grid-4 mb-xl">
+            <div className="metric-card">
+              <span className="metric-label">Projects</span>
+              <span className="metric-value text-blue">{stats.totalProjects}</span>
+              <span className="metric-change text-muted">Total</span>
+            </div>
+            <div className="metric-card">
+              <span className="metric-label">Success Rate</span>
+              <span className="metric-value text-green">{successRate}%</span>
+              <span className="metric-change text-muted">{stats.completedProjects} done</span>
+            </div>
+            <div className="metric-card">
+              <span className="metric-label">Spent</span>
+              <span className="metric-value" style={{color:'#06b6d4'}}>${totalCost.toFixed(2)}</span>
+              <span className="metric-change text-muted">All projects</span>
+            </div>
+            <div className="metric-card">
+              <span className="metric-label">Active</span>
+              <span className="metric-value text-purple">{stats.activeProjects}</span>
+              <span className="metric-change">{stats.blockedProjects > 0 ? <span className="text-red">{stats.blockedProjects} blocked</span> : <span className="text-muted">No blockers</span>}</span>
             </div>
           </div>
 
-          {/* Navigation Tabs */}
-          <div style={{
-            background: '#1e293b',
-            padding: '0 24px',
-            display: 'flex',
-            gap: '4px',
-            borderBottom: '1px solid #334155'
-          }}>
-            {['dashboard', 'projects', 'agents', 'costs', 'activity'].map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                style={{
-                  background: activeTab === tab ? '#0f172a' : 'transparent',
-                  border: 'none',
-                  borderBottom: activeTab === tab ? '2px solid #3b82f6' : '2px solid transparent',
-                  padding: '12px 20px',
-                  color: activeTab === tab ? '#fff' : '#94a3b8',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  textTransform: 'capitalize'
-                }}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          {/* Main Content */}
-          <div style={{ padding: '24px' }}>
-
-            {/* Dashboard Tab */}
-            {activeTab === 'dashboard' && (
-              <div>
-                {/* Stats Cards */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', marginBottom: '24px' }}>
-                  {[
-                    { label: 'Total Projects', value: stats.totalProjects, color: '#3b82f6', icon: <GitBranch size={20} /> },
-                    { label: 'Completed', value: stats.completedProjects, color: '#22c55e', icon: <CheckCircle size={20} /> },
-                    { label: 'In Progress', value: stats.activeProjects, color: '#f59e0b', icon: <Activity size={20} /> },
-                    { label: 'Blocked', value: stats.blockedProjects, color: '#ef4444', icon: <XCircle size={20} /> },
-                  ].map((stat, i) => (
-                    <div key={i} style={{
-                      background: '#1e293b',
-                      borderRadius: '12px',
-                      padding: '20px',
-                      border: '1px solid #334155'
-                    }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                        <div>
-                          <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>{stat.label}</p>
-                          <p style={{ margin: '8px 0 0 0', fontSize: '32px', fontWeight: 700, color: stat.color }}>{stat.value}</p>
-                        </div>
-                        <div style={{ color: stat.color, opacity: 0.5 }}>{stat.icon}</div>
-                      </div>
-                    </div>
-                  ))}
-                  {/* Total Spent Card */}
-                  <div style={{
-                    background: '#1e293b',
-                    borderRadius: '12px',
-                    padding: '20px',
-                    border: '1px solid #334155'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                      <div>
-                        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Total Spent</p>
-                        <p style={{ margin: '8px 0 0 0', fontSize: '32px', fontWeight: 700, color: '#fbbf24' }}>
-                          {formatCost(totalSpent)}
-                        </p>
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px',
-                          marginTop: '8px',
-                          fontSize: '11px',
-                          color: getBudgetStatus(totalSpent, totalBudget).color
-                        }}>
-                          <span>{getBudgetStatus(totalSpent, totalBudget).indicator}</span>
-                          <span>{getBudgetStatus(totalSpent, totalBudget).label}</span>
-                        </div>
-                      </div>
-                      <div style={{ color: '#fbbf24', opacity: 0.5, fontSize: '20px' }}>💰</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Budget Utilization Progress Bar */}
-                {totalBudget > 0 && (
-                  <div style={{
-                    background: '#1e293b',
-                    borderRadius: '12px',
-                    padding: '16px',
-                    border: '1px solid #334155',
-                    marginBottom: '24px'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '13px', fontWeight: 600 }}>Budget Utilization</span>
-                      <span style={{ fontSize: '13px', color: '#94a3b8' }}>
-                        {formatCost(totalSpent)} / {formatCost(totalBudget)} ({Math.round((totalSpent / totalBudget) * 100)}%)
-                      </span>
-                    </div>
-                    <div style={{
-                      width: '100%',
-                      height: '12px',
-                      background: '#0f172a',
-                      borderRadius: '6px',
-                      overflow: 'hidden'
-                    }}>
-                      <div style={{
-                        width: `${Math.min((totalSpent / totalBudget) * 100, 100)}%`,
-                        height: '100%',
-                        background: getBudgetStatus(totalSpent, totalBudget).color,
-                        transition: 'width 0.3s ease, background 0.3s ease'
-                      }} />
-                    </div>
-                  </div>
-                )}
-
-                {/* Agent Workflow */}
-                <div style={{
-                  background: '#1e293b',
-                  borderRadius: '12px',
-                  padding: '20px',
-                  border: '1px solid #334155',
-                  marginBottom: '24px'
-                }}>
-                  <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>Agent Workflow</h2>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', padding: '8px 0' }}>
-                    {AGENTS.filter(a => a.id !== 'tracker' && a.id !== 'finops' && a.id !== 'ask-tom').map((agent, i) => (
-                      <React.Fragment key={agent.id}>
-                        <div style={{
-                          background: agent.color,
-                          borderRadius: '8px',
-                          padding: '12px 16px',
-                          minWidth: '100px',
-                          textAlign: 'center'
-                        }}>
-                          <div style={{ fontSize: '24px', marginBottom: '4px' }}>{agent.icon}</div>
-                          <div style={{ fontSize: '12px', fontWeight: 600 }}>{agent.name}</div>
-                          <div style={{ fontSize: '10px', opacity: 0.8 }}>{agent.model}</div>
-                        </div>
-                        {i < AGENTS.filter(a => a.id !== 'tracker' && a.id !== 'finops' && a.id !== 'ask-tom').length - 1 && (
-                          <ChevronRight size={20} style={{ color: '#64748b', flexShrink: 0 }} />
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                  <div style={{
-                    marginTop: '12px',
-                    padding: '12px',
-                    background: '#0f172a',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    fontSize: '12px'
-                  }}>
-                    <div style={{
-                      background: '#fbbf24',
-                      borderRadius: '6px',
-                      padding: '8px 12px',
-                      minWidth: '80px',
-                      textAlign: 'center'
-                    }}>
-                      <div style={{ fontSize: '20px', marginBottom: '2px' }}>💰</div>
-                      <div style={{ fontSize: '11px', fontWeight: 600 }}>FinOps</div>
-                      <div style={{ fontSize: '9px', opacity: 0.8 }}>Haiku</div>
-                    </div>
-                    <div style={{ flex: 1, color: '#94a3b8' }}>
-                      Tracks costs across all agents • Real-time budget monitoring • Optimization recommendations
-                    </div>
-                  </div>
-                  <div style={{
-                    marginTop: '8px',
-                    padding: '12px',
-                    background: '#0f172a',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    fontSize: '12px',
-                    border: '1px solid #c084fc'
-                  }}>
-                    <div style={{
-                      background: '#c084fc',
-                      borderRadius: '6px',
-                      padding: '8px 12px',
-                      minWidth: '80px',
-                      textAlign: 'center'
-                    }}>
-                      <div style={{ fontSize: '20px', marginBottom: '2px' }}>⚡</div>
-                      <div style={{ fontSize: '11px', fontWeight: 600 }}>Ask Tom</div>
-                      <div style={{ fontSize: '9px', opacity: 0.8 }}>Opus</div>
-                    </div>
-                    <div style={{ flex: 1, color: '#94a3b8' }}>
-                      On-demand problem solver • Root cause analysis • Never gives up until solved • Coordinates with all agents
-                    </div>
-                  </div>
-                </div>
-
-                {/* Recent Activity */}
-                <div style={{
-                  background: '#1e293b',
-                  borderRadius: '12px',
-                  padding: '20px',
-                  border: '1px solid #334155'
-                }}>
-                  <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>
-                    Recent Activity {activity.length > 0 && `(${activity.length} events)`}
-                  </h2>
-                  {activity.length === 0 ? (
-                    <div style={{
-                      padding: '40px',
-                      textAlign: 'center',
-                      color: '#64748b',
-                      fontSize: '14px'
-                    }}>
-                      No activity yet. Start a workflow with /sdlc-start to see updates here.
-                    </div>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      {activity.slice(0, 10).map((item, i) => {
-                        const agent = getAgent(item.agent);
-                        return (
-                          <div key={i} style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            padding: '12px',
-                            background: '#0f172a',
-                            borderRadius: '8px',
-                            borderLeft: `3px solid ${agent.color}`
-                          }}>
-                            <div style={{ fontSize: '20px' }}>{agent.icon}</div>
-                            <div style={{ flex: 1 }}>
-                              <div style={{ fontSize: '14px', fontWeight: 500 }}>{item.action}</div>
-                              <div style={{ fontSize: '12px', color: '#64748b' }}>
-                                {agent.name} • {item.project}
-                              </div>
-                            </div>
-                            <div style={{
-                              fontSize: '11px',
-                              color: '#64748b',
-                              whiteSpace: 'nowrap'
-                            }}>
-                              {new Date(item.timestamp).toLocaleTimeString()}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Projects Tab */}
-            {activeTab === 'projects' && (
-              <div>
-                {projects.length === 0 ? (
-                  <div style={{
-                    background: '#1e293b',
-                    borderRadius: '12px',
-                    padding: '60px',
-                    border: '1px solid #334155',
-                    textAlign: 'center'
-                  }}>
-                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>📁</div>
-                    <h3 style={{ fontSize: '18px', marginBottom: '8px', fontWeight: 600 }}>No Projects Yet</h3>
-                    <p style={{ color: '#64748b', fontSize: '14px' }}>
-                      Start a workflow with /sdlc-start to create your first project
-                    </p>
-                  </div>
-                ) : (
-                  <div style={{ display: 'flex', gap: '24px' }}>
-                    {/* Project List */}
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        {projects.map(project => (
-                          <div
-                            key={project.id}
-                            onClick={() => setSelectedProject(project)}
-                            style={{
-                              background: selectedProject?.id === project.id ? '#334155' : '#1e293b',
-                              borderRadius: '12px',
-                              padding: '16px',
-                              border: '1px solid #334155',
-                              cursor: 'pointer',
-                              transition: 'all 0.2s'
-                            }}
-                          >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
-                              <div>
-                                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>{project.name}</h3>
-                                <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#64748b' }}>{project.id}</p>
-                              </div>
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '6px',
-                                padding: '4px 10px',
-                                borderRadius: '12px',
-                                fontSize: '12px',
-                                fontWeight: 500,
-                                background: `${getStatusColor(project.status)}20`,
-                                color: getStatusColor(project.status)
-                              }}>
-                                {getStatusIcon(project.status)}
-                                {project.status.replace('_', ' ')}
-                              </div>
-                            </div>
-
-                            {/* Cost Information */}
-                            {project.cost && (
-                              <div style={{
-                                background: '#0f172a',
-                                borderRadius: '8px',
-                                padding: '10px',
-                                marginBottom: '12px',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center'
-                              }}>
-                                <div style={{ fontSize: '12px', color: '#94a3b8' }}>
-                                  Cost: <span style={{ color: '#fbbf24', fontWeight: 600 }}>{formatCost(project.cost.total_cost)}</span>
-                                  {project.cost.budget > 0 && (
-                                    <span> / {formatCost(project.cost.budget)}</span>
-                                  )}
-                                </div>
-                                <span style={{ fontSize: '14px' }}>
-                                  {getBudgetStatus(project.cost.total_cost, project.cost.budget).indicator}
-                                </span>
-                              </div>
-                            )}
-
-                            {/* Phase Progress */}
-                            {project.phases && (
-                              <div style={{ display: 'flex', gap: '4px' }}>
-                                {project.phases.map((phase, i) => {
-                                  const agent = getAgent(phase.agent);
-                                  return (
-                                    <div
-                                      key={i}
-                                      title={`${agent.name}: ${phase.status}`}
-                                      style={{
-                                        flex: 1,
-                                        height: '6px',
-                                        borderRadius: '3px',
-                                        background: phase.status === 'complete' ? agent.color :
-                                                   phase.status === 'in_progress' ? `${agent.color}80` :
-                                                   phase.status === 'blocked' ? '#ef4444' : '#334155'
-                                      }}
-                                    />
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Project Detail */}
-                    {selectedProject && selectedProject.phases && (
-                      <div style={{
-                        width: '400px',
-                        background: '#1e293b',
-                        borderRadius: '12px',
-                        padding: '20px',
-                        border: '1px solid #334155',
-                        height: 'fit-content'
-                      }}>
-                        <h2 style={{ margin: '0 0 4px 0', fontSize: '18px', fontWeight: 600 }}>{selectedProject.name}</h2>
-                        <p style={{ margin: '0 0 20px 0', fontSize: '12px', color: '#64748b' }}>{selectedProject.id}</p>
-
-                        {/* Cost Breakdown */}
-                        {selectedProject.cost && (
-                          <div style={{ marginBottom: '20px' }}>
-                            <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>Cost Breakdown</h3>
-                            <div style={{
-                              background: '#0f172a',
-                              borderRadius: '8px',
-                              padding: '12px',
-                              marginBottom: '12px'
-                            }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
-                                <span style={{ color: '#94a3b8' }}>Total Cost</span>
-                                <span style={{ color: '#fbbf24', fontWeight: 600 }}>{formatCost(selectedProject.cost.total_cost)}</span>
-                              </div>
-                              {selectedProject.cost.budget > 0 && (
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
-                                  <span style={{ color: '#94a3b8' }}>Budget</span>
-                                  <span style={{ fontWeight: 500 }}>{formatCost(selectedProject.cost.budget)}</span>
-                                </div>
-                              )}
-                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
-                                <span style={{ color: '#94a3b8' }}>Total Tokens</span>
-                                <span style={{ fontWeight: 500 }}>{selectedProject.cost.total_tokens?.toLocaleString()}</span>
-                              </div>
-                              {selectedProject.cost.budget > 0 && (
-                                <div style={{
-                                  marginTop: '12px',
-                                  paddingTop: '12px',
-                                  borderTop: '1px solid #334155',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '8px',
-                                  fontSize: '12px'
-                                }}>
-                                  <span style={{ fontSize: '16px' }}>
-                                    {getBudgetStatus(selectedProject.cost.total_cost, selectedProject.cost.budget).indicator}
-                                  </span>
-                                  <span style={{ color: getBudgetStatus(selectedProject.cost.total_cost, selectedProject.cost.budget).color }}>
-                                    {getBudgetStatus(selectedProject.cost.total_cost, selectedProject.cost.budget).label}
-                                  </span>
-                                  <span style={{ marginLeft: 'auto', color: '#64748b' }}>
-                                    {Math.round((selectedProject.cost.total_cost / selectedProject.cost.budget) * 100)}% used
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                            {/* Cost by Agent */}
-                            {selectedProject.cost.breakdown_by_agent && selectedProject.cost.breakdown_by_agent.length > 0 && (
-                              <div>
-                                <h4 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 600, color: '#94a3b8' }}>By Agent</h4>
-                                {selectedProject.cost.breakdown_by_agent.map((agentCost, i) => {
-                                  const agent = getAgent(agentCost.agent);
-                                  return (
-                                    <div key={i} style={{
-                                      background: '#0f172a',
-                                      borderRadius: '6px',
-                                      padding: '8px',
-                                      marginBottom: '6px',
-                                      display: 'flex',
-                                      justifyContent: 'space-between',
-                                      alignItems: 'center'
-                                    }}>
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <span style={{ fontSize: '14px' }}>{agent.icon}</span>
-                                        <span style={{ fontSize: '11px', color: '#94a3b8' }}>{agent.name}</span>
-                                      </div>
-                                      <span style={{ fontSize: '11px', color: '#fbbf24', fontWeight: 600 }}>
-                                        {formatCost(agentCost.cost)}
-                                      </span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                        <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: '#94a3b8' }}>Phase Details</h3>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                          {selectedProject.phases.map((phase, i) => {
-                            const agent = getAgent(phase.agent);
-                            return (
-                              <div key={i} style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '12px',
-                                padding: '10px',
-                                background: '#0f172a',
-                                borderRadius: '8px',
-                                borderLeft: `3px solid ${phase.status === 'blocked' ? '#ef4444' : agent.color}`
-                              }}>
-                                <div style={{ fontSize: '18px' }}>{agent.icon}</div>
-                                <div style={{ flex: 1 }}>
-                                  <div style={{ fontSize: '13px', fontWeight: 500 }}>{agent.name}</div>
-                                  {phase.output && (
-                                    <div style={{ fontSize: '11px', color: '#64748b' }}>{phase.output}</div>
-                                  )}
-                                  {phase.reason && (
-                                    <div style={{ fontSize: '11px', color: '#ef4444' }}>{phase.reason}</div>
-                                  )}
-                                </div>
-                                <div style={{ textAlign: 'right' }}>
-                                  <div style={{ color: getStatusColor(phase.status) }}>
-                                    {getStatusIcon(phase.status)}
-                                  </div>
-                                  {phase.duration && (
-                                    <div style={{ fontSize: '10px', color: '#64748b' }}>{phase.duration}</div>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Agents Tab */}
-            {activeTab === 'agents' && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-                {AGENTS.map(agent => {
-                  const agentStats = registry?.agents?.[agent.id] || { invocations: 0, totalDuration: 0 };
-
-                  // Calculate total cost for this agent across all projects
-                  let agentTotalCost = 0;
-                  let agentTotalTokens = 0;
-                  costs.forEach(projectCost => {
-                    if (projectCost.breakdown_by_agent) {
-                      const agentBreakdown = projectCost.breakdown_by_agent.find(a => a.agent === agent.id);
-                      if (agentBreakdown) {
-                        agentTotalCost += agentBreakdown.cost || 0;
-                        agentTotalTokens += agentBreakdown.tokens || 0;
-                      }
-                    }
-                  });
-
-                  return (
-                    <div key={agent.id} style={{
-                      background: '#1e293b',
-                      borderRadius: '12px',
-                      padding: '20px',
-                      border: '1px solid #334155',
-                      borderTop: `4px solid ${agent.color}`
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                        <div style={{
-                          fontSize: '32px',
-                          width: '50px',
-                          height: '50px',
-                          background: `${agent.color}20`,
-                          borderRadius: '12px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                          {agent.icon}
-                        </div>
-                        <div>
-                          <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>{agent.name}</h3>
-                          <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#64748b' }}>{agent.role}</p>
-                        </div>
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
-                          <span style={{ color: '#94a3b8' }}>Model</span>
-                          <span style={{ fontWeight: 500 }}>{agent.model}</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
-                          <span style={{ color: '#94a3b8' }}>Invocations</span>
-                          <span style={{ fontWeight: 500 }}>{agentStats.invocations}</span>
-                        </div>
-                        {agentTotalCost > 0 && (
-                          <>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
-                              <span style={{ color: '#94a3b8' }}>Total Cost</span>
-                              <span style={{ fontWeight: 600, color: '#fbbf24' }}>{formatCost(agentTotalCost)}</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
-                              <span style={{ color: '#94a3b8' }}>Tokens</span>
-                              <span style={{ fontWeight: 500 }}>{agentTotalTokens.toLocaleString()}</span>
-                            </div>
-                          </>
-                        )}
-                        {agentStats.blocked > 0 && (
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
-                            <span style={{ color: '#ef4444' }}>Blocked</span>
-                            <span style={{ fontWeight: 500, color: '#ef4444' }}>{agentStats.blocked}</span>
-                          </div>
-                        )}
-                        {agentStats.failed > 0 && (
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
-                            <span style={{ color: '#f59e0b' }}>Failed</span>
-                            <span style={{ fontWeight: 500, color: '#f59e0b' }}>{agentStats.failed}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* Costs Tab */}
-            {activeTab === 'costs' && (
-              <div>
-                {costs.length === 0 ? (
-                  <div style={{
-                    background: '#1e293b',
-                    borderRadius: '12px',
-                    padding: '60px',
-                    border: '1px solid #334155',
-                    textAlign: 'center'
-                  }}>
-                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>💰</div>
-                    <h3 style={{ fontSize: '18px', marginBottom: '8px', fontWeight: 600 }}>No Cost Data Yet</h3>
-                    <p style={{ color: '#64748b', fontSize: '14px' }}>
-                      Cost tracking will appear here after running workflows
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    {/* Summary Cards */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
-                      <div style={{
-                        background: '#1e293b',
-                        borderRadius: '12px',
-                        padding: '20px',
-                        border: '1px solid #334155'
-                      }}>
-                        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Total Budget</p>
-                        <p style={{ margin: '8px 0 0 0', fontSize: '28px', fontWeight: 700, color: '#3b82f6' }}>
-                          {formatCost(totalBudget)}
-                        </p>
-                      </div>
-                      <div style={{
-                        background: '#1e293b',
-                        borderRadius: '12px',
-                        padding: '20px',
-                        border: '1px solid #334155'
-                      }}>
-                        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Total Spent</p>
-                        <p style={{ margin: '8px 0 0 0', fontSize: '28px', fontWeight: 700, color: '#fbbf24' }}>
-                          {formatCost(totalSpent)}
-                        </p>
-                      </div>
-                      <div style={{
-                        background: '#1e293b',
-                        borderRadius: '12px',
-                        padding: '20px',
-                        border: '1px solid #334155'
-                      }}>
-                        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Remaining</p>
-                        <p style={{ margin: '8px 0 0 0', fontSize: '28px', fontWeight: 700, color: '#22c55e' }}>
-                          {formatCost(Math.max(0, totalBudget - totalSpent))}
-                        </p>
-                      </div>
-                      <div style={{
-                        background: '#1e293b',
-                        borderRadius: '12px',
-                        padding: '20px',
-                        border: '1px solid #334155'
-                      }}>
-                        <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Budget Health</p>
-                        <div style={{
-                          margin: '8px 0 0 0',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px'
-                        }}>
-                          <span style={{ fontSize: '28px' }}>
-                            {getBudgetStatus(totalSpent, totalBudget).indicator}
-                          </span>
-                          <span style={{
-                            fontSize: '16px',
-                            fontWeight: 600,
-                            color: getBudgetStatus(totalSpent, totalBudget).color
-                          }}>
-                            {getBudgetStatus(totalSpent, totalBudget).label}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Cost by Agent Chart */}
-                    <div style={{
-                      background: '#1e293b',
-                      borderRadius: '12px',
-                      padding: '20px',
-                      border: '1px solid #334155',
-                      marginBottom: '24px'
-                    }}>
-                      <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>Cost by Agent</h2>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        {AGENTS.filter(a => a.id !== 'tracker').map(agent => {
-                          // Calculate agent cost across all projects
-                          let agentCost = 0;
-                          let agentTokens = 0;
-                          let agentInvocations = 0;
-                          costs.forEach(projectCost => {
-                            if (projectCost.breakdown_by_agent) {
-                              const breakdown = projectCost.breakdown_by_agent.find(a => a.agent === agent.id);
-                              if (breakdown) {
-                                agentCost += breakdown.cost || 0;
-                                agentTokens += breakdown.tokens || 0;
-                                agentInvocations += breakdown.invocations || 0;
-                              }
-                            }
-                          });
-
-                          const percentage = totalSpent > 0 ? (agentCost / totalSpent) * 100 : 0;
-
-                          return (
-                            <div key={agent.id} style={{
-                              background: '#0f172a',
-                              borderRadius: '8px',
-                              padding: '12px'
-                            }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                  <span style={{ fontSize: '18px' }}>{agent.icon}</span>
-                                  <span style={{ fontWeight: 600 }}>{agent.name}</span>
-                                  <span style={{ color: '#64748b' }}>• {agentInvocations} invocations • {agentTokens.toLocaleString()} tokens</span>
-                                </div>
-                                <span style={{ fontWeight: 600, color: '#fbbf24' }}>{formatCost(agentCost)}</span>
-                              </div>
-                              <div style={{
-                                width: '100%',
-                                height: '8px',
-                                background: '#1e293b',
-                                borderRadius: '4px',
-                                overflow: 'hidden'
-                              }}>
-                                <div style={{
-                                  width: `${percentage}%`,
-                                  height: '100%',
-                                  background: agent.color,
-                                  transition: 'width 0.3s ease'
-                                }} />
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', marginBottom: '24px' }}>
-                      {/* Cost by Project */}
-                      <div style={{
-                        background: '#1e293b',
-                        borderRadius: '12px',
-                        padding: '20px',
-                        border: '1px solid #334155'
-                      }}>
-                        <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>Cost by Project</h2>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
-                          {costs.map((cost, i) => {
-                            const status = getBudgetStatus(cost.total_cost, cost.budget);
-                            const percentage = cost.budget > 0 ? (cost.total_cost / cost.budget) * 100 : 0;
-                            return (
-                              <div key={i} style={{
-                                background: '#0f172a',
-                                borderRadius: '8px',
-                                padding: '12px',
-                                borderLeft: `3px solid ${status.color}`
-                              }}>
-                                <div style={{ marginBottom: '8px' }}>
-                                  <div style={{ fontSize: '13px', fontWeight: 600, marginBottom: '4px' }}>{cost.project_name}</div>
-                                  <div style={{ fontSize: '11px', color: '#64748b' }}>{cost.project_id}</div>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '12px' }}>
-                                  <span style={{ color: '#94a3b8' }}>Spent</span>
-                                  <span style={{ color: '#fbbf24', fontWeight: 600 }}>{formatCost(cost.total_cost)}</span>
-                                </div>
-                                {cost.budget > 0 && (
-                                  <>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '12px' }}>
-                                      <span style={{ color: '#94a3b8' }}>Budget</span>
-                                      <span style={{ fontWeight: 500 }}>{formatCost(cost.budget)}</span>
-                                    </div>
-                                    <div style={{
-                                      width: '100%',
-                                      height: '6px',
-                                      background: '#1e293b',
-                                      borderRadius: '3px',
-                                      overflow: 'hidden',
-                                      marginBottom: '6px'
-                                    }}>
-                                      <div style={{
-                                        width: `${Math.min(percentage, 100)}%`,
-                                        height: '100%',
-                                        background: status.color,
-                                        transition: 'width 0.3s ease'
-                                      }} />
-                                    </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px' }}>
-                                      <span>{status.indicator}</span>
-                                      <span style={{ color: status.color }}>{Math.round(percentage)}% utilized</span>
-                                    </div>
-                                  </>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Cost Efficiency & Optimization */}
-                      <div>
-                        {/* Cost Efficiency Metrics */}
-                        <div style={{
-                          background: '#1e293b',
-                          borderRadius: '12px',
-                          padding: '20px',
-                          border: '1px solid #334155',
-                          marginBottom: '16px'
-                        }}>
-                          <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>Cost Efficiency</h2>
-                          {(() => {
-                            const efficiency = calculateCostEfficiency();
-                            return (
-                              <>
-                                <div style={{
-                                  background: '#0f172a',
-                                  borderRadius: '8px',
-                                  padding: '12px',
-                                  marginBottom: '8px'
-                                }}>
-                                  <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Avg Cost / Project</div>
-                                  <div style={{ fontSize: '20px', fontWeight: 700, color: '#fbbf24' }}>
-                                    {formatCost(efficiency.avgCostPerProject)}
-                                  </div>
-                                </div>
-                                <div style={{
-                                  background: '#0f172a',
-                                  borderRadius: '8px',
-                                  padding: '12px',
-                                  marginBottom: '8px'
-                                }}>
-                                  <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Cost / 1K Tokens</div>
-                                  <div style={{ fontSize: '20px', fontWeight: 700, color: '#fbbf24' }}>
-                                    {formatCost(efficiency.costPer1KTokens)}
-                                  </div>
-                                </div>
-                                <div style={{
-                                  background: '#0f172a',
-                                  borderRadius: '8px',
-                                  padding: '12px'
-                                }}>
-                                  <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '4px' }}>Total Tokens</div>
-                                  <div style={{ fontSize: '20px', fontWeight: 700, color: '#3b82f6' }}>
-                                    {efficiency.totalTokens.toLocaleString()}
-                                  </div>
-                                </div>
-                              </>
-                            );
-                          })()}
-                        </div>
-
-                        {/* Optimization Tips */}
-                        <div style={{
-                          background: '#1e293b',
-                          borderRadius: '12px',
-                          padding: '20px',
-                          border: '1px solid #334155'
-                        }}>
-                          <h2 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 600 }}>💡 Optimization Tips</h2>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px', color: '#94a3b8' }}>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                              <span style={{ color: '#22c55e' }}>✓</span>
-                              <span>Use Haiku for simple tasks</span>
-                            </div>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                              <span style={{ color: '#22c55e' }}>✓</span>
-                              <span>Cache frequently used prompts</span>
-                            </div>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                              <span style={{ color: '#22c55e' }}>✓</span>
-                              <span>Set project budgets proactively</span>
-                            </div>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                              <span style={{ color: '#22c55e' }}>✓</span>
-                              <span>Monitor cost trends daily</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
-
-            {/* Activity Tab */}
-            {activeTab === 'activity' && (
-              <div style={{
-                background: '#1e293b',
-                borderRadius: '12px',
-                padding: '20px',
-                border: '1px solid #334155'
-              }}>
-                <h2 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600 }}>
-                  All Activity ({activity.length} events)
-                </h2>
-                {activity.length === 0 ? (
-                  <div style={{
-                    padding: '40px',
-                    textAlign: 'center',
-                    color: '#64748b',
-                    fontSize: '14px'
-                  }}>
-                    No activity logged yet.
-                  </div>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {activity.map((item, i) => {
-                      const agent = getAgent(item.agent);
-                      return (
-                        <div key={i} style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '16px',
-                          padding: '16px',
-                          background: '#0f172a',
-                          borderRadius: '8px',
-                          borderLeft: `3px solid ${
-                            item.type === 'blocked' ? '#ef4444' :
-                            item.type === 'approved' ? '#22c55e' :
-                            item.type === 'complete' ? '#3b82f6' : agent.color
-                          }`
-                        }}>
-                          <div style={{
-                            fontSize: '24px',
-                            width: '44px',
-                            height: '44px',
-                            background: `${agent.color}20`,
-                            borderRadius: '10px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}>
-                            {agent.icon}
-                          </div>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '14px', fontWeight: 500, marginBottom: '4px' }}>{item.action}</div>
-                            <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: '#64748b' }}>
-                              <span>{agent.name}</span>
-                              <span>{item.project}</span>
-                            </div>
-                          </div>
-                          <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '12px', color: '#94a3b8' }}>
-                              {new Date(item.timestamp).toLocaleDateString()}
-                            </div>
-                            <div style={{ fontSize: '12px', color: '#64748b' }}>
-                              {new Date(item.timestamp).toLocaleTimeString()}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
-
-          </div>
-
-          {/* Footer */}
-          <div style={{
-            padding: '16px 24px',
-            borderTop: '1px solid #334155',
-            background: '#1e293b',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            fontSize: '12px',
-            color: '#64748b'
-          }}>
-            <div>
-              AI-SDLC Framework v2.1.1 • Auto-refresh: 3s • Registry: {registry ? '✅ Connected' : '⚠️ Not Connected'} • Costs: {costs.length > 0 ? `✅ ${costs.length} projects` : '⚠️ No data'}
+          <div className="grid-2">
+            <div className="card">
+              <div className="section-header"><h3 className="section-title">Recent Projects</h3></div>
+              {projects.length === 0 ? (
+                <div className="empty-state"><div className="empty-state-icon">📁</div><div className="empty-state-title">No projects</div><p>Run /sdlc-start</p></div>
+              ) : projects.slice(0, 4).map(p => <ProjectMini key={p.id} project={p} costs={costs} />)}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Zap size={14} style={{ color: '#22c55e' }} />
-              <span>Speed • Clarity • Control</span>
+            <div className="card">
+              <div className="section-header"><h3 className="section-title">Recent Activity</h3></div>
+              {activity.length === 0 ? (
+                <div className="empty-state"><div className="empty-state-icon">🕐</div><div className="empty-state-title">No activity</div></div>
+              ) : activity.slice(0, 5).map((a, i) => <ActivityItem key={i} item={a} />)}
             </div>
           </div>
         </div>
       );
     }
 
-    // Render the app
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<SDLCControlCenter />);
+    function ProjectMini({ project, costs }) {
+      const cost = costs.find(c => c.project_id === project.id);
+      const color = { completed: '#10b981', active: '#3b82f6', in_progress: '#3b82f6', blocked: '#ef4444' }[project.status] || '#f59e0b';
+      return (
+        <div className="activity-item">
+          <div className="activity-icon" style={{ background: `${color}20`, color }}>📁</div>
+          <div className="activity-content">
+            <div className="activity-text">{project.description || project.id}</div>
+            <div className="activity-time">{project.status}{cost ? ` • $${(cost.total_cost || 0).toFixed(2)}` : ''}</div>
+          </div>
+        </div>
+      );
+    }
+
+    // Projects View
+    function Projects({ projects, costs }) {
+      if (projects.length === 0) return <div className="empty-state"><div className="empty-state-icon">📁</div><div className="empty-state-title">No Projects</div><p>/sdlc-start to begin</p></div>;
+
+      return <div>{projects.map(p => <ProjectCard key={p.id} project={p} costs={costs} />)}</div>;
+    }
+
+    function ProjectCard({ project, costs }) {
+      const cost = costs.find(c => c.project_id === project.id);
+      const phases = project.phases || {};
+      const completed = Object.values(phases).filter(p => p === 'completed').length;
+      const progress = Math.round((completed / PIPELINE_AGENTS.length) * 100);
+
+      const getStatus = (id) => {
+        const p = phases[id];
+        if (p === 'completed') return 'completed';
+        if (p === 'active' || p === 'in_progress') return 'active';
+        if (p === 'blocked') return 'blocked';
+        return 'pending';
+      };
+
+      const badge = { completed: ['badge-success', 'Done'], active: ['badge-info', 'Active'], in_progress: ['badge-info', 'Active'], blocked: ['badge-danger', 'Blocked'] }[project.status] || ['badge-warning', 'Pending'];
+
+      return (
+        <div className="project-card">
+          <div className="project-header">
+            <div>
+              <h3 className="project-name">{project.description || project.id}</h3>
+              <div className="project-id">{project.id}</div>
+            </div>
+            <div className="project-meta">
+              <span className={`badge ${badge[0]}`}>{badge[1]}</span>
+              {cost && <div className="project-cost">${(cost.total_cost || 0).toFixed(2)}</div>}
+            </div>
+          </div>
+
+          <div className="agent-pipeline">
+            {PIPELINE_AGENTS.map((id, i) => {
+              const agent = AGENTS.find(a => a.id === id);
+              const status = getStatus(id);
+              return (
+                <React.Fragment key={id}>
+                  <div className="pipeline-agent">
+                    <div className={`pipeline-icon ${status}`}>{agent?.icon}</div>
+                    <span className="pipeline-name">{agent?.role}</span>
+                  </div>
+                  {i < PIPELINE_AGENTS.length - 1 && <div className={`pipeline-connector ${status === 'completed' ? 'completed' : ''}`}></div>}
+                </React.Fragment>
+              );
+            })}
+          </div>
+
+          <div className="project-footer">
+            <div className="project-progress">
+              <div className="progress-label"><span>Progress</span><span>{progress}%</span></div>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: `${progress}%`, background: project.status === 'blocked' ? '#ef4444' : progress === 100 ? '#10b981' : 'linear-gradient(90deg, #3b82f6, #8b5cf6)' }}></div>
+              </div>
+            </div>
+            <div className="project-time">{project.created_at && new Date(project.created_at).toLocaleDateString()}</div>
+          </div>
+        </div>
+      );
+    }
+
+    // Analytics View
+    function Analytics({ costs, projects }) {
+      const agentCosts = {};
+      costs.forEach(c => (c.breakdown_by_agent || []).forEach(a => {
+        if (!agentCosts[a.agent]) agentCosts[a.agent] = { cost: 0, invocations: 0, tokens: 0 };
+        agentCosts[a.agent].cost += a.cost || 0;
+        agentCosts[a.agent].invocations += a.invocations || 0;
+        agentCosts[a.agent].tokens += a.tokens || 0;
+      }));
+
+      const totalCost = costs.reduce((s, c) => s + (c.total_cost || 0), 0);
+      const totalTokens = costs.reduce((s, c) => s + (c.total_tokens || 0), 0);
+
+      const modelUsage = {};
+      AGENTS.forEach(a => { if (!modelUsage[a.model]) modelUsage[a.model] = 0; modelUsage[a.model] += agentCosts[a.id]?.invocations || 0; });
+
+      return (
+        <div>
+          <div className="grid-4 mb-xl">
+            <div className="metric-card"><span className="metric-label">Total Spent</span><span className="metric-value" style={{color:'#06b6d4'}}>${totalCost.toFixed(2)}</span></div>
+            <div className="metric-card"><span className="metric-label">Tokens</span><span className="metric-value text-purple">{(totalTokens/1000).toFixed(1)}K</span></div>
+            <div className="metric-card"><span className="metric-label">Avg/Project</span><span className="metric-value text-blue">${projects.length ? (totalCost/projects.length).toFixed(2) : '0'}</span></div>
+            <div className="metric-card"><span className="metric-label">$/1K Tokens</span><span className="metric-value text-green">${totalTokens ? ((totalCost/totalTokens)*1000).toFixed(4) : '0'}</span></div>
+          </div>
+
+          <div className="grid-2 mb-xl">
+            <div className="chart-container">
+              <div className="chart-header"><h3 className="chart-title">Model Distribution</h3></div>
+              <div style={{padding:'var(--space-md)'}}>
+                {Object.entries(modelUsage).map(([m, c]) => {
+                  const t = Object.values(modelUsage).reduce((a,b) => a+b, 0);
+                  const p = t ? (c/t)*100 : 0;
+                  const col = m === 'Opus' ? '#8b5cf6' : m === 'Sonnet' ? '#3b82f6' : '#10b981';
+                  return (
+                    <div key={m} style={{marginBottom:'var(--space-md)'}}>
+                      <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
+                        <span style={{fontSize:'14px',fontWeight:500}}>{m}</span>
+                        <span style={{fontSize:'14px',color:'var(--text-secondary)'}}>{c} ({p.toFixed(0)}%)</span>
+                      </div>
+                      <div className="progress-bar"><div className="progress-fill" style={{width:`${p}%`,background:col}}></div></div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="chart-container">
+              <div className="chart-header"><h3 className="chart-title">Cost by Agent</h3></div>
+              <div style={{padding:'var(--space-md)'}}>
+                {Object.entries(agentCosts).sort((a,b) => b[1].cost - a[1].cost).slice(0,6).map(([id, d]) => {
+                  const agent = AGENTS.find(a => a.id === id);
+                  const max = Math.max(...Object.values(agentCosts).map(x => x.cost), 1);
+                  const p = (d.cost/max)*100;
+                  return (
+                    <div key={id} style={{marginBottom:'var(--space-md)'}}>
+                      <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
+                        <span style={{fontSize:'14px'}}>{agent?.icon} {agent?.name}</span>
+                        <span style={{fontSize:'14px',color:'#06b6d4'}}>${d.cost.toFixed(2)}</span>
+                      </div>
+                      <div className="progress-bar"><div className="progress-fill" style={{width:`${p}%`,background:agent?.color || '#3b82f6'}}></div></div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Agents View
+    function Agents({ costs }) {
+      const agentCosts = {};
+      costs.forEach(c => (c.breakdown_by_agent || []).forEach(a => {
+        if (!agentCosts[a.agent]) agentCosts[a.agent] = { cost: 0, invocations: 0 };
+        agentCosts[a.agent].cost += a.cost || 0;
+        agentCosts[a.agent].invocations += a.invocations || 0;
+      }));
+
+      const core = AGENTS.filter(a => PIPELINE_AGENTS.includes(a.id) || a.id === 'conductor');
+      const support = AGENTS.filter(a => ['ask-tom', 'finops', 'tracker'].includes(a.id));
+
+      return (
+        <div>
+          <div className="section-header"><h3 className="section-title">Pipeline Agents</h3><p className="section-subtitle">Core SDLC workflow</p></div>
+          <div className="grid-3 mb-xl">{core.map(a => <AgentCard key={a.id} agent={a} data={agentCosts[a.id]} />)}</div>
+
+          <div className="section-header"><h3 className="section-title">Support Agents</h3><p className="section-subtitle">On-demand specialists</p></div>
+          <div className="grid-3">{support.map(a => <AgentCard key={a.id} agent={a} data={agentCosts[a.id]} />)}</div>
+        </div>
+      );
+    }
+
+    function AgentCard({ agent, data }) {
+      return (
+        <div className="agent-card">
+          <div className="agent-avatar" style={{ background: `${agent.color}20`, color: agent.color }}>{agent.icon}</div>
+          <div className="agent-info">
+            <div className="agent-name">{agent.name}</div>
+            <div className="agent-role">{agent.role} • {agent.model}</div>
+          </div>
+          <div className="agent-stats">
+            <div className="agent-invocations">{data?.invocations || 0}</div>
+            <div className="agent-cost">${(data?.cost || 0).toFixed(2)}</div>
+          </div>
+        </div>
+      );
+    }
+
+    // Activity View
+    function ActivityView({ activity }) {
+      if (!activity.length) return <div className="empty-state"><div className="empty-state-icon">🕐</div><div className="empty-state-title">No Activity</div></div>;
+      return <div className="card">{activity.map((a, i) => <ActivityItem key={i} item={a} />)}</div>;
+    }
+
+    function ActivityItem({ item }) {
+      const agent = AGENTS.find(a => a.id === item.agent) || { icon: '🔄', color: '#64748b' };
+      const color = { start: '#3b82f6', complete: '#10b981', block: '#ef4444' }[item.action] || agent.color;
+      return (
+        <div className="activity-item">
+          <div className="activity-icon" style={{ background: `${color}20`, color }}>{agent.icon}</div>
+          <div className="activity-content">
+            <div className="activity-text"><strong>{agent.name || item.agent}</strong> {item.action}{item.project_id && <span className="text-muted"> on {item.project_id}</span>}</div>
+            <div className="activity-time">{item.timestamp && new Date(item.timestamp).toLocaleString()}</div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
 </body>
 </html>
