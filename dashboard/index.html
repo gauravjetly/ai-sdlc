@@ -701,7 +701,7 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef, useCallback } = React;
 
     const AGENTS = [
       { id: 'conductor', name: 'Conductor', icon: '🎭', color: '#0066cc', model: 'Opus', role: 'Orchestrator' },
@@ -728,6 +728,44 @@
       hourlyDevCost: 85, // $ per hour for traditional dev
     };
 
+    // Normalize project status (handle 'complete' vs 'completed')
+    function normalizeStatus(status) {
+      if (status === 'complete') return 'completed';
+      return status;
+    }
+
+    // Check if project is completed
+    function isCompleted(project) {
+      const status = normalizeStatus(project.status);
+      return status === 'completed' || status === 'complete';
+    }
+
+    // Check if project is active/in progress
+    function isActive(project) {
+      const status = normalizeStatus(project.status);
+      return status === 'active' || status === 'in_progress';
+    }
+
+    // Convert phases array to object keyed by agent
+    function normalizePhasesArray(phases) {
+      if (!phases) return {};
+      if (!Array.isArray(phases)) return phases; // Already an object
+
+      const result = {};
+      phases.forEach(phase => {
+        if (phase.agent) {
+          result[phase.agent] = normalizeStatus(phase.status);
+        }
+      });
+      return result;
+    }
+
+    // Get current phase info from phases array
+    function getCurrentPhaseInfo(phases) {
+      if (!phases || !Array.isArray(phases)) return null;
+      return phases.find(p => p.status === 'in_progress') || phases[phases.length - 1];
+    }
+
     function App() {
       const [activeView, setActiveView] = useState('executive');
       const [projects, setProjects] = useState([]);
@@ -735,30 +773,85 @@
       const [costs, setCosts] = useState([]);
       const [stats, setStats] = useState({ totalProjects: 0, completedProjects: 0, activeProjects: 0, blockedProjects: 0 });
       const [lastUpdate, setLastUpdate] = useState(new Date());
+      const [notifications, setNotifications] = useState([]);
+      const [showNotifications, setShowNotifications] = useState(false);
+      const [unreadCount, setUnreadCount] = useState(0);
+      const lastActivityRef = useRef(null);
+
+      // Check for new activity and create notifications
+      const checkForNewActivity = useCallback((newActivity, oldActivity) => {
+        if (!oldActivity || oldActivity.length === 0) return;
+
+        const lastKnownTimestamp = oldActivity[0]?.timestamp;
+        const newItems = newActivity.filter(a =>
+          a.timestamp && lastKnownTimestamp && a.timestamp > lastKnownTimestamp
+        );
+
+        if (newItems.length > 0) {
+          const newNotifs = newItems.map(item => ({
+            id: `${item.timestamp}-${item.agent}-${item.project}`,
+            timestamp: item.timestamp,
+            agent: item.agent,
+            project: item.project,
+            action: item.action,
+            type: item.type,
+            read: false
+          }));
+
+          setNotifications(prev => [...newNotifs, ...prev].slice(0, 50));
+          setUnreadCount(prev => prev + newItems.length);
+
+          // Show browser notification if supported
+          if (Notification.permission === 'granted') {
+            newItems.forEach(item => {
+              const agent = AGENTS.find(a => a.id === item.agent);
+              new Notification(`AI-SDLC: ${agent?.name || item.agent}`, {
+                body: `${item.action} on ${item.project}`,
+                icon: '⚡',
+                tag: item.timestamp
+              });
+            });
+          }
+        }
+      }, []);
 
       const fetchData = async () => {
         try {
           const [p, a, c] = await Promise.all([
             fetch('/api/projects').then(r => r.json()).catch(() => []),
-            fetch('/api/activity?limit=20').then(r => r.json()).catch(() => []),
+            fetch('/api/activity?limit=50').then(r => r.json()).catch(() => []),
             fetch('/api/costs').then(r => r.json()).catch(() => [])
           ]);
+
+          // Check for new activity before updating state
+          if (lastActivityRef.current) {
+            checkForNewActivity(a, lastActivityRef.current);
+          }
+          lastActivityRef.current = a;
+
           setProjects(p);
           setActivity(a);
           setCosts(c);
           setStats({
             totalProjects: p.length,
-            completedProjects: p.filter(x => x.status === 'completed').length,
-            activeProjects: p.filter(x => x.status === 'active' || x.status === 'in_progress').length,
+            completedProjects: p.filter(isCompleted).length,
+            activeProjects: p.filter(isActive).length,
             blockedProjects: p.filter(x => x.status === 'blocked').length
           });
           setLastUpdate(new Date());
         } catch (e) { console.error(e); }
       };
 
+      // Request notification permission on mount
+      useEffect(() => {
+        if ('Notification' in window && Notification.permission === 'default') {
+          Notification.requestPermission();
+        }
+      }, []);
+
       useEffect(() => {
         fetchData();
-        const interval = setInterval(fetchData, 5000);
+        const interval = setInterval(fetchData, 3000); // Faster refresh for notifications
         return () => clearInterval(interval);
       }, []);
 
@@ -823,6 +916,14 @@
               </h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <span style={{ fontSize: '13px', color: '#5a6b7c' }}>Last updated: {lastUpdate.toLocaleTimeString()}</span>
+                <NotificationBell
+                  notifications={notifications}
+                  unreadCount={unreadCount}
+                  showNotifications={showNotifications}
+                  setShowNotifications={setShowNotifications}
+                  setUnreadCount={setUnreadCount}
+                  setNotifications={setNotifications}
+                />
                 <button className="btn btn-secondary" onClick={fetchData}>↻ Refresh</button>
               </div>
             </div>
@@ -841,7 +942,7 @@
     }
 
     function calculateValueMetrics(projects, costs) {
-      const completed = projects.filter(p => p.status === 'completed').length;
+      const completed = projects.filter(isCompleted).length;
       const totalCost = costs.reduce((s, c) => s + (c.total_cost || 0), 0);
 
       // Estimated traditional cost (industry benchmark)
@@ -1237,31 +1338,44 @@
 
     function ProjectCard({ project, costs }) {
       const cost = costs.find(c => c.project_id === project.id);
-      const phases = project.phases || {};
-      const completed = Object.values(phases).filter(p => p === 'completed').length;
-      const progress = Math.round((completed / PIPELINE_AGENTS.length) * 100);
 
-      const getStatus = (id) => {
-        const p = phases[id];
-        if (p === 'completed') return 'completed';
-        if (p === 'active' || p === 'in_progress') return 'active';
-        if (p === 'blocked') return 'blocked';
+      // Normalize phases - handle both array format and object format
+      const phasesMap = normalizePhasesArray(project.phases);
+
+      // Count completed phases
+      const completedCount = Object.values(phasesMap).filter(s =>
+        s === 'completed' || s === 'complete'
+      ).length;
+      const progress = Math.round((completedCount / PIPELINE_AGENTS.length) * 100);
+
+      const getStatus = (agentId) => {
+        const status = phasesMap[agentId];
+        if (!status) return 'pending';
+        if (status === 'completed' || status === 'complete') return 'completed';
+        if (status === 'active' || status === 'in_progress') return 'active';
+        if (status === 'blocked') return 'blocked';
         return 'pending';
       };
 
+      // Normalize project status for badge display
+      const projectStatus = normalizeStatus(project.status);
       const badges = {
         completed: ['badge-success', 'Completed'],
+        complete: ['badge-success', 'Completed'],
         active: ['badge-info', 'In Progress'],
         in_progress: ['badge-info', 'In Progress'],
         blocked: ['badge-danger', 'Blocked']
       };
-      const badge = badges[project.status] || ['badge-warning', 'Pending'];
+      const badge = badges[projectStatus] || ['badge-warning', 'Pending'];
+
+      // Get current active phase for display
+      const currentPhase = getCurrentPhaseInfo(project.phases);
 
       return (
         <div className="project-card">
           <div className="project-header">
             <div>
-              <h3 className="project-name">{project.description || project.id}</h3>
+              <h3 className="project-name">{project.description || project.name || project.id}</h3>
               <div className="project-id">{project.id}</div>
             </div>
             <div className="project-meta">
@@ -1269,6 +1383,16 @@
               {cost && <div className="project-cost">${(cost.total_cost || 0).toFixed(2)}</div>}
             </div>
           </div>
+
+          {/* Show current phase status for active projects */}
+          {isActive(project) && currentPhase && (
+            <div style={{ padding: '8px 24px', background: 'var(--deltek-light)', borderBottom: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--deltek-blue)', animation: 'pulse 1.5s infinite' }}></span>
+              <span style={{ fontSize: '13px', color: 'var(--deltek-blue)', fontWeight: 500 }}>
+                {AGENTS.find(a => a.id === currentPhase.agent)?.name || currentPhase.agent} {currentPhase.status === 'in_progress' ? 'working...' : ''}
+              </span>
+            </div>
+          )}
 
           <div className="agent-pipeline">
             {PIPELINE_AGENTS.map((id, i) => {
@@ -1293,7 +1417,10 @@
                 <div className="progress-fill" style={{ width: `${progress}%`, background: project.status === 'blocked' ? '#d32f2f' : progress === 100 ? '#00875a' : '#0066cc' }}></div>
               </div>
             </div>
-            <div className="project-time">{project.created_at && new Date(project.created_at).toLocaleDateString()}</div>
+            <div className="project-time">
+              {project.createdAt ? new Date(project.createdAt).toLocaleDateString() :
+               project.created_at ? new Date(project.created_at).toLocaleDateString() : ''}
+            </div>
           </div>
         </div>
       );
@@ -1408,6 +1535,149 @@
             <div className="agent-invocations">{data?.invocations || 0}</div>
             <div className="agent-cost">${(data?.cost || 0).toFixed(2)}</div>
           </div>
+        </div>
+      );
+    }
+
+    // Notification Bell Component
+    function NotificationBell({ notifications, unreadCount, showNotifications, setShowNotifications, setUnreadCount, setNotifications }) {
+      const markAllRead = () => {
+        setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+        setUnreadCount(0);
+      };
+
+      const clearAll = () => {
+        setNotifications([]);
+        setUnreadCount(0);
+      };
+
+      return (
+        <div style={{ position: 'relative' }}>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setShowNotifications(!showNotifications)}
+            style={{ position: 'relative', padding: '8px 12px' }}
+          >
+            <span style={{ fontSize: '18px' }}>🔔</span>
+            {unreadCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-4px',
+                right: '-4px',
+                background: 'var(--accent-red)',
+                color: 'white',
+                borderRadius: '50%',
+                width: '20px',
+                height: '20px',
+                fontSize: '11px',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+
+          {showNotifications && (
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              right: 0,
+              marginTop: '8px',
+              width: '380px',
+              maxHeight: '480px',
+              background: 'white',
+              border: '1px solid var(--border-color)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-lg)',
+              zIndex: 1000,
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                padding: '12px 16px',
+                borderBottom: '1px solid var(--border-color)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                background: 'var(--bg-tertiary)'
+              }}>
+                <span style={{ fontWeight: 600, fontSize: '14px' }}>Notifications</span>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {unreadCount > 0 && (
+                    <button onClick={markAllRead} style={{ fontSize: '12px', color: 'var(--deltek-blue)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                      Mark all read
+                    </button>
+                  )}
+                  {notifications.length > 0 && (
+                    <button onClick={clearAll} style={{ fontSize: '12px', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                      Clear all
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                {notifications.length === 0 ? (
+                  <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '32px', marginBottom: '8px', opacity: 0.4 }}>🔔</div>
+                    <div>No notifications yet</div>
+                    <div style={{ fontSize: '12px', marginTop: '4px' }}>Activity will appear here as agents work</div>
+                  </div>
+                ) : (
+                  notifications.map((notif, i) => {
+                    const agent = AGENTS.find(a => a.id === notif.agent) || { icon: '🔄', color: '#607d8b' };
+                    const typeColors = { start: '#0066cc', complete: '#00875a', blocked: '#d32f2f', create: '#7b1fa2' };
+                    const color = typeColors[notif.type] || agent.color;
+                    const bgColors = { '#0066cc': '#e6f0fa', '#00875a': '#e6f4ef', '#d32f2f': '#fdeaea', '#7b1fa2': '#f3e5f5' };
+                    const bg = bgColors[color] || '#f5f7fa';
+
+                    return (
+                      <div
+                        key={notif.id || i}
+                        style={{
+                          padding: '12px 16px',
+                          borderBottom: '1px solid var(--border-light)',
+                          background: notif.read ? 'white' : 'var(--deltek-light)',
+                          display: 'flex',
+                          gap: '12px',
+                          alignItems: 'flex-start'
+                        }}
+                      >
+                        <div style={{
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '50%',
+                          background: bg,
+                          color: color,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '16px',
+                          flexShrink: 0
+                        }}>
+                          {agent.icon}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: '13px', color: 'var(--text-primary)', marginBottom: '2px' }}>
+                            <strong>{agent.name || notif.agent}</strong> {notif.action}
+                          </div>
+                          <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
+                            <span>{notif.project}</span>
+                            <span>{notif.timestamp && new Date(notif.timestamp).toLocaleTimeString()}</span>
+                          </div>
+                        </div>
+                        {!notif.read && (
+                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--deltek-blue)', flexShrink: 0, marginTop: '6px' }}></div>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          )}
         </div>
       );
     }
