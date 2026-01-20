@@ -901,21 +901,21 @@
               <div className="nav-section">
                 <div className="nav-section-title">Dashboard</div>
                 {[
-                  { id: 'executive', icon: '📊', label: 'Executive' },
-                  { id: 'value', icon: '🎯', label: 'Value & ROI' },
-                  { id: 'projects', icon: '📁', label: 'Projects' },
-                  { id: 'analytics', icon: '📈', label: 'Analytics' },
-                  { id: 'agents', icon: '🤖', label: 'Agents' },
-                  { id: 'learning', icon: '🧠', label: 'AI Learning' },
-                  { id: 'activity', icon: '🕐', label: 'Activity' },
-                  { id: 'help', icon: '📖', label: 'Help & Docs', badge: 'v2.3' }
+                  { id: 'executive', icon: 'assets/brand/icons/calculator.svg', label: 'Executive' },
+                  { id: 'value', icon: 'assets/brand/icons/checkmark-badge.svg', label: 'Value & ROI' },
+                  { id: 'projects', icon: 'assets/brand/icons/checklist.svg', label: 'Projects' },
+                  { id: 'analytics', icon: 'assets/brand/icons/gear-integration.svg', label: 'Analytics' },
+                  { id: 'agents', icon: 'assets/brand/icons/workflow-team.svg', label: 'Agents' },
+                  { id: 'learning', icon: 'assets/brand/icons/brain-lightbulb.svg', label: 'AI Learning' },
+                  { id: 'activity', icon: 'assets/brand/icons/network-activity.svg', label: 'Activity' },
+                  { id: 'help', icon: 'assets/brand/icons/book.svg', label: 'Help & Docs', badge: 'v2.3' }
                 ].map(nav => (
                   <div
                     key={nav.id}
                     className={`nav-item ${activeView === nav.id ? 'active' : ''}`}
                     onClick={() => setActiveView(nav.id)}
                   >
-                    <span className="nav-item-icon">{nav.icon}</span>
+                    <span className="nav-item-icon"><img src={nav.icon} alt="" style={{ width: '18px', height: '18px', filter: 'brightness(0) invert(1)', opacity: 0.9 }} /></span>
                     {nav.label}
                     {nav.badge && <span className="nav-item-badge">{nav.badge}</span>}
                   </div>
