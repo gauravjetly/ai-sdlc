@@ -268,6 +268,37 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Serve static assets (images, SVGs, etc.)
+  if (req.url.startsWith('/assets/')) {
+    const assetPath = path.join(__dirname, req.url);
+    const ext = path.extname(assetPath).toLowerCase();
+
+    const mimeTypes = {
+      '.svg': 'image/svg+xml',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.gif': 'image/gif',
+      '.ico': 'image/x-icon',
+      '.css': 'text/css',
+      '.js': 'application/javascript',
+      '.json': 'application/json'
+    };
+
+    const contentType = mimeTypes[ext] || 'application/octet-stream';
+
+    fs.readFile(assetPath, (err, data) => {
+      if (err) {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Asset not found');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(data);
+    });
+    return;
+  }
+
   // 404 for other routes
   res.writeHead(404, { 'Content-Type': 'text/plain' });
   res.end('Not found');
