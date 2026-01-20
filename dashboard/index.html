@@ -919,8 +919,9 @@
                   { id: 'projects', icon: '📁', label: 'Projects' },
                   { id: 'analytics', icon: '📈', label: 'Analytics' },
                   { id: 'agents', icon: '🤖', label: 'Agents' },
-                  { id: 'learning', icon: '🧠', label: 'AI Learning', badge: 'NEW' },
-                  { id: 'activity', icon: '🕐', label: 'Activity' }
+                  { id: 'learning', icon: '🧠', label: 'AI Learning' },
+                  { id: 'activity', icon: '🕐', label: 'Activity' },
+                  { id: 'help', icon: '📖', label: 'Help & Docs', badge: 'v2.3' }
                 ].map(nav => (
                   <div
                     key={nav.id}
@@ -937,7 +938,7 @@
             <div className="sidebar-footer">
               <div className="status-indicator">
                 <div className="status-dot"></div>
-                <span>v2.2.0 • Live</span>
+                <span>v2.3.0 • Live</span>
               </div>
             </div>
           </aside>
@@ -945,7 +946,7 @@
           <main className="main-content">
             <div className="top-bar">
               <h1 className="page-title">
-                {{ executive: 'Executive Dashboard', value: 'Value & ROI', projects: 'Projects', analytics: 'Analytics', agents: 'Agents', learning: 'AI Learning & Cheat Codes', activity: 'Activity' }[activeView]}
+                {{ executive: 'Executive Dashboard', value: 'Value & ROI', projects: 'Projects', analytics: 'Analytics', agents: 'Agents', learning: 'AI Learning & Cheat Codes', activity: 'Activity', help: 'Help & Documentation' }[activeView]}
               </h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <span style={{ fontSize: '13px', color: '#5a6b7c' }}>Last updated: {lastUpdate.toLocaleTimeString()}</span>
@@ -969,6 +970,7 @@
               {activeView === 'agents' && <Agents costs={costs} />}
               {activeView === 'learning' && <AILearning />}
               {activeView === 'activity' && <ActivityView activity={activity} />}
+              {activeView === 'help' && <HelpDocs />}
             </div>
           </main>
         </div>
@@ -1026,7 +1028,7 @@
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
               <span className="badge badge-success">{valueMetrics.roi.toFixed(0)}% ROI</span>
-              <span className="badge badge-info">v2.2.0</span>
+              <span className="badge badge-info">v2.3.0</span>
             </div>
           </div>
 
@@ -2164,6 +2166,405 @@
                     </ul>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // Help & Documentation Component
+    function HelpDocs() {
+      const [activeTab, setActiveTab] = useState('release');
+
+      const releaseNotes = [
+        {
+          version: '2.3.0',
+          date: '2026-01-20',
+          type: 'major',
+          highlights: [
+            'Cross-Agent Learning - Agents share knowledge between domains',
+            'Slack/Teams Notifications - Real-time workflow alerts',
+            'GitHub Actions Integration - Auto PR review and deploy',
+            'Audit Trail - SOC2/HIPAA compliance logging',
+            'Memory Export/Import - Backup and sync capabilities',
+            'Agent Consultation Protocol - Formal knowledge sharing',
+            'Custom Agent Builder - Create specialized agents',
+            'Multi-Tenant Support - Enterprise isolation'
+          ],
+          newScripts: [
+            { name: 'notifications.sh', desc: 'Slack/Teams notifications' },
+            { name: 'cross-agent-learning.sh', desc: 'Cross-agent knowledge sharing' },
+            { name: 'audit-trail.sh', desc: 'Compliance audit logging' },
+            { name: 'memory-manager.sh', desc: 'Memory export/import/backup' },
+            { name: 'consultation.sh', desc: 'Agent consultation protocol' },
+            { name: 'agent-builder.sh', desc: 'Custom agent builder' },
+            { name: 'tenant-manager.sh', desc: 'Multi-tenant support' }
+          ]
+        },
+        {
+          version: '2.2.0',
+          date: '2026-01-20',
+          type: 'major',
+          highlights: [
+            'Self-Learning Memory for ALL Agents',
+            'Ask Tom Agent - Elite problem-solver with E.L.I.M.I.N.A.T.E. framework',
+            'Unified Memory Architecture at ~/.claude/agent-memory/',
+            'Project Memory - Per-project context preservation',
+            'Jets enhancements - World\'s Best Architect for ANY system'
+          ]
+        },
+        {
+          version: '2.1.1',
+          date: '2025-01-15',
+          type: 'minor',
+          highlights: [
+            'FinOps Agent - AI token cost tracking',
+            'Production-Ready Dashboard',
+            'Cost visibility and budget alerts'
+          ]
+        },
+        {
+          version: '2.1.0',
+          date: '2025-01-15',
+          type: 'major',
+          highlights: [
+            'Control Center Dashboard',
+            'Registry System',
+            'Update Manager'
+          ]
+        }
+      ];
+
+      const architecture = {
+        agents: [
+          { name: 'Conductor', model: 'Opus', role: 'Meta-orchestrator', desc: 'Classifies requests, tracks progress, orchestrates workflow, reports status' },
+          { name: 'BA Agent', model: 'Sonnet', role: 'Requirements', desc: 'Gathers requirements, creates user stories, defines acceptance criteria' },
+          { name: 'Architect (Jets)', model: 'Opus', role: 'Architecture', desc: 'System design, ADRs, technology decisions, AI-native patterns' },
+          { name: 'Software Engineer', model: 'Sonnet', role: 'Implementation', desc: 'Code generation, TDD, clean architecture, SOLID principles' },
+          { name: 'Security Agent', model: 'Sonnet', role: 'Security Review', desc: 'SAST, DAST, dependency audit, compliance validation' },
+          { name: 'QA Agent', model: 'Sonnet', role: 'Testing', desc: 'Integration testing, E2E, performance validation' },
+          { name: 'Atlas Agent', model: 'Sonnet', role: 'DevOps/SRE', desc: 'Deployment, infrastructure, operational readiness' },
+          { name: 'Customer Agent', model: 'Sonnet', role: 'UAT', desc: 'Post-deployment acceptance testing' },
+          { name: 'Ask Tom', model: 'Opus', role: 'Problem Solver', desc: 'Root cause analysis, permanent solutions' },
+          { name: 'FinOps Agent', model: 'Haiku', role: 'Cost Tracking', desc: 'Budget monitoring, cost optimization' },
+          { name: 'Tracker Agent', model: 'Haiku', role: 'Monitoring', desc: 'Progress tracking, status reports' }
+        ],
+        workflow: [
+          { phase: 'Requirements', agent: 'BA Agent', output: 'REQ-*.md' },
+          { phase: 'Architecture', agent: 'Architect', output: 'ARCH-*.md, ADR-*.md' },
+          { phase: 'Implementation', agent: 'Engineer', output: 'src/, tests/' },
+          { phase: 'Security', agent: 'Security', output: 'SECURITY-REVIEW-*.md' },
+          { phase: 'Testing', agent: 'QA Agent', output: 'TEST-REPORT-*.md' },
+          { phase: 'Deployment', agent: 'Atlas', output: 'DEPLOY-*.md' },
+          { phase: 'Acceptance', agent: 'Customer', output: 'UAT-*.md' }
+        ],
+        qualityGates: [
+          { phase: 'Security', gate: '0 critical/high vulns', authority: 'BLOCK' },
+          { phase: 'Testing', gate: 'All tests pass', authority: 'FAIL' },
+          { phase: 'Deployment', gate: 'Health checks pass', authority: 'ROLLBACK' },
+          { phase: 'Acceptance', gate: 'P0 criteria pass', authority: 'REJECT' }
+        ]
+      };
+
+      const scripts = [
+        { category: 'Core Workflow', items: [
+          { cmd: '/sdlc-start [desc]', desc: 'Start full autonomous SDLC workflow' },
+          { cmd: '/sdlc-status', desc: 'Check status of all work items' },
+          { cmd: '/sdlc-review [path]', desc: 'Run comprehensive code review' },
+          { cmd: '/sdlc-deploy [env]', desc: 'Deploy using Atlas agent' },
+          { cmd: '/sdlc-ask-tom [problem]', desc: 'Elite problem-solving' }
+        ]},
+        { category: 'Phase Commands', items: [
+          { cmd: '/sdlc-requirements', desc: 'Run requirements gathering only' },
+          { cmd: '/sdlc-architecture', desc: 'Run architecture design only' },
+          { cmd: '/sdlc-security', desc: 'Run security review only' }
+        ]},
+        { category: 'CLI Tools (scripts/)', items: [
+          { cmd: 'notifications.sh', desc: 'Configure Slack/Teams alerts' },
+          { cmd: 'cross-agent-learning.sh', desc: 'Manage cross-agent knowledge' },
+          { cmd: 'audit-trail.sh', desc: 'Compliance audit logging' },
+          { cmd: 'memory-manager.sh', desc: 'Export/import/backup memory' },
+          { cmd: 'consultation.sh', desc: 'Agent consultation protocol' },
+          { cmd: 'agent-builder.sh', desc: 'Create custom agents' },
+          { cmd: 'tenant-manager.sh', desc: 'Multi-tenant management' },
+          { cmd: 'sdlc-registry.sh', desc: 'Registry CLI' },
+          { cmd: 'sdlc-update.sh', desc: 'Update manager' }
+        ]}
+      ];
+
+      const tabStyle = (isActive) => ({
+        padding: '12px 20px',
+        background: isActive ? 'var(--deltek-blue)' : 'transparent',
+        color: isActive ? 'white' : 'var(--text-secondary)',
+        border: 'none',
+        borderRadius: 'var(--radius-md)',
+        cursor: 'pointer',
+        fontWeight: 600,
+        fontSize: '14px',
+        transition: 'all 0.2s ease'
+      });
+
+      return (
+        <div>
+          {/* Tabs */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', background: 'var(--bg-tertiary)', padding: '8px', borderRadius: 'var(--radius-lg)' }}>
+            {[
+              { id: 'release', label: '📋 Release Notes' },
+              { id: 'architecture', label: '🏗️ Architecture' },
+              { id: 'scripts', label: '⚡ Commands & Scripts' },
+              { id: 'readme', label: '📖 Getting Started' }
+            ].map(tab => (
+              <button key={tab.id} style={tabStyle(activeTab === tab.id)} onClick={() => setActiveTab(tab.id)}>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Release Notes Tab */}
+          {activeTab === 'release' && (
+            <div>
+              <div className="section-header mb-lg">
+                <div>
+                  <h3 className="section-title">Release Notes</h3>
+                  <p className="section-subtitle">What's new in each version of AI-SDLC</p>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gap: '20px' }}>
+                {releaseNotes.map((release, i) => (
+                  <div key={i} className="card" style={{ borderLeft: `4px solid ${release.type === 'major' ? 'var(--deltek-blue)' : 'var(--accent-green)'}` }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <span style={{ fontSize: '24px', fontWeight: 700, color: 'var(--deltek-blue)' }}>v{release.version}</span>
+                        <span className={`badge ${release.type === 'major' ? 'badge-info' : 'badge-success'}`}>{release.type}</span>
+                        {i === 0 && <span className="badge badge-purple">CURRENT</span>}
+                      </div>
+                      <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{release.date}</span>
+                    </div>
+                    <div style={{ marginBottom: '16px' }}>
+                      <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>Highlights</h4>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                        {release.highlights.map((h, j) => (
+                          <li key={j} style={{ padding: '6px 0', fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                            <span style={{ color: 'var(--accent-green)', marginTop: '2px' }}>✓</span> {h}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {release.newScripts && (
+                      <div>
+                        <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>New Scripts</h4>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                          {release.newScripts.map((s, j) => (
+                            <span key={j} style={{ background: 'var(--bg-tertiary)', padding: '4px 10px', borderRadius: '4px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                              <code style={{ color: 'var(--deltek-blue)' }}>{s.name}</code> - {s.desc}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Architecture Tab */}
+          {activeTab === 'architecture' && (
+            <div>
+              <div className="section-header mb-lg">
+                <div>
+                  <h3 className="section-title">System Architecture</h3>
+                  <p className="section-subtitle">Understanding the AI-SDLC agent workflow</p>
+                </div>
+              </div>
+
+              {/* Workflow Diagram */}
+              <div className="card mb-xl">
+                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>7-Phase Pipeline</h4>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', padding: '16px 0' }}>
+                  {architecture.workflow.map((phase, i) => (
+                    <React.Fragment key={i}>
+                      <div style={{
+                        background: 'linear-gradient(135deg, var(--dela-blue), var(--dela-cyan))',
+                        color: 'white',
+                        padding: '16px 20px',
+                        borderRadius: '8px',
+                        minWidth: '140px',
+                        textAlign: 'center'
+                      }}>
+                        <div style={{ fontSize: '13px', fontWeight: 600, marginBottom: '4px' }}>{phase.phase}</div>
+                        <div style={{ fontSize: '11px', opacity: 0.9 }}>{phase.agent}</div>
+                        <div style={{ fontSize: '10px', opacity: 0.7, marginTop: '4px' }}>{phase.output}</div>
+                      </div>
+                      {i < architecture.workflow.length - 1 && (
+                        <span style={{ fontSize: '20px', color: 'var(--text-muted)' }}>→</span>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quality Gates */}
+              <div className="card mb-xl">
+                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>Quality Gates</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+                  {architecture.qualityGates.map((gate, i) => (
+                    <div key={i} style={{ background: 'var(--bg-tertiary)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
+                      <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>{gate.phase}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px' }}>{gate.gate}</div>
+                      <span className="badge badge-danger" style={{ fontSize: '10px' }}>{gate.authority}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Agent Details */}
+              <div className="card">
+                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>The 11 Agents</h4>
+                <div style={{ display: 'grid', gap: '8px' }}>
+                  {architecture.agents.map((agent, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'var(--bg-tertiary)', borderRadius: '6px' }}>
+                      <span style={{
+                        width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px',
+                        background: agent.model === 'Opus' ? 'linear-gradient(135deg, var(--dela-purple), var(--dela-magenta))' :
+                                    agent.model === 'Sonnet' ? 'linear-gradient(135deg, var(--dela-blue), var(--dela-cyan))' :
+                                    'linear-gradient(135deg, var(--accent-green), #00a86b)'
+                      }}>
+                        {agent.name === 'Conductor' ? '🎭' : agent.name === 'BA Agent' ? '📋' : agent.name === 'Architect (Jets)' ? '🏗️' :
+                         agent.name === 'Software Engineer' ? '💻' : agent.name === 'Security Agent' ? '🔒' : agent.name === 'QA Agent' ? '🧪' :
+                         agent.name === 'Atlas Agent' ? '🚀' : agent.name === 'Customer Agent' ? '✅' : agent.name === 'Ask Tom' ? '⚡' :
+                         agent.name === 'FinOps Agent' ? '💰' : '📊'}
+                      </span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>{agent.name}</span>
+                          <span className={`badge ${agent.model === 'Opus' ? 'badge-purple' : agent.model === 'Sonnet' ? 'badge-info' : 'badge-success'}`} style={{ fontSize: '9px', padding: '2px 6px' }}>
+                            {agent.model}
+                          </span>
+                          <span style={{ fontSize: '11px', color: 'var(--deltek-blue)' }}>{agent.role}</span>
+                        </div>
+                        <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{agent.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Scripts Tab */}
+          {activeTab === 'scripts' && (
+            <div>
+              <div className="section-header mb-lg">
+                <div>
+                  <h3 className="section-title">Commands & Scripts</h3>
+                  <p className="section-subtitle">All available commands and CLI tools</p>
+                </div>
+              </div>
+              <div style={{ display: 'grid', gap: '20px' }}>
+                {scripts.map((section, i) => (
+                  <div key={i} className="card">
+                    <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--deltek-blue)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ width: '24px', height: '24px', background: 'var(--deltek-light)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
+                        {i + 1}
+                      </span>
+                      {section.category}
+                    </h4>
+                    <div style={{ display: 'grid', gap: '8px' }}>
+                      {section.items.map((item, j) => (
+                        <div key={j} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--bg-tertiary)', borderRadius: '6px' }}>
+                          <code style={{ background: 'var(--deltek-light)', color: 'var(--deltek-blue)', padding: '4px 10px', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>
+                            {item.cmd}
+                          </code>
+                          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{item.desc}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Getting Started Tab */}
+          {activeTab === 'readme' && (
+            <div>
+              <div className="section-header mb-lg">
+                <div>
+                  <h3 className="section-title">Getting Started</h3>
+                  <p className="section-subtitle">Quick start guide for AI-SDLC</p>
+                </div>
+              </div>
+
+              <div className="grid-2 mb-xl">
+                <div className="card">
+                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>🚀 Quick Start</h4>
+                  <ol style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {[
+                      { step: '1', title: 'Start a new feature', code: '/sdlc-start Build user authentication with OAuth 2.0' },
+                      { step: '2', title: 'Check progress', code: '/sdlc-status' },
+                      { step: '3', title: 'Review code', code: '/sdlc-review src/' },
+                      { step: '4', title: 'Deploy', code: '/sdlc-deploy staging' }
+                    ].map((item, i) => (
+                      <li key={i} style={{ padding: '12px 0', borderBottom: i < 3 ? '1px solid var(--border-light)' : 'none' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                          <span style={{ width: '28px', height: '28px', background: 'var(--deltek-light)', color: 'var(--deltek-blue)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '13px' }}>
+                            {item.step}
+                          </span>
+                          <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--text-primary)' }}>{item.title}</span>
+                        </div>
+                        <code style={{ display: 'block', background: 'var(--bg-tertiary)', padding: '8px 12px', borderRadius: '4px', fontSize: '12px', color: 'var(--deltek-blue)' }}>
+                          {item.code}
+                        </code>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div className="card">
+                  <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>📁 Output Structure</h4>
+                  <div style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                    <pre style={{ margin: 0 }}>{`docs/sdlc/
+├── requirements/    # REQ-*.md
+├── architecture/    # ARCH-*.md, ADR-*.md
+├── security/        # SECURITY-REVIEW-*.md
+├── testing/         # TEST-REPORT-*.md
+├── deployments/     # DEPLOY-*.md
+├── acceptance/      # UAT-*.md
+├── problems/        # PROBLEM-*.md
+└── tracking/        # SDLC-*.md`}</pre>
+                  </div>
+                  <div style={{ marginTop: '16px' }}>
+                    <h5 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>Memory Locations</h5>
+                    <div style={{ background: 'var(--bg-tertiary)', padding: '12px', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>
+                      <div>~/.claude/agent-memory/  - Agent learning</div>
+                      <div>~/.claude/sdlc-registry/ - Project registry</div>
+                      <div>~/.claude/audit-trail/   - Compliance logs</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card">
+                <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>📋 Requirements</h4>
+                <div className="grid-3">
+                  <div style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>💻</div>
+                    <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>Claude Code</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Latest version</div>
+                  </div>
+                  <div style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>⭐</div>
+                    <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>Pro or Max</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Required for subagents</div>
+                  </div>
+                  <div style={{ background: 'var(--bg-tertiary)', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>💾</div>
+                    <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>~1MB Disk</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>For agent files</div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
