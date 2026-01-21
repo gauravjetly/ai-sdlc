@@ -1,5 +1,7 @@
 # Agent Registry System
 
+**Version**: 2.4.0
+
 The registry tracks all agent invocations across projects, enabling the Control Center dashboard to show real-time status.
 
 ## Registry Location
@@ -11,6 +13,29 @@ The registry tracks all agent invocations across projects, enabling the Control 
 │   ├── SDLC-20250115-1423.json
 │   └── ...
 └── activity.log        # Chronological activity log
+```
+
+## FinOps Registry (v2.1.1+)
+
+```
+~/.claude/finops-registry/costs/
+└── {PROJECT_ID}-costs.json    # Cost tracking per project
+```
+
+## Agent Memory (v2.2.0+)
+
+```
+~/.claude/agent-memory/
+├── ba/                 # BA agent learnings
+├── engineer/           # Software engineer patterns
+├── security/           # Security vulnerabilities
+├── qa/                 # Test patterns
+├── atlas/              # Deployment patterns
+├── customer/           # UAT patterns
+├── conductor/          # Orchestration patterns
+├── finops/             # Cost optimization patterns
+├── tracker/            # Tracking patterns
+└── shared/             # Cross-agent learnings
 ```
 
 ## Registry Schema
@@ -147,14 +172,48 @@ The Control Center reads from the registry:
 2. **Projects**: Reads `projects/*.json` for details
 3. **Activity**: Reads `activity.log` for timeline
 4. **Agents**: Aggregates from registry stats
+5. **Costs**: Reads from `~/.claude/finops-registry/costs/` (v2.1.1+)
+6. **Memory**: Reads from `~/.claude/agent-memory/` (v2.2.0+)
+
+## Dashboard Features (v2.4.0)
+
+The Control Center dashboard provides comprehensive visualization:
+
+### Views
+- **Executive Dashboard** - SDLC pipeline flow, agent performance, velocity charts
+- **Projects** - Clickable cards with detail modals, search/filter, archive
+- **Agents** - Clickable cards with deep dive modals
+- **Timeline** - Gantt chart visualization of projects
+- **Compare** - Side-by-side project comparison
+- **Integrations** - Jira, GitHub, Slack connections
+- **Costs** - Budget tracking and efficiency metrics
+- **Activity** - Real-time event log
+
+### Advanced Features
+- **Command Palette** - Press `⌘K` for quick actions
+- **AI Insights** - Auto-generated recommendations
+- **Predictive Analytics** - Completion date estimates
+- **Budget Alerts** - Toast notifications on threshold
+- **PDF Export** - Print-optimized reports
+
+### API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/registry` | Registry stats |
+| `GET /api/projects` | Projects with costs |
+| `GET /api/costs` | All cost data |
+| `GET /api/activity` | Activity log |
+| `GET /api/memory` | Agent memory stats |
+| `GET /events` | SSE for real-time |
 
 ## File Watcher (Optional)
 
-For real-time updates, run the file watcher:
+For real-time updates, the dashboard uses SSE (Server-Sent Events):
 
 ```bash
-# Watch for registry changes and update UI
-claude-registry watch --port 3000
+# Start the dashboard server with SSE support
+node dashboard/server.js
 ```
 
-This starts a WebSocket server that the Control Center can connect to for live updates.
+The dashboard automatically connects to `/events` for live updates.

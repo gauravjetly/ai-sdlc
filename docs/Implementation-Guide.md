@@ -1,6 +1,8 @@
 # Agentic AI-SDLC: Claude Code Implementation Guide
 ## Deploy Self-Orchestrating SDLC Agents in Your Claude Code Ecosystem
 
+**Version**: 2.4.0
+
 ---
 
 ## Implementation Overview
@@ -699,5 +701,41 @@ USER: "/sdlc-start Build feedback portal"
 - [ ] Create `docs/sdlc/` directories in project
 - [ ] Add `CLAUDE.md` to project root
 - [ ] Test with `/sdlc-start Build hello world API`
+- [ ] Start Control Center: `node dashboard/server.js`
 
 Your autonomous AI-SDLC is now ready to operate!
+
+---
+
+## Control Center Dashboard (v2.4.0)
+
+Monitor your SDLC workflows with the advanced Control Center:
+
+### Start Dashboard
+```bash
+cd ~/aisdlc-2.1.0/dashboard
+node server.js
+# Opens at http://localhost:3030
+```
+
+### Dashboard Features
+- **Executive Dashboard** - SDLC pipeline flow, agent performance, velocity charts
+- **Project Detail Modals** - Click any project for full phase history
+- **Agent Deep Dive** - Click any agent for complete stats
+- **Command Palette** - Press `⌘K` for VS Code-style quick actions
+- **Gantt Timeline** - Visual timeline of all projects
+- **Compare Projects** - Side-by-side comparison
+- **Integration Hub** - Connect Jira, GitHub, Slack
+- **AI Insights** - Auto-generated recommendations
+- **Predictive Analytics** - Completion date estimates
+- **Budget Alerts** - Toast notifications on threshold
+- **PDF Export** - Print-optimized reports
+- **Dark Mode** - Toggle light/dark themes
+
+### Keyboard Shortcuts
+| Shortcut | Action |
+|----------|--------|
+| `⌘K` / `Ctrl+K` | Command Palette |
+| `Escape` | Close modal |
+
+See [dashboard/README.md](../dashboard/README.md) for full documentation.

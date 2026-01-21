@@ -2,6 +2,141 @@
 
 All notable changes to the AI-SDLC Framework.
 
+## [2.4.0] - 2026-01-21
+
+### Added - Advanced Control Center Dashboard
+
+#### 12 New Dashboard Features
+
+1. **Project Detail Modal**
+   - Click any project card to open full detail view
+   - Complete phase history with timestamps and duration
+   - Cost breakdown by agent and model
+   - Activity log filtered to project
+   - Quick actions (archive, export, run again)
+
+2. **Command Palette (⌘K / Ctrl+K)**
+   - VS Code-style quick command menu
+   - Navigate to any view instantly
+   - Search projects by name
+   - Execute actions: Run SDLC, Export, Toggle Theme
+   - Keyboard-first workflow
+
+3. **Sparkline Charts**
+   - Mini trend visualizations in metric cards
+   - 4-week history at a glance
+   - Color-coded positive/negative trends
+
+4. **Drag & Drop**
+   - Reorder projects by priority
+   - Visual drag handles on project cards
+   - CSS and hooks ready for implementation
+
+5. **Gantt Timeline View**
+   - New "Timeline" navigation item
+   - Visual timeline of all projects
+   - Phase duration bars
+   - Project overlap detection
+   - Hover for details
+
+6. **Agent Deep Dive Modal**
+   - Click any agent card for full history
+   - Performance stats (invocations, success rate)
+   - Cost breakdown over time
+   - Recent activity filtered to agent
+   - Model information and capabilities
+
+7. **PDF Report Export**
+   - Print-optimized CSS with media queries
+   - Executive summary format
+   - Hide navigation/controls in print
+   - Professional formatting for stakeholders
+
+8. **Budget Alerts**
+   - Toast notification system
+   - Configurable warning thresholds (default 80%)
+   - Danger alerts at 100% budget
+   - Auto-dismiss after 5 seconds
+   - Manual dismiss option
+
+9. **AI Insights Panel**
+   - Auto-generated recommendations on Executive view
+   - Analyzes project data for patterns
+   - Suggests optimizations
+   - Highlights bottlenecks
+   - Priority-based ordering
+
+10. **Compare Projects View**
+    - New "Compare" navigation item
+    - Side-by-side comparison of up to 4 projects
+    - Metric comparison (cost, duration, completion)
+    - Visual difference highlighting
+    - Performance benchmarking
+
+11. **Predictive Analytics**
+    - ML-based completion date estimates
+    - Confidence intervals
+    - Based on historical velocity
+    - Highlights at-risk projects
+    - Adjusts for project complexity
+
+12. **Integration Hub**
+    - New "Integrations" navigation item
+    - Jira connection management
+    - GitHub repository linking
+    - Slack notification configuration
+    - Connection status indicators
+    - Add/Edit/Remove integrations
+
+#### Enhanced Executive Dashboard
+- **SDLC Pipeline Flow** - All 8 stages with project counts
+- **Agent Performance Grid** - Comprehensive metrics per agent
+- **Project Velocity Chart** - 4-week completion trends
+- **Bottleneck Detection** - Identify blocking agents
+- **Cost by Model Breakdown** - Opus/Sonnet/Haiku distribution
+
+#### UI/UX Improvements
+- **Dark Mode Support** - All new components themed
+- **Real-time SSE Updates** - Instant activity notifications
+- **Toast Notification System** - Non-blocking alerts
+- **Clickable Cards** - Projects and agents now interactive
+- **New Navigation Items** - Timeline, Compare, Integrations
+
+### Changed
+- Dashboard version updated to 2.4.0
+- Projects component accepts `onProjectClick` prop
+- Agents component accepts `onAgentClick` prop
+- Executive view now includes AI Insights and Predictive Analytics
+- Navigation expanded with 3 new views
+
+### Technical
+- Added ~800 lines of CSS for new features
+- Added 10 new React components
+- Toast notification system with auto-dismiss
+- Command palette with keyboard navigation
+- Print media queries for PDF export
+
+### Upgrade Guide (2.3.0 → 2.4.0)
+```bash
+# 1. Pull latest changes
+git pull
+
+# 2. Restart dashboard server
+lsof -ti:3030 | xargs kill -9
+node dashboard/server.js &
+
+# 3. Access new features
+# - Press ⌘K (or Ctrl+K) for command palette
+# - Click projects/agents for detail modals
+# - Navigate to Timeline, Compare, Integrations views
+
+# 4. Configure integrations (optional)
+# - Go to Integrations view
+# - Add Jira, GitHub, or Slack connections
+```
+
+---
+
 ## [2.3.0] - 2026-01-20
 
 ### Added - Enterprise Features

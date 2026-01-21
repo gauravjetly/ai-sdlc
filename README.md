@@ -2,8 +2,26 @@
 
 ## Complete Enterprise Software Development Automation
 
-**Version**: 2.3.0
+**Version**: 2.4.0
 **Author**: Deltek Cloud Engineering
+
+---
+
+## What's New in v2.4.0
+
+### Advanced Control Center Dashboard
+- **Project Detail Modal** - Click any project for full phase history, logs, and metrics
+- **Command Palette (⌘K)** - VS Code-style quick actions and navigation
+- **Sparkline Charts** - Mini trend visualizations in metric cards
+- **Gantt Timeline** - Visual timeline view of all projects (new nav item)
+- **Agent Deep Dive** - Click any agent card for full history and stats
+- **PDF Report Export** - Print-optimized executive summaries
+- **Budget Alerts** - Toast notifications when budget thresholds are hit
+- **AI Insights Panel** - Auto-generated recommendations on Executive view
+- **Compare Projects** - Side-by-side project comparison (new nav item)
+- **Predictive Analytics** - ML-based completion date estimates
+- **Integration Hub** - Jira, GitHub, Slack connection management (new nav item)
+- **Comprehensive Executive Dashboard** - SDLC Pipeline Flow, Agent Performance Grid, Velocity Charts
 
 ---
 
@@ -200,40 +218,76 @@ sdlc-update --changelog
 
 Production-ready web UI for real-time monitoring of agent activity, cost tracking, and budget management across all projects.
 
-### Features
+### Core Features
 
-**Dashboard Tab:**
-- **Stats Overview**: Total projects, completed, in progress, blocked, total spent
-- **Budget Utilization**: Progress bar with color-coded health indicators (🟢🟡🔴)
-- **Agent Workflow**: Visual representation of all 10 agents including FinOps
-- **Recent Activity**: Real-time feed of agent actions
+**Executive Dashboard:**
+- **SDLC Pipeline Flow** - Visual representation of all 8 pipeline stages with project counts
+- **Agent Performance Grid** - Invocations, success rates, costs for each agent
+- **Project Velocity Chart** - 4-week trend of completed projects
+- **Bottleneck Detection** - Identify which agents are blocking projects
+- **AI Insights Panel** - Auto-generated recommendations based on data
+- **Predictive Analytics** - ML-based completion date estimates
 
 **Projects Tab:**
-- **Project Cards**: Status, cost metrics, budget health per project
+- **Project Cards**: Click for full detail modal with phase history
+- **Search & Filter**: Find projects by name, status, or ID
+- **Archive System**: Archive/restore projects with dedicated view
 - **Phase Progress**: Visual indicators for each SDLC phase
-- **Cost Breakdown**: Detailed spending by agent for selected project
-- **Budget Status**: Color-coded alerts at 50% (🟡) and 90% (🔴) thresholds
+- **Drag & Drop**: Reorder projects by priority (CSS ready)
 
 **Agents Tab:**
-- **Agent Cards**: All 10 agents with invocation counts and stats
-- **Cost Totals**: Aggregate spending per agent across all projects
-- **Token Usage**: Total tokens consumed by each agent
+- **Agent Cards**: Click for deep dive modal with full history
+- **All 11 Agents**: Including Ask Tom and FinOps
+- **Cost Totals**: Aggregate spending per agent
 - **Performance Metrics**: Success rates, blocked/failed counts
 
-**Costs Tab** ⭐ NEW:
-- **Summary Cards**: Total budget, total spent, remaining, budget health
-- **Cost by Agent Chart**: Horizontal bars showing cost distribution and percentages
-- **Cost by Project Grid**: Budget utilization with status indicators for each project
-- **Cost Efficiency Metrics**:
-  - Average cost per project
-  - Cost per 1,000 tokens
-  - Total tokens across all projects
-- **Optimization Tips**: Best practices for reducing AI token costs
+**Timeline View (New):**
+- **Gantt Chart**: Visual timeline of all projects
+- **Phase Duration**: See how long each phase takes
+- **Project Overlap**: Identify resource conflicts
+
+**Compare View (New):**
+- **Side-by-Side**: Compare up to 4 projects
+- **Metric Comparison**: Costs, duration, phase completion
+- **Performance Analysis**: Identify best/worst performers
+
+**Integrations Hub (New):**
+- **Jira Integration**: Connect to Jira for ticket sync
+- **GitHub Integration**: Link to repos and PRs
+- **Slack Integration**: Real-time notifications
+- **Connection Management**: Add, edit, remove integrations
+
+**Costs Tab:**
+- **Summary Cards**: Total budget, spent, remaining, health
+- **Cost by Agent Chart**: Distribution and percentages
+- **Cost by Model**: Opus/Sonnet/Haiku breakdown
+- **Efficiency Metrics**: Cost per project, per 1K tokens
 
 **Activity Tab:**
 - **Chronological Log**: All agent actions with timestamps
 - **Event Types**: Phase starts, completions, blocks, approvals
-- **Filtering**: View by agent, project, or event type
+- **Real-time Updates**: SSE for instant notifications
+
+### Advanced Features
+
+**Command Palette (⌘K):**
+- Quick navigation to any view
+- Search projects by name
+- Execute common actions (Run SDLC, Export, Theme toggle)
+- Keyboard-first workflow
+
+**Detail Modals:**
+- **Project Modal**: Full phase timeline, costs, activity log
+- **Agent Modal**: Complete history, performance stats, recent activity
+
+**Export & Reporting:**
+- **PDF Export**: Print-optimized executive summaries
+- **CSV Export**: Download project and cost data
+
+**Budget Alerts:**
+- **Toast Notifications**: Pop-up alerts when thresholds hit
+- **Configurable Thresholds**: Set warning and danger levels
+- **Color-coded Indicators**: 🟢🟡🔴 health status
 
 ### Usage
 
@@ -494,6 +548,7 @@ When you add a deprecation, it's automatically:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.4.0 | 2026-01-21 | Advanced Dashboard: 12 new features (Command Palette, Gantt Timeline, AI Insights, etc.) |
 | 2.3.0 | 2026-01-20 | Cross-agent learning, notifications, GitHub Actions, audit trail, multi-tenant |
 | 2.2.0 | 2026-01-20 | Self-learning memory for ALL agents, Ask Tom, Jets enhancements |
 | 2.1.1 | 2025-01-15 | FinOps integration, cost tracking, production dashboard |
