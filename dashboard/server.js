@@ -301,6 +301,63 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // API endpoint for running SDLC workflow
+  if (req.url === '/api/run-sdlc' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+        const { description, projectName, workflow } = data;
+
+        if (!description) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Description is required' }));
+          return;
+        }
+
+        // Generate project ID
+        const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
+        const projectId = `SDLC-${timestamp}`;
+
+        // Create project in registry
+        const name = projectName || description.slice(0, 50);
+        const createCmd = `bash "${REGISTRY_SCRIPT}" create "${projectId}" "${name.replace(/"/g, '\\"')}" "${description.replace(/"/g, '\\"')}"`;
+
+        exec(createCmd, (error, stdout, stderr) => {
+          if (error) {
+            console.error('Error creating project:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: 'Failed to create project' }));
+            return;
+          }
+
+          // Generate the command for the user to run
+          const workflowCommands = {
+            full: `/sdlc-start ${description}`,
+            quick: `/sdlc-start ${description}`,
+            review: `/sdlc-review src/`
+          };
+
+          const command = workflowCommands[workflow] || workflowCommands.full;
+
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            projectId,
+            message: `Project ${projectId} created. Run this in your Claude Code terminal:`,
+            command,
+            note: 'The SDLC workflow will be orchestrated by the Conductor agent.'
+          }));
+        });
+      } catch (error) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
   // Serve the dashboard HTML
   if (req.url === '/' || req.url === '/index.html') {
     const htmlPath = path.join(__dirname, 'index.html');

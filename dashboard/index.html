@@ -731,6 +731,250 @@
     .text-blue { color: var(--deltek-blue); }
     .text-red { color: var(--accent-red); }
     .text-muted { color: var(--text-muted); }
+
+    /* === RUN SDLC MODAL === */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow: hidden;
+      animation: modalSlideIn 0.2s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: var(--space-lg);
+      overflow-y: auto;
+    }
+
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--deltek-blue);
+      box-shadow: 0 0 0 3px rgba(23, 66, 246, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .modal-footer {
+      padding: var(--space-lg);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn-run-sdlc {
+      background: linear-gradient(135deg, var(--deltek-blue) 0%, var(--dela-purple) 100%);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-run-sdlc:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(23, 66, 246, 0.3);
+    }
+
+    .btn-run-sdlc:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .workflow-preview {
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      margin-top: var(--space-md);
+    }
+
+    .workflow-preview-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .workflow-phases {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .workflow-phase {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .workflow-phase-number {
+      width: 18px;
+      height: 18px;
+      background: var(--deltek-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .cost-estimate {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: var(--space-md);
+      background: var(--accent-green-light);
+      border-radius: var(--radius-md);
+      margin-top: var(--space-md);
+    }
+
+    .cost-estimate-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .cost-estimate-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent-green);
+    }
+
+    .running-status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-xl);
+      text-align: center;
+    }
+
+    .running-spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--border-color);
+      border-top-color: var(--deltek-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: var(--space-md);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .running-message {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .running-phase {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--deltek-blue);
+    }
   </style>
 </head>
 <body>
@@ -820,6 +1064,140 @@
       return phases.find(p => p.status === 'in_progress') || phases[phases.length - 1];
     }
 
+    // Run SDLC Modal Component
+    function RunSDLCModal({ show, onClose, onSubmit, isRunning, status }) {
+      const [description, setDescription] = useState('');
+      const [projectName, setProjectName] = useState('');
+      const [workflow, setWorkflow] = useState('full');
+
+      if (!show) return null;
+
+      const workflowPhases = {
+        full: ['BA', 'Architect', 'Engineer', 'Security', 'QA', 'Deploy', 'UAT'],
+        quick: ['BA', 'Engineer', 'QA'],
+        review: ['Security', 'QA']
+      };
+
+      const estimatedCost = {
+        full: '$0.30 - $0.80',
+        quick: '$0.10 - $0.25',
+        review: '$0.05 - $0.15'
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (description.trim()) {
+          onSubmit({ description: description.trim(), projectName: projectName.trim(), workflow });
+        }
+      };
+
+      return (
+        <div className="modal-overlay" onClick={onClose}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">
+                <AgentIcon src="assets/brand/icons/team-workflow.svg" size={24} />
+                Run SDLC Workflow
+              </h2>
+              <button className="modal-close" onClick={onClose}>&times;</button>
+            </div>
+
+            {isRunning ? (
+              <div className="modal-body">
+                <div className="running-status">
+                  {status && status.includes('Project') ? (
+                    <>
+                      <div style={{ width: '48px', height: '48px', background: 'var(--accent-green-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                        <AgentIcon src="assets/brand/icons/checkmark-badge.svg" size={24} style={{ filter: 'brightness(0) saturate(100%) invert(35%) sepia(98%) saturate(500%) hue-rotate(100deg)' }} />
+                      </div>
+                      <div className="running-message" style={{ color: 'var(--accent-green)', fontWeight: 600 }}>Project Created</div>
+                      <div style={{ marginTop: '16px', padding: '16px', background: 'var(--bg-tertiary)', borderRadius: '8px', textAlign: 'left', width: '100%' }}>
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Run this command in your Claude Code terminal:</div>
+                        <code style={{ display: 'block', padding: '12px', background: 'var(--deltek-navy)', color: '#fff', borderRadius: '6px', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>
+                          {status.split(':').slice(1).join(':').trim() || '/sdlc-start [your description]'}
+                        </code>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="running-spinner"></div>
+                      <div className="running-message">Setting up project...</div>
+                      <div className="running-phase">{status || 'Creating project in registry'}</div>
+                    </>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <div className="modal-body">
+                  <div className="form-group">
+                    <label className="form-label">Project Name (optional)</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g., User Authentication System"
+                      value={projectName}
+                      onChange={e => setProjectName(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">What do you want to build?</label>
+                    <textarea
+                      className="form-textarea"
+                      placeholder="Describe the feature, bug fix, or improvement you want to implement...&#10;&#10;Example: Build a user authentication system with OAuth 2.0 support, MFA, and password reset functionality."
+                      value={description}
+                      onChange={e => setDescription(e.target.value)}
+                      required
+                    />
+                    <div className="form-hint">Be specific - the more detail you provide, the better the results.</div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Workflow Type</label>
+                    <select
+                      className="form-select"
+                      value={workflow}
+                      onChange={e => setWorkflow(e.target.value)}
+                    >
+                      <option value="full">Full SDLC (Recommended) - All 7 phases</option>
+                      <option value="quick">Quick Build - BA → Engineer → QA</option>
+                      <option value="review">Review Only - Security + QA</option>
+                    </select>
+                  </div>
+
+                  <div className="workflow-preview">
+                    <div className="workflow-preview-title">Workflow Phases</div>
+                    <div className="workflow-phases">
+                      {workflowPhases[workflow].map((phase, i) => (
+                        <div key={phase} className="workflow-phase">
+                          <span className="workflow-phase-number">{i + 1}</span>
+                          {phase}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="cost-estimate">
+                    <span className="cost-estimate-label">Estimated AI Cost:</span>
+                    <span className="cost-estimate-value">{estimatedCost[workflow]}</span>
+                  </div>
+                </div>
+
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
+                  <button type="submit" className="btn-run-sdlc" disabled={!description.trim()}>
+                    <AgentIcon src="assets/brand/icons/team-workflow.svg" size={16} style={{ filter: 'brightness(0) invert(1)' }} />
+                    Start SDLC
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      );
+    }
+
     function App() {
       const [activeView, setActiveView] = useState('executive');
       const [projects, setProjects] = useState([]);
@@ -830,6 +1208,9 @@
       const [notifications, setNotifications] = useState([]);
       const [showNotifications, setShowNotifications] = useState(false);
       const [unreadCount, setUnreadCount] = useState(0);
+      const [showRunModal, setShowRunModal] = useState(false);
+      const [sdlcRunning, setSdlcRunning] = useState(false);
+      const [sdlcStatus, setSdlcStatus] = useState(null);
       const lastActivityRef = useRef(null);
 
       // Check for new activity and create notifications
@@ -923,6 +1304,42 @@
 
       const health = getHealth();
 
+      // Handle running SDLC workflow
+      const handleRunSDLC = async (formData) => {
+        setSdlcRunning(true);
+        setSdlcStatus('Creating project...');
+
+        try {
+          const response = await fetch('/api/run-sdlc', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            // Show the command to run
+            setSdlcStatus(`Project ${result.projectId} created. Run: ${result.command}`);
+            // Refresh data
+            fetchData();
+            // Keep modal open to show command, user closes manually
+          } else {
+            setSdlcStatus(`Error: ${result.error || 'Failed to create project'}`);
+            setTimeout(() => {
+              setSdlcRunning(false);
+              setSdlcStatus(null);
+            }, 5000);
+          }
+        } catch (error) {
+          setSdlcStatus(`Error: ${error.message}`);
+          setTimeout(() => {
+            setSdlcRunning(false);
+            setSdlcStatus(null);
+          }, 5000);
+        }
+      };
+
       return (
         <div className="app-shell">
           <aside className="sidebar">
@@ -975,6 +1392,10 @@
               </h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <span style={{ fontSize: '13px', color: '#5a6b7c' }}>Last updated: {lastUpdate.toLocaleTimeString()}</span>
+                <button className="btn-run-sdlc" onClick={() => setShowRunModal(true)}>
+                  <AgentIcon src="assets/brand/icons/team-workflow.svg" size={16} style={{ filter: 'brightness(0) invert(1)' }} />
+                  Run SDLC
+                </button>
                 <NotificationBell
                   notifications={notifications}
                   unreadCount={unreadCount}
@@ -998,6 +1419,14 @@
               {activeView === 'help' && <HelpDocs />}
             </div>
           </main>
+
+          <RunSDLCModal
+            show={showRunModal}
+            onClose={() => { setShowRunModal(false); setSdlcRunning(false); setSdlcStatus(null); }}
+            onSubmit={handleRunSDLC}
+            isRunning={sdlcRunning}
+            status={sdlcStatus}
+          />
         </div>
       );
     }
