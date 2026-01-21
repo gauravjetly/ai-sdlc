@@ -1485,103 +1485,86 @@
       return phases.find(p => p.status === 'in_progress') || phases[phases.length - 1];
     }
 
-    // Run SDLC Modal Component - Enhanced with Tabs, Project Selection, All Agents
+    // Run SDLC Modal - Redesigned for Intuitive UX
     function RunSDLCModal({ show, onClose, onSubmit, isRunning, status, projects = [] }) {
-      const [activeTab, setActiveTab] = useState('new');
+      const [step, setStep] = useState('choose'); // choose, build, agent, project
       const [description, setDescription] = useState('');
-      const [projectName, setProjectName] = useState('');
-      const [workflow, setWorkflow] = useState('full');
-      const [selectedProject, setSelectedProject] = useState(null);
       const [selectedAgent, setSelectedAgent] = useState(null);
+      const [selectedProject, setSelectedProject] = useState(null);
       const [agentPrompt, setAgentPrompt] = useState('');
 
       if (!show) return null;
 
-      // Workflow definitions with all agents
-      const workflows = {
-        full: {
-          name: 'Full SDLC',
-          desc: 'Complete software development lifecycle with all phases',
-          agents: ['BA', 'Jets', 'Engineer', 'Security', 'QA', 'Atlas', 'Customer'],
-          cost: '$0.30 - $0.80',
-          badge: 'Recommended'
+      // Quick actions with clear descriptions
+      const quickActions = [
+        {
+          id: 'build',
+          icon: 'assets/brand/icons/ai-chip.svg',
+          title: 'Build Something New',
+          subtitle: 'Create a feature, fix a bug, or build an app',
+          color: 'var(--deltek-blue)',
+          examples: ['Add user login', 'Fix checkout bug', 'Build REST API']
         },
-        fullWithTom: {
-          name: 'Full + Ask Tom',
-          desc: 'Full SDLC with problem-solving support from Tom',
-          agents: ['BA', 'Jets', 'Engineer', 'Security', 'QA', 'Atlas', 'Customer', 'Ask Tom'],
-          cost: '$0.40 - $1.00',
-          badge: 'Premium'
+        {
+          id: 'agent',
+          icon: 'assets/brand/icons/brain-lightbulb.svg',
+          title: 'Ask an Agent',
+          subtitle: 'Get help from a specialized AI agent',
+          color: 'var(--dela-purple)',
+          examples: ['Ask Tom to debug', 'Security review', 'Check status']
         },
-        quick: {
-          name: 'Quick Build',
-          desc: 'Fast implementation for simple features',
-          agents: ['BA', 'Engineer', 'QA'],
-          cost: '$0.10 - $0.25',
-          badge: null
-        },
-        review: {
-          name: 'Code Review',
-          desc: 'Security audit and quality assurance only',
-          agents: ['Security', 'QA'],
-          cost: '$0.05 - $0.15',
-          badge: null
-        },
-        architecture: {
-          name: 'Architecture',
-          desc: 'Requirements gathering and system design',
-          agents: ['BA', 'Jets'],
-          cost: '$0.08 - $0.20',
-          badge: null
-        },
-        deploy: {
-          name: 'Deploy Only',
-          desc: 'Deployment and UAT validation',
-          agents: ['Atlas', 'Customer'],
-          cost: '$0.05 - $0.12',
-          badge: null
+        {
+          id: 'project',
+          icon: 'assets/brand/icons/checklist.svg',
+          title: 'Continue Project',
+          subtitle: 'Resume or review an existing project',
+          color: 'var(--accent-green)',
+          examples: ['Resume build', 'Run tests', 'Deploy to prod']
         }
-      };
-
-      // Individual agent actions
-      const agentActions = [
-        { id: 'ask-tom', name: 'Ask Tom', icon: 'assets/brand/icons/brain-lightbulb.svg', role: 'Problem Solver', model: 'Opus', desc: 'Elite troubleshooting and root cause analysis', command: '/sdlc-ask-tom' },
-        { id: 'ba', name: 'BA Agent', icon: 'assets/brand/icons/checklist.svg', role: 'Requirements', model: 'Sonnet', desc: 'Gather and document requirements', command: '/sdlc-requirements' },
-        { id: 'jets', name: 'Jets', icon: 'assets/brand/icons/building-governance.svg', role: 'Architecture', model: 'Opus', desc: 'Design system architecture', command: '/sdlc-architecture' },
-        { id: 'security', name: 'Security', icon: 'assets/brand/icons/compliance.svg', role: 'Security', model: 'Sonnet', desc: 'Security review and vulnerability scan', command: '/sdlc-security' },
-        { id: 'qa', name: 'QA Agent', icon: 'assets/brand/icons/data-workflow.svg', role: 'Testing', model: 'Sonnet', desc: 'Quality assurance and testing', command: '/sdlc-review' },
-        { id: 'tracker', name: 'Tracker', icon: 'assets/brand/icons/data-flow.svg', role: 'Monitor', model: 'Haiku', desc: 'Check status and progress', command: '/sdlc-status' },
-        { id: 'finops', name: 'FinOps', icon: 'assets/brand/icons/calculator.svg', role: 'Costs', model: 'Haiku', desc: 'Cost tracking and optimization', command: '/sdlc-status' },
       ];
 
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        if (activeTab === 'new' && description.trim()) {
-          onSubmit({ mode: 'new', description: description.trim(), projectName: projectName.trim(), workflow });
-        } else if (activeTab === 'continue' && selectedProject) {
-          onSubmit({ mode: 'continue', projectId: selectedProject.id, workflow });
-        } else if (activeTab === 'agent' && selectedAgent) {
-          onSubmit({ mode: 'agent', agent: selectedAgent, prompt: agentPrompt.trim(), projectId: selectedProject?.id });
+      // Simplified agent list with clear purposes
+      const agents = [
+        { id: 'ask-tom', name: 'Ask Tom', icon: 'assets/brand/icons/brain-lightbulb.svg', purpose: 'Stuck? Tom solves hard problems', placeholder: 'Describe your problem...' },
+        { id: 'security', name: 'Security Review', icon: 'assets/brand/icons/compliance.svg', purpose: 'Scan code for vulnerabilities', placeholder: 'What to review? (e.g., src/)' },
+        { id: 'qa', name: 'Run Tests', icon: 'assets/brand/icons/data-workflow.svg', purpose: 'Quality assurance & testing', placeholder: 'What to test?' },
+        { id: 'tracker', name: 'Check Status', icon: 'assets/brand/icons/data-flow.svg', purpose: 'See project progress', placeholder: '' },
+        { id: 'ba', name: 'Gather Requirements', icon: 'assets/brand/icons/checklist.svg', purpose: 'Document what to build', placeholder: 'What feature to document?' },
+        { id: 'jets', name: 'Design Architecture', icon: 'assets/brand/icons/building-governance.svg', purpose: 'Plan system design', placeholder: 'What to architect?' },
+      ];
+
+      const handleQuickAction = (actionId) => {
+        setStep(actionId);
+      };
+
+      const handleSubmit = () => {
+        if (step === 'build' && description.trim()) {
+          onSubmit({ mode: 'new', description: description.trim(), workflow: 'full' });
+        } else if (step === 'agent' && selectedAgent) {
+          onSubmit({ mode: 'agent', agent: selectedAgent.id, prompt: agentPrompt.trim() });
+        } else if (step === 'project' && selectedProject) {
+          onSubmit({ mode: 'continue', projectId: selectedProject.id, workflow: 'full' });
         }
       };
 
       const canSubmit = () => {
-        if (activeTab === 'new') return description.trim().length > 0;
-        if (activeTab === 'continue') return selectedProject !== null;
-        if (activeTab === 'agent') return selectedAgent !== null;
+        if (step === 'build') return description.trim().length > 0;
+        if (step === 'agent') return selectedAgent !== null;
+        if (step === 'project') return selectedProject !== null;
         return false;
       };
 
-      const getSubmitLabel = () => {
-        if (activeTab === 'new') return 'Start SDLC';
-        if (activeTab === 'continue') return 'Continue Project';
-        if (activeTab === 'agent') return `Run ${agentActions.find(a => a.id === selectedAgent)?.name || 'Agent'}`;
-        return 'Submit';
+      const resetModal = () => {
+        setStep('choose');
+        setDescription('');
+        setSelectedAgent(null);
+        setSelectedProject(null);
+        setAgentPrompt('');
       };
 
       return (
         <div className="modal-overlay" onClick={onClose}>
-          <div className={`modal ${activeTab === 'agent' ? 'modal-wide' : ''}`} onClick={e => e.stopPropagation()}>
+          <div className="modal modal-wide" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2 className="modal-title">
                 <AgentIcon src="assets/brand/icons/team-workflow.svg" size={24} />
@@ -1590,224 +1573,234 @@
               <button className="modal-close" onClick={onClose}>&times;</button>
             </div>
 
-            {/* Tabs */}
-            <div className="modal-tabs">
-              <button
-                className={`modal-tab ${activeTab === 'new' ? 'active' : ''}`}
-                onClick={() => setActiveTab('new')}
-              >
-                <AgentIcon src="assets/brand/icons/ai-chip.svg" size={16} />
-                New Project
-              </button>
-              <button
-                className={`modal-tab ${activeTab === 'continue' ? 'active' : ''}`}
-                onClick={() => setActiveTab('continue')}
-              >
-                <AgentIcon src="assets/brand/icons/data-workflow.svg" size={16} />
-                Continue Project
-              </button>
-              <button
-                className={`modal-tab ${activeTab === 'agent' ? 'active' : ''}`}
-                onClick={() => setActiveTab('agent')}
-              >
-                <AgentIcon src="assets/brand/icons/brain-lightbulb.svg" size={16} />
-                Agent Action
-              </button>
-            </div>
-
             {isRunning ? (
               <div className="modal-body">
                 <div className="running-status">
-                  {status && status.includes('Project') ? (
+                  {status && status.includes('Run:') ? (
                     <>
-                      <div style={{ width: '48px', height: '48px', background: 'var(--accent-green-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
-                        <AgentIcon src="assets/brand/icons/checkmark-badge.svg" size={24} style={{ filter: 'brightness(0) saturate(100%) invert(35%) sepia(98%) saturate(500%) hue-rotate(100deg)' }} />
+                      <div style={{ width: '56px', height: '56px', background: 'var(--accent-green-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                        <AgentIcon src="assets/brand/icons/checkmark-badge.svg" size={28} style={{ filter: 'brightness(0) saturate(100%) invert(35%) sepia(98%) saturate(500%) hue-rotate(100deg)' }} />
                       </div>
-                      <div className="running-message" style={{ color: 'var(--accent-green)', fontWeight: 600 }}>Ready to Run</div>
-                      <div style={{ marginTop: '16px', padding: '16px', background: 'var(--bg-tertiary)', borderRadius: '8px', textAlign: 'left', width: '100%' }}>
-                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Run this command in your Claude Code terminal:</div>
-                        <code style={{ display: 'block', padding: '12px', background: 'var(--deltek-navy)', color: '#fff', borderRadius: '6px', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>
-                          {status.split(':').slice(1).join(':').trim() || '/sdlc-start [your description]'}
+                      <div className="running-message" style={{ color: 'var(--accent-green)', fontWeight: 600, fontSize: '18px' }}>Ready!</div>
+                      <div style={{ marginTop: '20px', padding: '20px', background: 'var(--bg-tertiary)', borderRadius: '12px', textAlign: 'left', width: '100%' }}>
+                        <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '12px' }}>Copy and paste this into your Claude Code terminal:</div>
+                        <code style={{ display: 'block', padding: '16px', background: 'var(--deltek-navy)', color: '#fff', borderRadius: '8px', fontSize: '14px', fontFamily: 'var(--font-mono)', wordBreak: 'break-all' }}>
+                          {status.split('Run:')[1]?.trim() || '/sdlc-start'}
                         </code>
                       </div>
+                      <button className="btn btn-secondary" style={{ marginTop: '20px' }} onClick={() => { resetModal(); onClose(); }}>Done</button>
                     </>
                   ) : (
                     <>
                       <div className="running-spinner"></div>
                       <div className="running-message">Setting up...</div>
-                      <div className="running-phase">{status || 'Processing request'}</div>
+                      <div className="running-phase">{status || 'Processing'}</div>
                     </>
                   )}
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit}>
-                <div className="modal-body">
+              <div className="modal-body">
+                {/* STEP 1: Choose what to do */}
+                {step === 'choose' && (
+                  <div>
+                    <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                      <div style={{ fontSize: '16px', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '8px' }}>What would you like to do?</div>
+                      <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Choose an option to get started</div>
+                    </div>
 
-                  {/* NEW PROJECT TAB */}
-                  {activeTab === 'new' && (
-                    <>
-                      <div className="form-group">
-                        <label className="form-label">Project Name (optional)</label>
-                        <input
-                          type="text"
-                          className="form-input"
-                          placeholder="e.g., User Authentication System"
-                          value={projectName}
-                          onChange={e => setProjectName(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">What do you want to build?</label>
-                        <textarea
-                          className="form-textarea"
-                          placeholder="Describe the feature, bug fix, or improvement...&#10;&#10;Example: Build a user authentication system with OAuth 2.0 support, MFA, and password reset."
-                          value={description}
-                          onChange={e => setDescription(e.target.value)}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="form-label">Workflow Type</label>
-                        <div className="workflow-cards">
-                          {Object.entries(workflows).map(([key, wf]) => (
-                            <div
-                              key={key}
-                              className={`workflow-card ${workflow === key ? 'selected' : ''}`}
-                              onClick={() => setWorkflow(key)}
-                            >
-                              <div className="workflow-card-header">
-                                <span className="workflow-card-title">{wf.name}</span>
-                                {wf.badge && <span className="workflow-card-badge">{wf.badge}</span>}
-                              </div>
-                              <div className="workflow-card-desc">{wf.desc}</div>
-                              <div className="workflow-card-agents">
-                                {wf.agents.map(a => <span key={a} className="workflow-card-agent">{a}</span>)}
-                              </div>
-                              <div className="workflow-card-cost">Est. {wf.cost}</div>
+                    <div style={{ display: 'grid', gap: '12px' }}>
+                      {quickActions.map(action => (
+                        <div
+                          key={action.id}
+                          onClick={() => handleQuickAction(action.id)}
+                          style={{
+                            padding: '20px',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '12px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '16px',
+                            background: 'var(--bg-secondary)'
+                          }}
+                          onMouseOver={e => { e.currentTarget.style.borderColor = action.color; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                          onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.transform = 'none'; }}
+                        >
+                          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: `${action.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <AgentIcon src={action.icon} size={24} style={{ filter: 'none' }} />
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>{action.title}</div>
+                            <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '8px' }}>{action.subtitle}</div>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                              {action.examples.map(ex => (
+                                <span key={ex} style={{ fontSize: '11px', padding: '3px 8px', background: 'var(--bg-tertiary)', borderRadius: '4px', color: 'var(--text-secondary)' }}>{ex}</span>
+                              ))}
                             </div>
-                          ))}
+                          </div>
+                          <div style={{ color: 'var(--text-muted)', fontSize: '20px' }}>→</div>
                         </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 2a: Build Something */}
+                {step === 'build' && (
+                  <div>
+                    <button onClick={() => setStep('choose')} style={{ background: 'none', border: 'none', color: 'var(--deltek-blue)', cursor: 'pointer', fontSize: '13px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      ← Back
+                    </button>
+
+                    <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                      <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--deltek-blue)15', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                        <AgentIcon src="assets/brand/icons/ai-chip.svg" size={28} />
                       </div>
-                    </>
-                  )}
+                      <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)' }}>What do you want to build?</div>
+                    </div>
 
-                  {/* CONTINUE PROJECT TAB */}
-                  {activeTab === 'continue' && (
-                    <>
-                      <div className="form-group">
-                        <label className="form-label">Select Project to Continue</label>
-                        <div className="project-list">
-                          {projects.length === 0 ? (
-                            <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                              No projects found
-                            </div>
-                          ) : (
-                            projects.map(p => (
-                              <div
-                                key={p.id}
-                                className={`project-item ${selectedProject?.id === p.id ? 'selected' : ''}`}
-                                onClick={() => setSelectedProject(p)}
-                              >
-                                <div className="project-item-header">
-                                  <span className="project-item-id">{p.id}</span>
-                                  <span className={`project-item-status ${p.status}`}>{p.status}</span>
-                                </div>
-                                <div className="project-item-name">{p.name || p.description?.slice(0, 50)}</div>
-                              </div>
-                            ))
-                          )}
+                    <textarea
+                      className="form-textarea"
+                      style={{ minHeight: '120px', fontSize: '15px' }}
+                      placeholder="Describe what you want to build...&#10;&#10;Examples:&#10;• Add user authentication with OAuth&#10;• Fix the checkout page bug&#10;• Build a REST API for products"
+                      value={description}
+                      onChange={e => setDescription(e.target.value)}
+                      autoFocus
+                    />
+
+                    <div style={{ marginTop: '12px', padding: '12px', background: 'var(--bg-tertiary)', borderRadius: '8px', fontSize: '12px', color: 'var(--text-muted)' }}>
+                      <strong>What happens next:</strong> 7 AI agents will work together - gathering requirements, designing architecture, writing code, testing, and deploying.
+                    </div>
+
+                    <div className="modal-footer" style={{ marginTop: '24px', padding: 0, border: 'none' }}>
+                      <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
+                      <button className="btn-run-sdlc" disabled={!description.trim()} onClick={handleSubmit}>
+                        Start Building →
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 2b: Ask an Agent */}
+                {step === 'agent' && (
+                  <div>
+                    <button onClick={() => { setStep('choose'); setSelectedAgent(null); }} style={{ background: 'none', border: 'none', color: 'var(--deltek-blue)', cursor: 'pointer', fontSize: '13px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      ← Back
+                    </button>
+
+                    {!selectedAgent ? (
+                      <>
+                        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                          <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)' }}>Choose an Agent</div>
+                          <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Each agent has a specialized skill</div>
                         </div>
-                      </div>
 
-                      {selectedProject && (
-                        <div className="form-group">
-                          <label className="form-label">Action</label>
-                          <select
-                            className="form-select"
-                            value={workflow}
-                            onChange={e => setWorkflow(e.target.value)}
-                          >
-                            <option value="full">Resume Full SDLC</option>
-                            <option value="review">Run Security + QA Review</option>
-                            <option value="deploy">Deploy + UAT</option>
-                          </select>
-                        </div>
-                      )}
-                    </>
-                  )}
-
-                  {/* AGENT ACTION TAB */}
-                  {activeTab === 'agent' && (
-                    <>
-                      <div className="form-group">
-                        <label className="form-label">Select Agent</label>
-                        <div className="agent-grid">
-                          {agentActions.map(agent => (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                          {agents.map(agent => (
                             <div
                               key={agent.id}
-                              className={`agent-card ${selectedAgent === agent.id ? 'selected' : ''}`}
-                              onClick={() => setSelectedAgent(agent.id)}
+                              onClick={() => setSelectedAgent(agent)}
+                              style={{
+                                padding: '16px',
+                                border: '1px solid var(--border-color)',
+                                borderRadius: '10px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                background: 'var(--bg-secondary)',
+                                textAlign: 'center'
+                              }}
+                              onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--deltek-blue)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                              onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.transform = 'none'; }}
                             >
-                              <div className="agent-card-icon">
+                              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px' }}>
                                 <AgentIcon src={agent.icon} size={20} />
                               </div>
-                              <div className="agent-card-name">{agent.name}</div>
-                              <div className="agent-card-role">{agent.role}</div>
-                              <div className="agent-card-model">{agent.model}</div>
+                              <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>{agent.name}</div>
+                              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{agent.purpose}</div>
                             </div>
                           ))}
                         </div>
+                      </>
+                    ) : (
+                      <>
+                        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--dela-purple)15', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                            <AgentIcon src={selectedAgent.icon} size={28} />
+                          </div>
+                          <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)' }}>{selectedAgent.name}</div>
+                          <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{selectedAgent.purpose}</div>
+                        </div>
+
+                        {selectedAgent.placeholder && (
+                          <textarea
+                            className="form-textarea"
+                            style={{ minHeight: '100px' }}
+                            placeholder={selectedAgent.placeholder}
+                            value={agentPrompt}
+                            onChange={e => setAgentPrompt(e.target.value)}
+                            autoFocus
+                          />
+                        )}
+
+                        <div className="modal-footer" style={{ marginTop: '24px', padding: 0, border: 'none' }}>
+                          <button type="button" className="btn btn-secondary" onClick={() => setSelectedAgent(null)}>Choose Different</button>
+                          <button className="btn-run-sdlc" onClick={handleSubmit}>
+                            Run {selectedAgent.name} →
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* STEP 2c: Continue Project */}
+                {step === 'project' && (
+                  <div>
+                    <button onClick={() => setStep('choose')} style={{ background: 'none', border: 'none', color: 'var(--deltek-blue)', cursor: 'pointer', fontSize: '13px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      ← Back
+                    </button>
+
+                    <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                      <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)' }}>Select a Project</div>
+                      <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Choose a project to continue working on</div>
+                    </div>
+
+                    {projects.length === 0 ? (
+                      <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+                        <div style={{ fontSize: '14px', marginBottom: '8px' }}>No projects yet</div>
+                        <button className="btn btn-secondary" onClick={() => setStep('build')}>Create your first project</button>
                       </div>
-
-                      {selectedAgent && (
-                        <>
-                          <div className="form-group">
-                            <label className="form-label">
-                              {agentActions.find(a => a.id === selectedAgent)?.desc}
-                            </label>
-                            <textarea
-                              className="form-textarea"
-                              placeholder={selectedAgent === 'ask-tom'
-                                ? "Describe the problem you're facing..."
-                                : selectedAgent === 'tracker'
-                                ? "Optional: Filter or focus area"
-                                : "Optional: Specific instructions or context..."}
-                              value={agentPrompt}
-                              onChange={e => setAgentPrompt(e.target.value)}
-                            />
+                    ) : (
+                      <div className="project-list" style={{ maxHeight: '300px' }}>
+                        {projects.map(p => (
+                          <div
+                            key={p.id}
+                            className={`project-item ${selectedProject?.id === p.id ? 'selected' : ''}`}
+                            onClick={() => setSelectedProject(p)}
+                          >
+                            <div className="project-item-header">
+                              <span className="project-item-id">{p.id}</span>
+                              <span className={`project-item-status ${p.status}`}>{p.status.replace('_', ' ')}</span>
+                            </div>
+                            <div className="project-item-name">{p.name || p.description?.slice(0, 60) || 'Unnamed project'}</div>
                           </div>
+                        ))}
+                      </div>
+                    )}
 
-                          <div className="form-group">
-                            <label className="form-label">Target Project (optional)</label>
-                            <select
-                              className="form-select"
-                              value={selectedProject?.id || ''}
-                              onChange={e => setSelectedProject(projects.find(p => p.id === e.target.value) || null)}
-                            >
-                              <option value="">No specific project</option>
-                              {projects.map(p => (
-                                <option key={p.id} value={p.id}>{p.id} - {p.name || 'Unnamed'}</option>
-                              ))}
-                            </select>
-                          </div>
-                        </>
-                      )}
-                    </>
-                  )}
-
-                </div>
-
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
-                  <button type="submit" className="btn-run-sdlc" disabled={!canSubmit()}>
-                    <AgentIcon src="assets/brand/icons/team-workflow.svg" size={16} style={{ filter: 'brightness(0) invert(1)' }} />
-                    {getSubmitLabel()}
-                  </button>
-                </div>
-              </form>
+                    {selectedProject && (
+                      <div className="modal-footer" style={{ marginTop: '24px', padding: 0, border: 'none' }}>
+                        <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
+                        <button className="btn-run-sdlc" onClick={handleSubmit}>
+                          Continue Project →
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
