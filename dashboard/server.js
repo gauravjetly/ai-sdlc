@@ -301,15 +301,87 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // API endpoint for running SDLC workflow
+  // API endpoint for running SDLC workflow - supports new, continue, and agent modes
   if (req.url === '/api/run-sdlc' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk.toString(); });
     req.on('end', () => {
       try {
         const data = JSON.parse(body);
-        const { description, projectName, workflow } = data;
+        const { mode, description, projectName, workflow, projectId, agent, prompt } = data;
 
+        // Agent action commands mapping
+        const agentCommands = {
+          'ask-tom': '/sdlc-ask-tom',
+          'ba': '/sdlc-requirements',
+          'jets': '/sdlc-architecture',
+          'security': '/sdlc-security',
+          'qa': '/sdlc-review',
+          'tracker': '/sdlc-status',
+          'finops': '/sdlc-status'
+        };
+
+        // Workflow commands mapping
+        const workflowCommands = {
+          full: '/sdlc-start',
+          fullWithTom: '/sdlc-start',
+          quick: '/sdlc-start',
+          review: '/sdlc-review src/',
+          architecture: '/sdlc-architecture',
+          deploy: '/sdlc-deploy'
+        };
+
+        // MODE: Agent Action
+        if (mode === 'agent') {
+          if (!agent) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: 'Agent is required' }));
+            return;
+          }
+
+          let command = agentCommands[agent] || '/sdlc-status';
+          if (prompt) {
+            command += ` ${prompt}`;
+          }
+
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            projectId: projectId || null,
+            message: 'Run this command in your Claude Code terminal:',
+            command,
+            note: `The ${agent} agent will be invoked.`
+          }));
+          return;
+        }
+
+        // MODE: Continue existing project
+        if (mode === 'continue') {
+          if (!projectId) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: 'Project ID is required' }));
+            return;
+          }
+
+          let command = workflowCommands[workflow] || '/sdlc-start';
+          if (workflow === 'review') {
+            command = '/sdlc-review src/';
+          } else if (workflow === 'deploy') {
+            command = '/sdlc-deploy';
+          }
+
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            projectId,
+            message: `Continue project ${projectId}. Run this in your Claude Code terminal:`,
+            command,
+            note: 'The workflow will continue from where it left off.'
+          }));
+          return;
+        }
+
+        // MODE: New project (default)
         if (!description) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ success: false, error: 'Description is required' }));
@@ -318,11 +390,11 @@ const server = http.createServer((req, res) => {
 
         // Generate project ID
         const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
-        const projectId = `SDLC-${timestamp}`;
+        const newProjectId = `SDLC-${timestamp}`;
 
         // Create project in registry
         const name = projectName || description.slice(0, 50);
-        const createCmd = `bash "${REGISTRY_SCRIPT}" create "${projectId}" "${name.replace(/"/g, '\\"')}" "${description.replace(/"/g, '\\"')}"`;
+        const createCmd = `bash "${REGISTRY_SCRIPT}" create "${newProjectId}" "${name.replace(/"/g, '\\"')}" "${description.replace(/"/g, '\\"')}"`;
 
         exec(createCmd, (error, stdout, stderr) => {
           if (error) {
@@ -332,20 +404,15 @@ const server = http.createServer((req, res) => {
             return;
           }
 
-          // Generate the command for the user to run
-          const workflowCommands = {
-            full: `/sdlc-start ${description}`,
-            quick: `/sdlc-start ${description}`,
-            review: `/sdlc-review src/`
-          };
-
-          const command = workflowCommands[workflow] || workflowCommands.full;
+          // Generate command based on workflow
+          let command = workflowCommands[workflow] || '/sdlc-start';
+          command += ` ${description}`;
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({
             success: true,
-            projectId,
-            message: `Project ${projectId} created. Run this in your Claude Code terminal:`,
+            projectId: newProjectId,
+            message: `Project ${newProjectId} created. Run this in your Claude Code terminal:`,
             command,
             note: 'The SDLC workflow will be orchestrated by the Conductor agent.'
           }));

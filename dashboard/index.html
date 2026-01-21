@@ -975,6 +975,255 @@
       font-weight: 600;
       color: var(--deltek-blue);
     }
+
+    /* === ENHANCED MODAL TABS === */
+    .modal-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+    }
+
+    .modal-tab {
+      flex: 1;
+      padding: 14px 16px;
+      border: none;
+      background: none;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+
+    .modal-tab:hover {
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+    }
+
+    .modal-tab.active {
+      color: var(--deltek-blue);
+      background: var(--bg-card);
+      border-bottom-color: var(--deltek-blue);
+    }
+
+    /* === PROJECT SELECTOR === */
+    .project-list {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-secondary);
+    }
+
+    .project-item {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .project-item:last-child {
+      border-bottom: none;
+    }
+
+    .project-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .project-item.selected {
+      background: rgba(23, 66, 246, 0.08);
+      border-left: 3px solid var(--deltek-blue);
+    }
+
+    .project-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .project-item-id {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--deltek-blue);
+      font-family: var(--font-mono);
+    }
+
+    .project-item-status {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+
+    .project-item-status.in_progress {
+      background: var(--accent-blue-light);
+      color: var(--accent-blue);
+    }
+
+    .project-item-status.complete, .project-item-status.completed {
+      background: var(--accent-green-light);
+      color: var(--accent-green);
+    }
+
+    .project-item-status.blocked {
+      background: var(--accent-red-light);
+      color: var(--accent-red);
+    }
+
+    .project-item-name {
+      font-size: 14px;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* === AGENT GRID === */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: var(--space-md);
+    }
+
+    .agent-card {
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      background: var(--bg-secondary);
+    }
+
+    .agent-card:hover {
+      border-color: var(--deltek-blue);
+      background: var(--bg-tertiary);
+      transform: translateY(-2px);
+    }
+
+    .agent-card.selected {
+      border-color: var(--deltek-blue);
+      background: rgba(23, 66, 246, 0.08);
+      box-shadow: 0 0 0 2px rgba(23, 66, 246, 0.2);
+    }
+
+    .agent-card-icon {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border-radius: 50%;
+    }
+
+    .agent-card-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .agent-card-role {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .agent-card-model {
+      font-size: 9px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      padding: 2px 6px;
+      background: var(--bg-card);
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    /* === WORKFLOW CARDS === */
+    .workflow-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .workflow-card {
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--bg-secondary);
+    }
+
+    .workflow-card:hover {
+      border-color: var(--deltek-blue);
+    }
+
+    .workflow-card.selected {
+      border-color: var(--deltek-blue);
+      background: rgba(23, 66, 246, 0.05);
+      box-shadow: 0 0 0 2px rgba(23, 66, 246, 0.15);
+    }
+
+    .workflow-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .workflow-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .workflow-card-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      background: var(--deltek-blue);
+      color: white;
+      border-radius: 10px;
+    }
+
+    .workflow-card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .workflow-card-agents {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .workflow-card-agent {
+      font-size: 10px;
+      padding: 3px 8px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      color: var(--text-secondary);
+    }
+
+    .workflow-card-cost {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--accent-green);
+    }
+
+    .modal-wide {
+      max-width: 720px;
+    }
   </style>
 </head>
 <body>
@@ -1064,42 +1313,134 @@
       return phases.find(p => p.status === 'in_progress') || phases[phases.length - 1];
     }
 
-    // Run SDLC Modal Component
-    function RunSDLCModal({ show, onClose, onSubmit, isRunning, status }) {
+    // Run SDLC Modal Component - Enhanced with Tabs, Project Selection, All Agents
+    function RunSDLCModal({ show, onClose, onSubmit, isRunning, status, projects = [] }) {
+      const [activeTab, setActiveTab] = useState('new');
       const [description, setDescription] = useState('');
       const [projectName, setProjectName] = useState('');
       const [workflow, setWorkflow] = useState('full');
+      const [selectedProject, setSelectedProject] = useState(null);
+      const [selectedAgent, setSelectedAgent] = useState(null);
+      const [agentPrompt, setAgentPrompt] = useState('');
 
       if (!show) return null;
 
-      const workflowPhases = {
-        full: ['BA', 'Architect', 'Engineer', 'Security', 'QA', 'Deploy', 'UAT'],
-        quick: ['BA', 'Engineer', 'QA'],
-        review: ['Security', 'QA']
+      // Workflow definitions with all agents
+      const workflows = {
+        full: {
+          name: 'Full SDLC',
+          desc: 'Complete software development lifecycle with all phases',
+          agents: ['BA', 'Jets', 'Engineer', 'Security', 'QA', 'Atlas', 'Customer'],
+          cost: '$0.30 - $0.80',
+          badge: 'Recommended'
+        },
+        fullWithTom: {
+          name: 'Full + Ask Tom',
+          desc: 'Full SDLC with problem-solving support from Tom',
+          agents: ['BA', 'Jets', 'Engineer', 'Security', 'QA', 'Atlas', 'Customer', 'Ask Tom'],
+          cost: '$0.40 - $1.00',
+          badge: 'Premium'
+        },
+        quick: {
+          name: 'Quick Build',
+          desc: 'Fast implementation for simple features',
+          agents: ['BA', 'Engineer', 'QA'],
+          cost: '$0.10 - $0.25',
+          badge: null
+        },
+        review: {
+          name: 'Code Review',
+          desc: 'Security audit and quality assurance only',
+          agents: ['Security', 'QA'],
+          cost: '$0.05 - $0.15',
+          badge: null
+        },
+        architecture: {
+          name: 'Architecture',
+          desc: 'Requirements gathering and system design',
+          agents: ['BA', 'Jets'],
+          cost: '$0.08 - $0.20',
+          badge: null
+        },
+        deploy: {
+          name: 'Deploy Only',
+          desc: 'Deployment and UAT validation',
+          agents: ['Atlas', 'Customer'],
+          cost: '$0.05 - $0.12',
+          badge: null
+        }
       };
 
-      const estimatedCost = {
-        full: '$0.30 - $0.80',
-        quick: '$0.10 - $0.25',
-        review: '$0.05 - $0.15'
-      };
+      // Individual agent actions
+      const agentActions = [
+        { id: 'ask-tom', name: 'Ask Tom', icon: 'assets/brand/icons/brain-lightbulb.svg', role: 'Problem Solver', model: 'Opus', desc: 'Elite troubleshooting and root cause analysis', command: '/sdlc-ask-tom' },
+        { id: 'ba', name: 'BA Agent', icon: 'assets/brand/icons/checklist.svg', role: 'Requirements', model: 'Sonnet', desc: 'Gather and document requirements', command: '/sdlc-requirements' },
+        { id: 'jets', name: 'Jets', icon: 'assets/brand/icons/building-governance.svg', role: 'Architecture', model: 'Opus', desc: 'Design system architecture', command: '/sdlc-architecture' },
+        { id: 'security', name: 'Security', icon: 'assets/brand/icons/compliance.svg', role: 'Security', model: 'Sonnet', desc: 'Security review and vulnerability scan', command: '/sdlc-security' },
+        { id: 'qa', name: 'QA Agent', icon: 'assets/brand/icons/data-workflow.svg', role: 'Testing', model: 'Sonnet', desc: 'Quality assurance and testing', command: '/sdlc-review' },
+        { id: 'tracker', name: 'Tracker', icon: 'assets/brand/icons/data-flow.svg', role: 'Monitor', model: 'Haiku', desc: 'Check status and progress', command: '/sdlc-status' },
+        { id: 'finops', name: 'FinOps', icon: 'assets/brand/icons/calculator.svg', role: 'Costs', model: 'Haiku', desc: 'Cost tracking and optimization', command: '/sdlc-status' },
+      ];
 
       const handleSubmit = (e) => {
         e.preventDefault();
-        if (description.trim()) {
-          onSubmit({ description: description.trim(), projectName: projectName.trim(), workflow });
+        if (activeTab === 'new' && description.trim()) {
+          onSubmit({ mode: 'new', description: description.trim(), projectName: projectName.trim(), workflow });
+        } else if (activeTab === 'continue' && selectedProject) {
+          onSubmit({ mode: 'continue', projectId: selectedProject.id, workflow });
+        } else if (activeTab === 'agent' && selectedAgent) {
+          onSubmit({ mode: 'agent', agent: selectedAgent, prompt: agentPrompt.trim(), projectId: selectedProject?.id });
         }
+      };
+
+      const canSubmit = () => {
+        if (activeTab === 'new') return description.trim().length > 0;
+        if (activeTab === 'continue') return selectedProject !== null;
+        if (activeTab === 'agent') return selectedAgent !== null;
+        return false;
+      };
+
+      const getSubmitLabel = () => {
+        if (activeTab === 'new') return 'Start SDLC';
+        if (activeTab === 'continue') return 'Continue Project';
+        if (activeTab === 'agent') return `Run ${agentActions.find(a => a.id === selectedAgent)?.name || 'Agent'}`;
+        return 'Submit';
       };
 
       return (
         <div className="modal-overlay" onClick={onClose}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
+          <div className={`modal ${activeTab === 'agent' ? 'modal-wide' : ''}`} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2 className="modal-title">
                 <AgentIcon src="assets/brand/icons/team-workflow.svg" size={24} />
-                Run SDLC Workflow
+                AI-SDLC Control Center
               </h2>
               <button className="modal-close" onClick={onClose}>&times;</button>
+            </div>
+
+            {/* Tabs */}
+            <div className="modal-tabs">
+              <button
+                className={`modal-tab ${activeTab === 'new' ? 'active' : ''}`}
+                onClick={() => setActiveTab('new')}
+              >
+                <AgentIcon src="assets/brand/icons/ai-chip.svg" size={16} />
+                New Project
+              </button>
+              <button
+                className={`modal-tab ${activeTab === 'continue' ? 'active' : ''}`}
+                onClick={() => setActiveTab('continue')}
+              >
+                <AgentIcon src="assets/brand/icons/data-workflow.svg" size={16} />
+                Continue Project
+              </button>
+              <button
+                className={`modal-tab ${activeTab === 'agent' ? 'active' : ''}`}
+                onClick={() => setActiveTab('agent')}
+              >
+                <AgentIcon src="assets/brand/icons/brain-lightbulb.svg" size={16} />
+                Agent Action
+              </button>
             </div>
 
             {isRunning ? (
@@ -1110,7 +1451,7 @@
                       <div style={{ width: '48px', height: '48px', background: 'var(--accent-green-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
                         <AgentIcon src="assets/brand/icons/checkmark-badge.svg" size={24} style={{ filter: 'brightness(0) saturate(100%) invert(35%) sepia(98%) saturate(500%) hue-rotate(100deg)' }} />
                       </div>
-                      <div className="running-message" style={{ color: 'var(--accent-green)', fontWeight: 600 }}>Project Created</div>
+                      <div className="running-message" style={{ color: 'var(--accent-green)', fontWeight: 600 }}>Ready to Run</div>
                       <div style={{ marginTop: '16px', padding: '16px', background: 'var(--bg-tertiary)', borderRadius: '8px', textAlign: 'left', width: '100%' }}>
                         <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Run this command in your Claude Code terminal:</div>
                         <code style={{ display: 'block', padding: '12px', background: 'var(--deltek-navy)', color: '#fff', borderRadius: '6px', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>
@@ -1121,8 +1462,8 @@
                   ) : (
                     <>
                       <div className="running-spinner"></div>
-                      <div className="running-message">Setting up project...</div>
-                      <div className="running-phase">{status || 'Creating project in registry'}</div>
+                      <div className="running-message">Setting up...</div>
+                      <div className="running-phase">{status || 'Processing request'}</div>
                     </>
                   )}
                 </div>
@@ -1130,65 +1471,168 @@
             ) : (
               <form onSubmit={handleSubmit}>
                 <div className="modal-body">
-                  <div className="form-group">
-                    <label className="form-label">Project Name (optional)</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="e.g., User Authentication System"
-                      value={projectName}
-                      onChange={e => setProjectName(e.target.value)}
-                    />
-                  </div>
 
-                  <div className="form-group">
-                    <label className="form-label">What do you want to build?</label>
-                    <textarea
-                      className="form-textarea"
-                      placeholder="Describe the feature, bug fix, or improvement you want to implement...&#10;&#10;Example: Build a user authentication system with OAuth 2.0 support, MFA, and password reset functionality."
-                      value={description}
-                      onChange={e => setDescription(e.target.value)}
-                      required
-                    />
-                    <div className="form-hint">Be specific - the more detail you provide, the better the results.</div>
-                  </div>
+                  {/* NEW PROJECT TAB */}
+                  {activeTab === 'new' && (
+                    <>
+                      <div className="form-group">
+                        <label className="form-label">Project Name (optional)</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          placeholder="e.g., User Authentication System"
+                          value={projectName}
+                          onChange={e => setProjectName(e.target.value)}
+                        />
+                      </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Workflow Type</label>
-                    <select
-                      className="form-select"
-                      value={workflow}
-                      onChange={e => setWorkflow(e.target.value)}
-                    >
-                      <option value="full">Full SDLC (Recommended) - All 7 phases</option>
-                      <option value="quick">Quick Build - BA → Engineer → QA</option>
-                      <option value="review">Review Only - Security + QA</option>
-                    </select>
-                  </div>
+                      <div className="form-group">
+                        <label className="form-label">What do you want to build?</label>
+                        <textarea
+                          className="form-textarea"
+                          placeholder="Describe the feature, bug fix, or improvement...&#10;&#10;Example: Build a user authentication system with OAuth 2.0 support, MFA, and password reset."
+                          value={description}
+                          onChange={e => setDescription(e.target.value)}
+                          required
+                        />
+                      </div>
 
-                  <div className="workflow-preview">
-                    <div className="workflow-preview-title">Workflow Phases</div>
-                    <div className="workflow-phases">
-                      {workflowPhases[workflow].map((phase, i) => (
-                        <div key={phase} className="workflow-phase">
-                          <span className="workflow-phase-number">{i + 1}</span>
-                          {phase}
+                      <div className="form-group">
+                        <label className="form-label">Workflow Type</label>
+                        <div className="workflow-cards">
+                          {Object.entries(workflows).map(([key, wf]) => (
+                            <div
+                              key={key}
+                              className={`workflow-card ${workflow === key ? 'selected' : ''}`}
+                              onClick={() => setWorkflow(key)}
+                            >
+                              <div className="workflow-card-header">
+                                <span className="workflow-card-title">{wf.name}</span>
+                                {wf.badge && <span className="workflow-card-badge">{wf.badge}</span>}
+                              </div>
+                              <div className="workflow-card-desc">{wf.desc}</div>
+                              <div className="workflow-card-agents">
+                                {wf.agents.map(a => <span key={a} className="workflow-card-agent">{a}</span>)}
+                              </div>
+                              <div className="workflow-card-cost">Est. {wf.cost}</div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
+                      </div>
+                    </>
+                  )}
 
-                  <div className="cost-estimate">
-                    <span className="cost-estimate-label">Estimated AI Cost:</span>
-                    <span className="cost-estimate-value">{estimatedCost[workflow]}</span>
-                  </div>
+                  {/* CONTINUE PROJECT TAB */}
+                  {activeTab === 'continue' && (
+                    <>
+                      <div className="form-group">
+                        <label className="form-label">Select Project to Continue</label>
+                        <div className="project-list">
+                          {projects.length === 0 ? (
+                            <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                              No projects found
+                            </div>
+                          ) : (
+                            projects.map(p => (
+                              <div
+                                key={p.id}
+                                className={`project-item ${selectedProject?.id === p.id ? 'selected' : ''}`}
+                                onClick={() => setSelectedProject(p)}
+                              >
+                                <div className="project-item-header">
+                                  <span className="project-item-id">{p.id}</span>
+                                  <span className={`project-item-status ${p.status}`}>{p.status}</span>
+                                </div>
+                                <div className="project-item-name">{p.name || p.description?.slice(0, 50)}</div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+
+                      {selectedProject && (
+                        <div className="form-group">
+                          <label className="form-label">Action</label>
+                          <select
+                            className="form-select"
+                            value={workflow}
+                            onChange={e => setWorkflow(e.target.value)}
+                          >
+                            <option value="full">Resume Full SDLC</option>
+                            <option value="review">Run Security + QA Review</option>
+                            <option value="deploy">Deploy + UAT</option>
+                          </select>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* AGENT ACTION TAB */}
+                  {activeTab === 'agent' && (
+                    <>
+                      <div className="form-group">
+                        <label className="form-label">Select Agent</label>
+                        <div className="agent-grid">
+                          {agentActions.map(agent => (
+                            <div
+                              key={agent.id}
+                              className={`agent-card ${selectedAgent === agent.id ? 'selected' : ''}`}
+                              onClick={() => setSelectedAgent(agent.id)}
+                            >
+                              <div className="agent-card-icon">
+                                <AgentIcon src={agent.icon} size={20} />
+                              </div>
+                              <div className="agent-card-name">{agent.name}</div>
+                              <div className="agent-card-role">{agent.role}</div>
+                              <div className="agent-card-model">{agent.model}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {selectedAgent && (
+                        <>
+                          <div className="form-group">
+                            <label className="form-label">
+                              {agentActions.find(a => a.id === selectedAgent)?.desc}
+                            </label>
+                            <textarea
+                              className="form-textarea"
+                              placeholder={selectedAgent === 'ask-tom'
+                                ? "Describe the problem you're facing..."
+                                : selectedAgent === 'tracker'
+                                ? "Optional: Filter or focus area"
+                                : "Optional: Specific instructions or context..."}
+                              value={agentPrompt}
+                              onChange={e => setAgentPrompt(e.target.value)}
+                            />
+                          </div>
+
+                          <div className="form-group">
+                            <label className="form-label">Target Project (optional)</label>
+                            <select
+                              className="form-select"
+                              value={selectedProject?.id || ''}
+                              onChange={e => setSelectedProject(projects.find(p => p.id === e.target.value) || null)}
+                            >
+                              <option value="">No specific project</option>
+                              {projects.map(p => (
+                                <option key={p.id} value={p.id}>{p.id} - {p.name || 'Unnamed'}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+
                 </div>
 
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
-                  <button type="submit" className="btn-run-sdlc" disabled={!description.trim()}>
+                  <button type="submit" className="btn-run-sdlc" disabled={!canSubmit()}>
                     <AgentIcon src="assets/brand/icons/team-workflow.svg" size={16} style={{ filter: 'brightness(0) invert(1)' }} />
-                    Start SDLC
+                    {getSubmitLabel()}
                   </button>
                 </div>
               </form>
@@ -1304,10 +1748,10 @@
 
       const health = getHealth();
 
-      // Handle running SDLC workflow
+      // Handle running SDLC workflow - supports new, continue, and agent modes
       const handleRunSDLC = async (formData) => {
         setSdlcRunning(true);
-        setSdlcStatus('Creating project...');
+        setSdlcStatus('Processing...');
 
         try {
           const response = await fetch('/api/run-sdlc', {
@@ -1320,12 +1764,11 @@
 
           if (result.success) {
             // Show the command to run
-            setSdlcStatus(`Project ${result.projectId} created. Run: ${result.command}`);
+            setSdlcStatus(`Project ${result.projectId || 'Ready'}. Run: ${result.command}`);
             // Refresh data
             fetchData();
-            // Keep modal open to show command, user closes manually
           } else {
-            setSdlcStatus(`Error: ${result.error || 'Failed to create project'}`);
+            setSdlcStatus(`Error: ${result.error || 'Failed to process request'}`);
             setTimeout(() => {
               setSdlcRunning(false);
               setSdlcStatus(null);
@@ -1426,6 +1869,7 @@
             onSubmit={handleRunSDLC}
             isRunning={sdlcRunning}
             status={sdlcStatus}
+            projects={projects}
           />
         </div>
       );
