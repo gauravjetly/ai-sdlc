@@ -2067,6 +2067,786 @@
       font-size: 12px;
       color: var(--text-muted);
     }
+
+    /* ================================================================
+       FEATURE SET 2: Advanced Dashboard Features
+       ================================================================ */
+
+    /* 1. Project Detail Modal */
+    .project-detail-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .project-detail-content {
+      background: var(--bg-card);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .project-detail-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .project-detail-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .project-detail-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .phase-timeline {
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .phase-timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border-color);
+    }
+
+    .phase-item {
+      position: relative;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+
+    .phase-item::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 20px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--border-color);
+      border: 2px solid var(--bg-card);
+    }
+
+    .phase-item.completed::before {
+      background: var(--accent-green);
+    }
+
+    .phase-item.active::before {
+      background: var(--deltek-blue);
+      animation: pulse 1.5s infinite;
+    }
+
+    .phase-item.blocked::before {
+      background: var(--accent-red);
+    }
+
+    /* 2. Command Palette */
+    .command-palette-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 15vh;
+      z-index: 2000;
+    }
+
+    .command-palette {
+      background: var(--bg-card);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+
+    .command-input-wrapper {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      gap: 12px;
+    }
+
+    .command-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .command-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .command-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .command-group {
+      padding: 8px 0;
+    }
+
+    .command-group-title {
+      padding: 8px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .command-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .command-item:hover, .command-item.selected {
+      background: var(--bg-tertiary);
+    }
+
+    .command-item-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      color: var(--text-secondary);
+    }
+
+    .command-item.selected .command-item-icon {
+      background: var(--deltek-blue);
+      color: white;
+    }
+
+    .command-item-content {
+      flex: 1;
+    }
+
+    .command-item-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .command-item-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .command-item-shortcut {
+      display: flex;
+      gap: 4px;
+    }
+
+    .command-item-shortcut kbd {
+      font-size: 10px;
+      padding: 2px 6px;
+    }
+
+    /* 3. Sparkline Charts */
+    .sparkline {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 24px;
+    }
+
+    .sparkline-bar {
+      width: 4px;
+      background: var(--deltek-blue);
+      border-radius: 2px;
+      transition: height 0.3s ease;
+    }
+
+    .sparkline-bar:last-child {
+      background: var(--accent-green);
+    }
+
+    .metric-card-with-sparkline {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    /* 4. Drag & Drop */
+    .draggable-project {
+      cursor: grab;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .draggable-project:active {
+      cursor: grabbing;
+    }
+
+    .draggable-project.dragging {
+      opacity: 0.5;
+      transform: scale(1.02);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .drag-handle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      color: var(--text-muted);
+      cursor: grab;
+    }
+
+    .drop-indicator {
+      height: 4px;
+      background: var(--deltek-blue);
+      border-radius: 2px;
+      margin: 8px 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .drop-indicator.active {
+      opacity: 1;
+    }
+
+    /* 5. Gantt Timeline */
+    .gantt-container {
+      overflow-x: auto;
+      padding: 16px 0;
+    }
+
+    .gantt-header {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 8px;
+    }
+
+    .gantt-label-col {
+      width: 200px;
+      flex-shrink: 0;
+      padding: 8px 12px;
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .gantt-timeline-col {
+      flex: 1;
+      display: flex;
+      min-width: 600px;
+    }
+
+    .gantt-day {
+      flex: 1;
+      text-align: center;
+      padding: 8px 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-left: 1px solid var(--border-light);
+    }
+
+    .gantt-day.today {
+      background: var(--deltek-light);
+      font-weight: 600;
+      color: var(--deltek-blue);
+    }
+
+    .gantt-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .gantt-project-label {
+      width: 200px;
+      flex-shrink: 0;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .gantt-bars {
+      flex: 1;
+      position: relative;
+      height: 32px;
+      min-width: 600px;
+    }
+
+    .gantt-bar {
+      position: absolute;
+      height: 24px;
+      top: 4px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-size: 11px;
+      color: white;
+      font-weight: 500;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .gantt-bar.completed {
+      background: var(--accent-green);
+    }
+
+    .gantt-bar.active {
+      background: var(--deltek-blue);
+    }
+
+    .gantt-bar.blocked {
+      background: var(--accent-red);
+    }
+
+    /* 6. Agent Deep Dive Modal */
+    .agent-detail-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .agent-stat-card {
+      background: var(--bg-tertiary);
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .agent-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .agent-stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .agent-activity-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    /* 7. PDF Export Styles (Print) */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .print-area, .print-area * {
+        visibility: visible;
+      }
+      .print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    /* 8. Toast Notifications */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--bg-card);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      animation: slideIn 0.3s ease;
+      max-width: 380px;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast.warning {
+      border-left: 4px solid var(--accent-yellow);
+    }
+
+    .toast.danger {
+      border-left: 4px solid var(--accent-red);
+    }
+
+    .toast.success {
+      border-left: 4px solid var(--accent-green);
+    }
+
+    .toast-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .toast-message {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    /* 9. AI Insights Panel */
+    .insights-panel {
+      background: linear-gradient(135deg, var(--deltek-navy), var(--dela-purple));
+      border-radius: 12px;
+      padding: 20px;
+      color: white;
+      margin-bottom: 24px;
+    }
+
+    .insights-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .insights-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .insights-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+
+    .insight-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .insight-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .insight-icon-wrapper {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .insight-text {
+      flex: 1;
+    }
+
+    .insight-headline {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .insight-description {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    /* 10. Compare Projects */
+    .compare-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .compare-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 2px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    .compare-card.selected {
+      border-color: var(--deltek-blue);
+    }
+
+    .compare-header {
+      padding: 16px;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .compare-body {
+      padding: 16px;
+    }
+
+    .compare-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .compare-row:last-child {
+      border-bottom: none;
+    }
+
+    .compare-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .compare-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .compare-better {
+      color: var(--accent-green);
+    }
+
+    .compare-worse {
+      color: var(--accent-red);
+    }
+
+    /* 11. Predictive Analytics */
+    .prediction-card {
+      background: linear-gradient(135deg, var(--bg-card), var(--deltek-light));
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .prediction-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .prediction-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--deltek-blue);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .prediction-date {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .prediction-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .prediction-confidence {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .confidence-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      background: var(--accent-green);
+      border-radius: 3px;
+    }
+
+    /* 12. Integration Hub */
+    .integration-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .integration-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .integration-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .integration-card:hover {
+      border-color: var(--deltek-blue);
+      box-shadow: 0 4px 12px rgba(0, 102, 204, 0.1);
+    }
+
+    .integration-card.connected {
+      border-color: var(--accent-green);
+      background: var(--accent-green-light);
+    }
+
+    .integration-icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 12px;
+    }
+
+    .integration-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .integration-status {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .integration-card.connected .integration-status {
+      color: var(--accent-green);
+    }
+
+    /* Clickable project card */
+    .project-card-clickable {
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .project-card-clickable:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Navigation tabs for new views */
+    .view-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-tertiary);
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .view-tab {
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .view-tab:hover {
+      color: var(--text-primary);
+    }
+
+    .view-tab.active {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body>
@@ -2731,6 +3511,683 @@
       );
     }
 
+    // ================================================================
+    // FEATURE SET 2: Advanced Dashboard Components
+    // ================================================================
+
+    // 1. Project Detail Modal
+    function ProjectDetailModal({ project, costs, activity, onClose }) {
+      if (!project) return null;
+
+      const cost = costs.find(c => c.project_id === project.id);
+      const projectActivity = activity.filter(a => a.project === project.id);
+      const phases = Array.isArray(project.phases) ? project.phases : [];
+
+      return (
+        <div className="project-detail-modal" onClick={onClose}>
+          <div className="project-detail-content" onClick={e => e.stopPropagation()}>
+            <div className="project-detail-header">
+              <div>
+                <div className="project-detail-title">{project.description || project.name || project.id}</div>
+                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{project.id}</div>
+              </div>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <span className={`badge ${project.status === 'complete' || project.status === 'completed' ? 'badge-success' : project.status === 'blocked' ? 'badge-danger' : 'badge-info'}`}>
+                  {project.status}
+                </span>
+                <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '24px', color: 'var(--text-muted)', cursor: 'pointer' }}>×</button>
+              </div>
+            </div>
+
+            <div className="project-detail-body">
+              <div className="grid-4" style={{ marginBottom: '24px' }}>
+                <div className="agent-stat-card">
+                  <div className="agent-stat-value">{phases.length}</div>
+                  <div className="agent-stat-label">Phases</div>
+                </div>
+                <div className="agent-stat-card">
+                  <div className="agent-stat-value">{phases.filter(p => p.status === 'complete' || p.status === 'completed').length}</div>
+                  <div className="agent-stat-label">Completed</div>
+                </div>
+                <div className="agent-stat-card">
+                  <div className="agent-stat-value">${(cost?.total_cost || 0).toFixed(2)}</div>
+                  <div className="agent-stat-label">Total Cost</div>
+                </div>
+                <div className="agent-stat-card">
+                  <div className="agent-stat-value">{projectActivity.length}</div>
+                  <div className="agent-stat-label">Events</div>
+                </div>
+              </div>
+
+              <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>Phase Timeline</h4>
+              <div className="phase-timeline">
+                {phases.map((phase, i) => {
+                  const agent = AGENTS.find(a => a.id === phase.agent);
+                  const status = phase.status === 'complete' || phase.status === 'completed' ? 'completed' : phase.status === 'in_progress' || phase.status === 'active' ? 'active' : phase.status === 'blocked' ? 'blocked' : '';
+                  return (
+                    <div key={i} className={`phase-item ${status}`}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <AgentIcon src={agent?.icon} size={20} />
+                          <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{agent?.name || phase.agent}</span>
+                        </div>
+                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{phase.duration || ''}</span>
+                      </div>
+                      {phase.outputs && phase.outputs.length > 0 && (
+                        <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+                          Outputs: {phase.outputs.join(', ')}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {projectActivity.length > 0 && (
+                <>
+                  <h4 style={{ marginTop: '24px', marginBottom: '16px', color: 'var(--text-primary)' }}>Recent Activity</h4>
+                  <div className="agent-activity-list">
+                    {projectActivity.slice(0, 10).map((a, i) => (
+                      <div key={i} className="activity-item-mini">
+                        <div className="activity-dot" style={{ background: a.type === 'complete' ? 'var(--accent-green)' : a.type === 'blocked' ? 'var(--accent-red)' : 'var(--deltek-blue)' }}></div>
+                        <div className="activity-content">
+                          <span className="activity-agent">{AGENTS.find(ag => ag.id === a.agent)?.name || a.agent}</span>
+                          <span className="activity-action">{a.action}</span>
+                        </div>
+                        <span className="activity-time">{new Date(a.timestamp).toLocaleString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 2. Command Palette
+    function CommandPalette({ show, onClose, onAction, projects }) {
+      const [query, setQuery] = useState('');
+      const [selectedIndex, setSelectedIndex] = useState(0);
+      const inputRef = useRef(null);
+
+      const commands = [
+        { id: 'new-project', title: 'New Project', desc: 'Start a new SDLC project', icon: '➕', group: 'Actions', action: () => onAction('new-project') },
+        { id: 'run-sdlc', title: 'Run SDLC', desc: 'Open SDLC runner', icon: '▶️', group: 'Actions', shortcut: '⌘K', action: () => onAction('run-sdlc') },
+        { id: 'export-csv', title: 'Export CSV', desc: 'Download projects as CSV', icon: '📊', group: 'Actions', action: () => onAction('export-csv') },
+        { id: 'export-pdf', title: 'Export PDF Report', desc: 'Generate executive summary', icon: '📄', group: 'Actions', action: () => onAction('export-pdf') },
+        { id: 'toggle-theme', title: 'Toggle Theme', desc: 'Switch dark/light mode', icon: '🌙', group: 'Settings', action: () => onAction('toggle-theme') },
+        { id: 'view-executive', title: 'Executive Dashboard', desc: 'Go to executive view', icon: '📈', group: 'Navigation', action: () => onAction('view-executive') },
+        { id: 'view-projects', title: 'Projects', desc: 'View all projects', icon: '📁', group: 'Navigation', action: () => onAction('view-projects') },
+        { id: 'view-analytics', title: 'Analytics', desc: 'Cost and performance analytics', icon: '📊', group: 'Navigation', action: () => onAction('view-analytics') },
+        { id: 'view-timeline', title: 'Timeline', desc: 'Gantt timeline view', icon: '📅', group: 'Navigation', action: () => onAction('view-timeline') },
+        { id: 'view-compare', title: 'Compare Projects', desc: 'Side-by-side comparison', icon: '⚖️', group: 'Navigation', action: () => onAction('view-compare') },
+        { id: 'view-integrations', title: 'Integrations', desc: 'Manage connections', icon: '🔗', group: 'Navigation', action: () => onAction('view-integrations') },
+      ];
+
+      // Add project search results
+      const projectCommands = projects.slice(0, 5).map(p => ({
+        id: `project-${p.id}`,
+        title: p.name || p.description || p.id,
+        desc: `View project details`,
+        icon: '📋',
+        group: 'Projects',
+        action: () => onAction('open-project', p)
+      }));
+
+      const allCommands = [...commands, ...projectCommands];
+      const filteredCommands = query
+        ? allCommands.filter(c => c.title.toLowerCase().includes(query.toLowerCase()) || c.desc.toLowerCase().includes(query.toLowerCase()))
+        : allCommands;
+
+      const groupedCommands = filteredCommands.reduce((acc, cmd) => {
+        if (!acc[cmd.group]) acc[cmd.group] = [];
+        acc[cmd.group].push(cmd);
+        return acc;
+      }, {});
+
+      useEffect(() => {
+        if (show && inputRef.current) {
+          inputRef.current.focus();
+        }
+        setQuery('');
+        setSelectedIndex(0);
+      }, [show]);
+
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (!show) return;
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setSelectedIndex(i => Math.min(i + 1, filteredCommands.length - 1));
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setSelectedIndex(i => Math.max(i - 1, 0));
+          } else if (e.key === 'Enter' && filteredCommands[selectedIndex]) {
+            e.preventDefault();
+            filteredCommands[selectedIndex].action();
+            onClose();
+          }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+      }, [show, selectedIndex, filteredCommands, onClose]);
+
+      if (!show) return null;
+
+      let flatIndex = 0;
+      return (
+        <div className="command-palette-overlay" onClick={onClose}>
+          <div className="command-palette" onClick={e => e.stopPropagation()}>
+            <div className="command-input-wrapper">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--text-muted)" strokeWidth="2">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
+              <input
+                ref={inputRef}
+                className="command-input"
+                placeholder="Type a command or search..."
+                value={query}
+                onChange={e => { setQuery(e.target.value); setSelectedIndex(0); }}
+              />
+              <kbd>ESC</kbd>
+            </div>
+            <div className="command-list">
+              {Object.entries(groupedCommands).map(([group, cmds]) => (
+                <div key={group} className="command-group">
+                  <div className="command-group-title">{group}</div>
+                  {cmds.map(cmd => {
+                    const index = flatIndex++;
+                    return (
+                      <div
+                        key={cmd.id}
+                        className={`command-item ${selectedIndex === index ? 'selected' : ''}`}
+                        onClick={() => { cmd.action(); onClose(); }}
+                        onMouseEnter={() => setSelectedIndex(index)}
+                      >
+                        <div className="command-item-icon">{cmd.icon}</div>
+                        <div className="command-item-content">
+                          <div className="command-item-title">{cmd.title}</div>
+                          <div className="command-item-desc">{cmd.desc}</div>
+                        </div>
+                        {cmd.shortcut && <div className="command-item-shortcut"><kbd>{cmd.shortcut}</kbd></div>}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 3. Sparkline Component
+    function Sparkline({ data, color = 'var(--deltek-blue)' }) {
+      const max = Math.max(...data, 1);
+      return (
+        <div className="sparkline">
+          {data.map((val, i) => (
+            <div
+              key={i}
+              className="sparkline-bar"
+              style={{ height: `${(val / max) * 100}%`, background: i === data.length - 1 ? 'var(--accent-green)' : color }}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    // 5. Gantt Timeline View
+    function GanttTimeline({ projects }) {
+      const days = [];
+      const today = new Date();
+      for (let i = -7; i <= 14; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        days.push(d);
+      }
+
+      const getBarPosition = (project) => {
+        const created = new Date(project.createdAt || project.created_at || today);
+        const completed = project.completedAt || project.completed_at;
+        const end = completed ? new Date(completed) : new Date();
+
+        const startOffset = Math.max(0, Math.floor((created - days[0]) / (1000 * 60 * 60 * 24)));
+        const duration = Math.max(1, Math.ceil((end - created) / (1000 * 60 * 60 * 24)));
+
+        return {
+          left: `${(startOffset / days.length) * 100}%`,
+          width: `${Math.min(duration / days.length * 100, 100 - (startOffset / days.length) * 100)}%`
+        };
+      };
+
+      return (
+        <div className="card">
+          <div className="section-header">
+            <h3 className="section-title">Project Timeline</h3>
+          </div>
+          <div className="gantt-container">
+            <div className="gantt-header">
+              <div className="gantt-label-col">Project</div>
+              <div className="gantt-timeline-col">
+                {days.map((d, i) => (
+                  <div key={i} className={`gantt-day ${d.toDateString() === today.toDateString() ? 'today' : ''}`}>
+                    {d.getDate()}/{d.getMonth() + 1}
+                  </div>
+                ))}
+              </div>
+            </div>
+            {projects.slice(0, 10).map(p => {
+              const pos = getBarPosition(p);
+              const status = normalizeStatus(p.status);
+              return (
+                <div key={p.id} className="gantt-row">
+                  <div className="gantt-project-label">{p.name || p.description || p.id}</div>
+                  <div className="gantt-bars">
+                    <div
+                      className={`gantt-bar ${status === 'completed' || status === 'complete' ? 'completed' : status === 'blocked' ? 'blocked' : 'active'}`}
+                      style={pos}
+                    >
+                      {p.name || p.id}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // 6. Agent Deep Dive Modal
+    function AgentDetailModal({ agentId, costs, activity, onClose }) {
+      const agent = AGENTS.find(a => a.id === agentId);
+      if (!agent) return null;
+
+      const agentActivity = activity.filter(a => a.agent === agentId);
+      const agentCost = costs.reduce((sum, c) => {
+        const breakdown = (c.breakdown_by_agent || []).find(b => b.agent === agentId);
+        return sum + (breakdown?.cost || 0);
+      }, 0);
+      const invocations = costs.reduce((sum, c) => {
+        const breakdown = (c.breakdown_by_agent || []).find(b => b.agent === agentId);
+        return sum + (breakdown?.invocations || 0);
+      }, 0);
+      const tokens = costs.reduce((sum, c) => {
+        const breakdown = (c.breakdown_by_agent || []).find(b => b.agent === agentId);
+        return sum + (breakdown?.tokens || 0);
+      }, 0);
+
+      return (
+        <div className="project-detail-modal" onClick={onClose}>
+          <div className="project-detail-content" onClick={e => e.stopPropagation()}>
+            <div className="project-detail-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <AgentIcon src={agent.icon} size={32} />
+                <div>
+                  <div className="project-detail-title">{agent.name}</div>
+                  <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{agent.role} • {agent.model}</div>
+                </div>
+              </div>
+              <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '24px', color: 'var(--text-muted)', cursor: 'pointer' }}>×</button>
+            </div>
+
+            <div className="project-detail-body">
+              <div className="agent-detail-stats">
+                <div className="agent-stat-card">
+                  <div className="agent-stat-value">{invocations}</div>
+                  <div className="agent-stat-label">Invocations</div>
+                </div>
+                <div className="agent-stat-card">
+                  <div className="agent-stat-value">${agentCost.toFixed(2)}</div>
+                  <div className="agent-stat-label">Total Cost</div>
+                </div>
+                <div className="agent-stat-card">
+                  <div className="agent-stat-value">{(tokens / 1000).toFixed(1)}K</div>
+                  <div className="agent-stat-label">Tokens</div>
+                </div>
+                <div className="agent-stat-card">
+                  <div className="agent-stat-value">{agentActivity.length}</div>
+                  <div className="agent-stat-label">Events</div>
+                </div>
+              </div>
+
+              <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>Recent Activity</h4>
+              <div className="agent-activity-list">
+                {agentActivity.slice(0, 15).map((a, i) => (
+                  <div key={i} className="activity-item-mini">
+                    <div className="activity-dot" style={{ background: a.type === 'complete' ? 'var(--accent-green)' : a.type === 'blocked' ? 'var(--accent-red)' : 'var(--deltek-blue)' }}></div>
+                    <div className="activity-content">
+                      <span className="activity-agent">{a.project}</span>
+                      <span className="activity-action">{a.action}</span>
+                    </div>
+                    <span className="activity-time">{new Date(a.timestamp).toLocaleString()}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 8. Toast Notifications
+    function ToastContainer({ toasts, onDismiss }) {
+      return (
+        <div className="toast-container">
+          {toasts.map(toast => (
+            <div key={toast.id} className={`toast ${toast.type}`}>
+              <div className="toast-icon">
+                {toast.type === 'warning' && '⚠️'}
+                {toast.type === 'danger' && '🚨'}
+                {toast.type === 'success' && '✅'}
+              </div>
+              <div className="toast-content">
+                <div className="toast-title">{toast.title}</div>
+                <div className="toast-message">{toast.message}</div>
+              </div>
+              <button className="toast-close" onClick={() => onDismiss(toast.id)}>×</button>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // 9. AI Insights Panel
+    function AIInsightsPanel({ projects, costs, activity }) {
+      const insights = useMemo(() => {
+        const result = [];
+
+        // Check for blocked projects
+        const blocked = projects.filter(p => p.status === 'blocked');
+        if (blocked.length > 0) {
+          result.push({
+            icon: '🚨',
+            headline: `${blocked.length} project(s) blocked`,
+            description: 'Review blocked projects and resolve issues to maintain velocity.',
+            type: 'warning'
+          });
+        }
+
+        // Check for high-cost agents
+        const agentCosts = {};
+        costs.forEach(c => (c.breakdown_by_agent || []).forEach(a => {
+          agentCosts[a.agent] = (agentCosts[a.agent] || 0) + (a.cost || 0);
+        }));
+        const highCostAgent = Object.entries(agentCosts).sort((a, b) => b[1] - a[1])[0];
+        if (highCostAgent && highCostAgent[1] > 0) {
+          const agent = AGENTS.find(a => a.id === highCostAgent[0]);
+          result.push({
+            icon: '💰',
+            headline: `${agent?.name || highCostAgent[0]} is your highest cost agent`,
+            description: `Consider using Haiku for simpler tasks to reduce costs.`,
+            type: 'info'
+          });
+        }
+
+        // Velocity insight
+        const recentCompleted = projects.filter(p => {
+          const completed = p.completedAt || p.completed_at;
+          if (!completed) return false;
+          const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+          return new Date(completed).getTime() > weekAgo;
+        }).length;
+
+        if (recentCompleted > 0) {
+          result.push({
+            icon: '🚀',
+            headline: `${recentCompleted} project(s) completed this week`,
+            description: 'Great velocity! Keep up the momentum.',
+            type: 'success'
+          });
+        }
+
+        // Default insight
+        if (result.length === 0) {
+          result.push({
+            icon: '✨',
+            headline: 'All systems running smoothly',
+            description: 'No issues detected. Ready to start new projects!',
+            type: 'success'
+          });
+        }
+
+        return result.slice(0, 3);
+      }, [projects, costs, activity]);
+
+      return (
+        <div className="insights-panel">
+          <div className="insights-header">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span className="insights-title">AI Insights</span>
+            <span className="insights-badge">Auto-generated</span>
+          </div>
+          {insights.map((insight, i) => (
+            <div key={i} className="insight-item">
+              <div className="insight-icon-wrapper">{insight.icon}</div>
+              <div className="insight-text">
+                <div className="insight-headline">{insight.headline}</div>
+                <div className="insight-description">{insight.description}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // 10. Compare Projects View
+    function CompareProjectsView({ projects, costs }) {
+      const [selected, setSelected] = useState([]);
+
+      const toggleSelect = (project) => {
+        if (selected.find(p => p.id === project.id)) {
+          setSelected(selected.filter(p => p.id !== project.id));
+        } else if (selected.length < 2) {
+          setSelected([...selected, project]);
+        }
+      };
+
+      const getCost = (project) => costs.find(c => c.project_id === project.id)?.total_cost || 0;
+      const getPhaseCount = (project) => (project.phases || []).length;
+      const getCompletedPhases = (project) => (project.phases || []).filter(p => p.status === 'complete' || p.status === 'completed').length;
+
+      return (
+        <div>
+          <div style={{ marginBottom: '20px' }}>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '16px' }}>Select 2 projects to compare:</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {projects.map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => toggleSelect(p)}
+                  style={{
+                    padding: '8px 16px',
+                    border: `2px solid ${selected.find(s => s.id === p.id) ? 'var(--deltek-blue)' : 'var(--border-color)'}`,
+                    borderRadius: '8px',
+                    background: selected.find(s => s.id === p.id) ? 'var(--deltek-light)' : 'var(--bg-card)',
+                    cursor: 'pointer',
+                    fontSize: '13px'
+                  }}
+                >
+                  {p.name || p.description || p.id}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {selected.length === 2 && (
+            <div className="compare-container">
+              {selected.map(project => {
+                const cost = getCost(project);
+                const phases = getPhaseCount(project);
+                const completed = getCompletedPhases(project);
+                return (
+                  <div key={project.id} className="compare-card">
+                    <div className="compare-header">
+                      <h4 style={{ margin: 0 }}>{project.name || project.description || project.id}</h4>
+                    </div>
+                    <div className="compare-body">
+                      <div className="compare-row">
+                        <span className="compare-label">Status</span>
+                        <span className="compare-value">{project.status}</span>
+                      </div>
+                      <div className="compare-row">
+                        <span className="compare-label">Total Cost</span>
+                        <span className={`compare-value ${cost < getCost(selected.find(s => s.id !== project.id)) ? 'compare-better' : cost > getCost(selected.find(s => s.id !== project.id)) ? 'compare-worse' : ''}`}>${cost.toFixed(2)}</span>
+                      </div>
+                      <div className="compare-row">
+                        <span className="compare-label">Phases</span>
+                        <span className="compare-value">{completed}/{phases}</span>
+                      </div>
+                      <div className="compare-row">
+                        <span className="compare-label">Created</span>
+                        <span className="compare-value">{new Date(project.createdAt || project.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // 11. Predictive Analytics
+    function PredictiveAnalytics({ projects }) {
+      const activeProjects = projects.filter(p => isActive(p));
+
+      const predictions = activeProjects.map(project => {
+        const phases = project.phases || [];
+        const completed = phases.filter(p => p.status === 'complete' || p.status === 'completed').length;
+        const total = PIPELINE_AGENTS.length;
+        const progress = completed / total;
+
+        // Simple prediction: estimate days remaining based on average phase time
+        const created = new Date(project.createdAt || project.created_at);
+        const daysSoFar = Math.max(1, (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24));
+        const daysPerPhase = daysSoFar / Math.max(1, completed);
+        const remainingPhases = total - completed;
+        const estimatedDaysRemaining = Math.ceil(daysPerPhase * remainingPhases);
+
+        const estimatedCompletion = new Date();
+        estimatedCompletion.setDate(estimatedCompletion.getDate() + estimatedDaysRemaining);
+
+        const confidence = Math.min(95, Math.max(40, Math.round(progress * 100 + 20)));
+
+        return { project, estimatedCompletion, confidence, remainingPhases };
+      });
+
+      if (predictions.length === 0) {
+        return (
+          <div className="card">
+            <div className="section-header"><h3 className="section-title">Predictive Analytics</h3></div>
+            <div className="empty-state">
+              <div className="empty-state-title">No active projects</div>
+              <p>Start a project to see completion predictions</p>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="card">
+          <div className="section-header"><h3 className="section-title">Completion Predictions</h3></div>
+          <div className="grid-2" style={{ padding: '16px', gap: '16px' }}>
+            {predictions.slice(0, 4).map(({ project, estimatedCompletion, confidence, remainingPhases }) => (
+              <div key={project.id} className="prediction-card">
+                <div className="prediction-header">
+                  <div className="prediction-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="prediction-date">{estimatedCompletion.toLocaleDateString()}</div>
+                    <div className="prediction-label">Estimated completion</div>
+                  </div>
+                </div>
+                <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                  {project.name || project.description || project.id}
+                </div>
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>
+                  {remainingPhases} phase(s) remaining
+                </div>
+                <div className="prediction-confidence">
+                  <span>Confidence</span>
+                  <div className="confidence-bar">
+                    <div className="confidence-fill" style={{ width: `${confidence}%` }}></div>
+                  </div>
+                  <span>{confidence}%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // 12. Integration Hub
+    function IntegrationHub() {
+      const [connections, setConnections] = useState(() => {
+        try {
+          return JSON.parse(localStorage.getItem('sdlc-integrations') || '{}');
+        } catch { return {}; }
+      });
+
+      const integrations = [
+        { id: 'github', name: 'GitHub', desc: 'Sync with repositories', icon: '🐙' },
+        { id: 'jira', name: 'Jira', desc: 'Import/export issues', icon: '📋' },
+        { id: 'slack', name: 'Slack', desc: 'Send notifications', icon: '💬' },
+        { id: 'teams', name: 'Microsoft Teams', desc: 'Team notifications', icon: '👥' },
+        { id: 'confluence', name: 'Confluence', desc: 'Sync documentation', icon: '📝' },
+        { id: 'datadog', name: 'Datadog', desc: 'Monitoring alerts', icon: '📊' },
+      ];
+
+      const toggleConnection = (id) => {
+        const newConnections = { ...connections, [id]: !connections[id] };
+        setConnections(newConnections);
+        localStorage.setItem('sdlc-integrations', JSON.stringify(newConnections));
+      };
+
+      return (
+        <div>
+          <div className="insights-panel" style={{ marginBottom: '24px' }}>
+            <div className="insights-header">
+              <span className="insights-title">Integration Hub</span>
+              <span className="insights-badge">Beta</span>
+            </div>
+            <p style={{ opacity: 0.9, fontSize: '14px' }}>
+              Connect your AI-SDLC dashboard with your favorite tools.
+              Click on an integration to toggle its connection status.
+            </p>
+          </div>
+
+          <div className="integration-grid">
+            {integrations.map(int => (
+              <div
+                key={int.id}
+                className={`integration-card ${connections[int.id] ? 'connected' : ''}`}
+                onClick={() => toggleConnection(int.id)}
+              >
+                <div className="integration-icon" style={{ fontSize: '32px' }}>{int.icon}</div>
+                <div className="integration-name">{int.name}</div>
+                <div className="integration-status">
+                  {connections[int.id] ? '✓ Connected' : 'Click to connect'}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
     function App() {
       const [activeView, setActiveView] = useState('executive');
       const [projects, setProjects] = useState([]);
@@ -2747,6 +4204,12 @@
       const [theme, setTheme] = useState(() => localStorage.getItem('sdlc-theme') || 'light');
       const lastActivityRef = useRef(null);
 
+      // New feature states
+      const [showCommandPalette, setShowCommandPalette] = useState(false);
+      const [selectedProject, setSelectedProject] = useState(null);
+      const [selectedAgent, setSelectedAgent] = useState(null);
+      const [toasts, setToasts] = useState([]);
+
       // Theme effect - apply and persist
       useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
@@ -2755,23 +4218,98 @@
 
       const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
+      // Add toast notification
+      const addToast = (title, message, type = 'info') => {
+        const id = Date.now();
+        setToasts(prev => [...prev, { id, title, message, type }]);
+        setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 5000);
+      };
+
+      // Dismiss toast
+      const dismissToast = (id) => setToasts(prev => prev.filter(t => t.id !== id));
+
+      // Budget alert check
+      useEffect(() => {
+        const budget = parseFloat(localStorage.getItem('sdlc-budget') || '10');
+        const alertThreshold = parseFloat(localStorage.getItem('sdlc-budget-alert') || '80');
+        const totalCost = costs.reduce((s, c) => s + (c.total_cost || 0), 0);
+        const usedPercent = (totalCost / budget) * 100;
+
+        if (usedPercent >= 100) {
+          addToast('Budget Exceeded', `You've exceeded your $${budget} budget!`, 'danger');
+        } else if (usedPercent >= alertThreshold) {
+          addToast('Budget Warning', `You've used ${usedPercent.toFixed(0)}% of your budget`, 'warning');
+        }
+      }, [costs]);
+
       // Keyboard shortcuts
       useEffect(() => {
         const handleKeyDown = (e) => {
-          // ⌘K / Ctrl+K - Open Run SDLC modal
+          // ⌘K / Ctrl+K - Open Command Palette
           if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
             e.preventDefault();
-            setShowRunModal(true);
+            setShowCommandPalette(true);
           }
-          // Escape - Close modal
-          if (e.key === 'Escape' && showRunModal) {
-            setShowRunModal(false);
+          // Escape - Close modals
+          if (e.key === 'Escape') {
+            if (showCommandPalette) setShowCommandPalette(false);
+            else if (showRunModal) setShowRunModal(false);
+            else if (selectedProject) setSelectedProject(null);
+            else if (selectedAgent) setSelectedAgent(null);
           }
         };
 
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-      }, [showRunModal]);
+      }, [showRunModal, showCommandPalette, selectedProject, selectedAgent]);
+
+      // Command palette action handler
+      const handleCommandAction = (action, data) => {
+        switch (action) {
+          case 'new-project':
+          case 'run-sdlc':
+            setShowRunModal(true);
+            break;
+          case 'toggle-theme':
+            toggleTheme();
+            break;
+          case 'view-executive':
+            setActiveView('executive');
+            break;
+          case 'view-projects':
+            setActiveView('projects');
+            break;
+          case 'view-analytics':
+            setActiveView('analytics');
+            break;
+          case 'view-timeline':
+            setActiveView('timeline');
+            break;
+          case 'view-compare':
+            setActiveView('compare');
+            break;
+          case 'view-integrations':
+            setActiveView('integrations');
+            break;
+          case 'export-csv':
+            // Trigger CSV export
+            const csvData = projects.map(p => [p.id, p.name || '', p.status, p.createdAt].join(','));
+            const blob = new Blob(['ID,Name,Status,Created\n' + csvData.join('\n')], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sdlc-projects.csv';
+            a.click();
+            addToast('Export Complete', 'CSV file downloaded', 'success');
+            break;
+          case 'export-pdf':
+            window.print();
+            break;
+          case 'open-project':
+            setSelectedProject(data);
+            break;
+        }
+      };
 
       // Check for new activity and create notifications
       const checkForNewActivity = useCallback((newActivity, oldActivity) => {
@@ -2984,12 +4522,15 @@
                   { id: 'executive', icon: 'assets/brand/icons/calculator.svg', label: 'Executive' },
                   { id: 'value', icon: 'assets/brand/icons/checkmark-badge.svg', label: 'Value & ROI' },
                   { id: 'projects', icon: 'assets/brand/icons/checklist.svg', label: 'Projects' },
+                  { id: 'timeline', icon: 'assets/brand/icons/data-flow.svg', label: 'Timeline', badge: 'New' },
                   { id: 'analytics', icon: 'assets/brand/icons/gear-integration.svg', label: 'Analytics' },
+                  { id: 'compare', icon: 'assets/brand/icons/data-workflow.svg', label: 'Compare' },
                   { id: 'agents', icon: 'assets/brand/icons/workflow-team.svg', label: 'Agents' },
+                  { id: 'integrations', icon: 'assets/brand/icons/network-activity.svg', label: 'Integrations' },
                   { id: 'learning', icon: 'assets/brand/icons/brain-lightbulb.svg', label: 'AI Learning' },
                   { id: 'activity', icon: 'assets/brand/icons/network-activity.svg', label: 'Activity' },
                   { id: 'settings', icon: 'assets/brand/icons/gear-integration.svg', label: 'Settings' },
-                  { id: 'help', icon: 'assets/brand/icons/book.svg', label: 'Help & Docs', badge: 'v2.4' }
+                  { id: 'help', icon: 'assets/brand/icons/book.svg', label: 'Help & Docs', badge: 'v2.5' }
                 ].map(nav => (
                   <div
                     key={nav.id}
@@ -3037,12 +4578,20 @@
               </div>
             </div>
 
-            <div className="content-area">
+            <div className="content-area print-area">
+              {/* AI Insights Panel on Executive view */}
+              {activeView === 'executive' && <AIInsightsPanel projects={projects} costs={costs} activity={activity} />}
+
               {activeView === 'executive' && <Executive stats={stats} health={health} totalCost={totalCost} projects={projects} activity={activity} costs={costs} valueMetrics={valueMetrics} />}
+              {activeView === 'executive' && <PredictiveAnalytics projects={projects} />}
+
               {activeView === 'value' && <ValueROI projects={projects} costs={costs} valueMetrics={valueMetrics} />}
-              {activeView === 'projects' && <Projects projects={projects} costs={costs} />}
+              {activeView === 'projects' && <Projects projects={projects} costs={costs} onProjectClick={setSelectedProject} />}
+              {activeView === 'timeline' && <GanttTimeline projects={projects} />}
               {activeView === 'analytics' && <Analytics costs={costs} projects={projects} />}
-              {activeView === 'agents' && <Agents costs={costs} />}
+              {activeView === 'compare' && <CompareProjectsView projects={projects} costs={costs} />}
+              {activeView === 'agents' && <Agents costs={costs} onAgentClick={setSelectedAgent} />}
+              {activeView === 'integrations' && <IntegrationHub />}
               {activeView === 'learning' && <AILearning />}
               {activeView === 'activity' && <ActivityView activity={activity} />}
               {activeView === 'settings' && <Settings totalCost={totalCost} />}
@@ -3050,6 +4599,7 @@
             </div>
           </main>
 
+          {/* Modals */}
           <RunSDLCModal
             show={showRunModal}
             onClose={() => { setShowRunModal(false); setSdlcRunning(false); setSdlcStatus(null); }}
@@ -3058,6 +4608,34 @@
             status={sdlcStatus}
             projects={projects}
           />
+
+          <CommandPalette
+            show={showCommandPalette}
+            onClose={() => setShowCommandPalette(false)}
+            onAction={handleCommandAction}
+            projects={projects}
+          />
+
+          {selectedProject && (
+            <ProjectDetailModal
+              project={selectedProject}
+              costs={costs}
+              activity={activity}
+              onClose={() => setSelectedProject(null)}
+            />
+          )}
+
+          {selectedAgent && (
+            <AgentDetailModal
+              agentId={selectedAgent}
+              costs={costs}
+              activity={activity}
+              onClose={() => setSelectedAgent(null)}
+            />
+          )}
+
+          {/* Toast Notifications */}
+          <ToastContainer toasts={toasts} onDismiss={dismissToast} />
         </div>
       );
     }
@@ -4149,7 +5727,7 @@
       );
     }
 
-    function Projects({ projects, costs }) {
+    function Projects({ projects, costs, onProjectClick }) {
       const [searchQuery, setSearchQuery] = useState('');
       const [statusFilter, setStatusFilter] = useState('all');
       const [showArchived, setShowArchived] = useState(false);
@@ -4285,6 +5863,7 @@
                 costs={costs}
                 isArchived={archivedIds.includes(p.id)}
                 onToggleArchive={() => toggleArchive(p.id)}
+                onClick={() => onProjectClick && onProjectClick(p)}
               />
             ))
           )}
@@ -4292,7 +5871,7 @@
       );
     }
 
-    function ProjectCard({ project, costs, isArchived = false, onToggleArchive }) {
+    function ProjectCard({ project, costs, isArchived = false, onToggleArchive, onClick }) {
       const cost = costs.find(c => c.project_id === project.id);
 
       // Normalize phases - handle both array format and object format
@@ -4328,7 +5907,7 @@
       const currentPhase = getCurrentPhaseInfo(project.phases);
 
       return (
-        <div className={`project-card ${isArchived ? 'archived' : ''}`}>
+        <div className={`project-card ${isArchived ? 'archived' : ''}`} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
           <div className="project-header">
             <div>
               <h3 className="project-name">{project.description || project.name || project.id}</h3>
@@ -4467,7 +6046,7 @@
       );
     }
 
-    function Agents({ costs }) {
+    function Agents({ costs, onAgentClick }) {
       const agentCosts = {};
       costs.forEach(c => (c.breakdown_by_agent || []).forEach(a => {
         if (!agentCosts[a.agent]) agentCosts[a.agent] = { cost: 0, invocations: 0 };
@@ -4481,15 +6060,15 @@
       return (
         <div>
           <div className="section-header"><div><h3 className="section-title">Pipeline Agents</h3><p className="section-subtitle">Core SDLC workflow agents</p></div></div>
-          <div className="grid-3 mb-xl">{core.map(a => <AgentCard key={a.id} agent={a} data={agentCosts[a.id]} />)}</div>
+          <div className="grid-3 mb-xl">{core.map(a => <AgentCard key={a.id} agent={a} data={agentCosts[a.id]} onClick={() => onAgentClick && onAgentClick(a.id)} />)}</div>
 
           <div className="section-header"><div><h3 className="section-title">Support Agents</h3><p className="section-subtitle">On-demand specialist agents</p></div></div>
-          <div className="grid-3">{support.map(a => <AgentCard key={a.id} agent={a} data={agentCosts[a.id]} />)}</div>
+          <div className="grid-3">{support.map(a => <AgentCard key={a.id} agent={a} data={agentCosts[a.id]} onClick={() => onAgentClick && onAgentClick(a.id)} />)}</div>
         </div>
       );
     }
 
-    function AgentCard({ agent, data }) {
+    function AgentCard({ agent, data, onClick }) {
       const bgColors = {
         '#0066cc': '#e6f0fa', '#7b1fa2': '#f3e5f5', '#00875a': '#e6f4ef',
         '#d32f2f': '#fdeaea', '#ff9800': '#fff4e5', '#0097a7': '#e0f7fa',
@@ -4497,7 +6076,7 @@
       };
       const bg = bgColors[agent.color] || '#e6f0fa';
       return (
-        <div className="agent-card">
+        <div className="agent-card" onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
           <div className="agent-avatar" style={{ background: bg, color: agent.color }}><AgentIcon src={agent.icon} size={20} /></div>
           <div className="agent-info">
             <div className="agent-name">{agent.name}</div>
