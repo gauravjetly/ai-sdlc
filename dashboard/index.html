@@ -1578,6 +1578,495 @@
       background: var(--bg-tertiary);
       color: var(--text-muted);
     }
+
+    /* Grid layouts */
+    .grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1200px) {
+      .grid-5 { grid-template-columns: repeat(3, 1fr); }
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .grid-5, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    /* Pipeline Flow */
+    .pipeline-flow {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 24px 16px;
+      overflow-x: auto;
+      gap: 8px;
+    }
+
+    .pipeline-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      min-width: 80px;
+    }
+
+    .pipeline-stage-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .pipeline-stage-icon.active {
+      background: var(--deltek-blue);
+      box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
+    }
+
+    .pipeline-stage-icon.active img {
+      filter: brightness(0) invert(1);
+    }
+
+    .pipeline-stage-icon.completed {
+      background: var(--accent-green);
+    }
+
+    .pipeline-stage-icon.completed img {
+      filter: brightness(0) invert(1);
+    }
+
+    .stage-pulse {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 12px;
+      height: 12px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      border: 2px solid var(--bg-card);
+      animation: pulse 1.5s infinite;
+    }
+
+    .pipeline-stage-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .pipeline-stage-stats {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .stage-completed {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .stage-active {
+      font-size: 10px;
+      color: var(--deltek-blue);
+      font-weight: 600;
+    }
+
+    .pipeline-flow-arrow {
+      display: flex;
+      align-items: center;
+      padding-top: 12px;
+      opacity: 0.5;
+    }
+
+    /* Agent Performance Grid */
+    .agent-perf-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .agent-perf-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .agent-perf-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 100px;
+    }
+
+    .agent-perf-name {
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .agent-perf-bar-container {
+      flex: 1;
+      height: 8px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .agent-perf-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--deltek-blue), var(--dela-cyan));
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .agent-perf-stats {
+      display: flex;
+      gap: 12px;
+      min-width: 90px;
+      justify-content: flex-end;
+    }
+
+    .agent-perf-count {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      min-width: 30px;
+      text-align: right;
+    }
+
+    .agent-perf-cost {
+      font-size: 11px;
+      color: var(--text-muted);
+      min-width: 50px;
+      text-align: right;
+    }
+
+    /* Velocity Chart */
+    .velocity-chart {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 180px;
+      padding: 16px 0;
+      gap: 16px;
+    }
+
+    .velocity-week {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .velocity-bars {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+      height: 120px;
+      margin-bottom: 8px;
+    }
+
+    .velocity-bar {
+      width: 24px;
+      border-radius: 4px 4px 0 0;
+      transition: height 0.5s ease;
+      min-height: 8px;
+    }
+
+    .velocity-bar.completed {
+      background: var(--accent-green);
+    }
+
+    .velocity-bar.started {
+      background: var(--deltek-blue);
+    }
+
+    .velocity-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .velocity-values {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .velocity-completed {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-green);
+    }
+
+    .velocity-started {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--deltek-blue);
+    }
+
+    .velocity-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .velocity-legend span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    .legend-dot.completed {
+      background: var(--accent-green);
+    }
+
+    .legend-dot.started {
+      background: var(--deltek-blue);
+    }
+
+    /* Bottleneck Detection */
+    .bottleneck-clear {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      gap: 8px;
+      color: var(--accent-green);
+      font-weight: 500;
+    }
+
+    .bottleneck-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .bottleneck-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      border-left: 3px solid #d32f2f;
+    }
+
+    .bottleneck-project {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .bottleneck-details {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bottleneck-days {
+      font-size: 11px;
+      color: #d32f2f;
+      font-weight: 600;
+    }
+
+    /* Cost Breakdown */
+    .cost-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 8px 0;
+    }
+
+    .cost-model-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cost-model-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 70px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .cost-model-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .cost-model-bar-container {
+      flex: 1;
+      height: 8px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .cost-model-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .cost-model-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .cost-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-light);
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .cost-total-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Activity Feed */
+    .activity-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .activity-item-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .activity-item-mini:last-child {
+      border-bottom: none;
+    }
+
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .activity-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .activity-agent {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: block;
+    }
+
+    .activity-action {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .activity-time {
+      font-size: 10px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* Insights Grid */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1200px) {
+      .insights-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .insights-grid { grid-template-columns: 1fr; }
+    }
+
+    .insight-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+    }
+
+    .insight-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      border-radius: 12px;
+    }
+
+    .insight-content {
+      flex: 1;
+    }
+
+    .insight-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .insight-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
@@ -2614,67 +3103,409 @@
     function Executive({ stats, health, totalCost, projects, activity, costs, valueMetrics }) {
       const successRate = stats.totalProjects > 0 ? Math.round((stats.completedProjects / stats.totalProjects) * 100) : 100;
 
+      // Calculate pipeline stage counts
+      const pipelineData = useMemo(() => {
+        const stages = {
+          conductor: { count: 0, active: 0, label: 'Conductor', icon: 'assets/brand/icons/workflow-team.svg' },
+          ba: { count: 0, active: 0, label: 'Requirements', icon: 'assets/brand/icons/checklist.svg' },
+          jets: { count: 0, active: 0, label: 'Architecture', icon: 'assets/brand/icons/gear-integration.svg' },
+          engineer: { count: 0, active: 0, label: 'Development', icon: 'assets/brand/icons/data-workflow.svg' },
+          security: { count: 0, active: 0, label: 'Security', icon: 'assets/brand/icons/shield-badge.svg' },
+          qa: { count: 0, active: 0, label: 'QA Testing', icon: 'assets/brand/icons/checkmark-badge.svg' },
+          atlas: { count: 0, active: 0, label: 'Deployment', icon: 'assets/brand/icons/network-activity.svg' },
+          customer: { count: 0, active: 0, label: 'UAT', icon: 'assets/brand/icons/user-globe.svg' }
+        };
+
+        projects.forEach(p => {
+          const phasesMap = normalizePhasesArray(p.phases);
+          const currentPhase = p.currentPhase || getCurrentPhaseInfo(p.phases)?.agent;
+
+          Object.keys(stages).forEach(stageId => {
+            const status = phasesMap[stageId];
+            if (status === 'completed' || status === 'complete') {
+              stages[stageId].count++;
+            }
+            if (currentPhase === stageId || status === 'in_progress' || status === 'active') {
+              stages[stageId].active++;
+            }
+          });
+        });
+
+        return stages;
+      }, [projects]);
+
+      // Calculate agent performance from costs and activity
+      const agentPerformance = useMemo(() => {
+        const perf = {};
+        AGENTS.forEach(a => {
+          perf[a.id] = { invocations: 0, cost: 0, tokens: 0, avgTime: 0, blocked: 0, name: a.name, role: a.role, icon: a.icon };
+        });
+
+        costs.forEach(c => {
+          (c.breakdown_by_agent || []).forEach(a => {
+            if (perf[a.agent]) {
+              perf[a.agent].invocations += a.invocations || 0;
+              perf[a.agent].cost += a.cost || 0;
+              perf[a.agent].tokens += a.tokens || 0;
+            }
+          });
+        });
+
+        // Count blocks from activity
+        activity.forEach(a => {
+          if (a.type === 'blocked' && perf[a.agent]) {
+            perf[a.agent].blocked++;
+          }
+        });
+
+        return perf;
+      }, [costs, activity]);
+
+      // Calculate velocity (projects completed per week over last 4 weeks)
+      const velocityData = useMemo(() => {
+        const weeks = [];
+        const now = new Date();
+
+        for (let i = 3; i >= 0; i--) {
+          const weekStart = new Date(now);
+          weekStart.setDate(now.getDate() - (i + 1) * 7);
+          const weekEnd = new Date(now);
+          weekEnd.setDate(now.getDate() - i * 7);
+
+          const completed = projects.filter(p => {
+            const completedAt = p.completedAt || p.completed_at;
+            if (!completedAt) return false;
+            const date = new Date(completedAt);
+            return date >= weekStart && date < weekEnd;
+          }).length;
+
+          weeks.push({
+            label: i === 0 ? 'This Week' : i === 1 ? 'Last Week' : `${i + 1}w ago`,
+            completed,
+            started: projects.filter(p => {
+              const createdAt = p.createdAt || p.created_at;
+              if (!createdAt) return false;
+              const date = new Date(createdAt);
+              return date >= weekStart && date < weekEnd;
+            }).length
+          });
+        }
+        return weeks;
+      }, [projects]);
+
+      // Calculate bottlenecks - stages where projects are stuck
+      const bottlenecks = useMemo(() => {
+        const stuck = [];
+        projects.forEach(p => {
+          if (p.status === 'blocked') {
+            const currentPhase = p.currentPhase || getCurrentPhaseInfo(p.phases)?.agent || 'unknown';
+            const agent = AGENTS.find(a => a.id === currentPhase);
+            stuck.push({
+              project: p.id,
+              name: p.name || p.description || p.id,
+              stage: currentPhase,
+              stageName: agent?.name || currentPhase,
+              days: Math.floor((Date.now() - new Date(p.updatedAt || p.updated_at || p.createdAt || p.created_at).getTime()) / (1000 * 60 * 60 * 24))
+            });
+          }
+        });
+        return stuck.sort((a, b) => b.days - a.days).slice(0, 5);
+      }, [projects]);
+
+      // Cost by category
+      const costByModel = useMemo(() => {
+        const models = { Opus: 0, Sonnet: 0, Haiku: 0 };
+        costs.forEach(c => {
+          (c.breakdown_by_agent || []).forEach(a => {
+            const agent = AGENTS.find(ag => ag.id === a.agent);
+            if (agent && models[agent.model] !== undefined) {
+              models[agent.model] += a.cost || 0;
+            }
+          });
+        });
+        return models;
+      }, [costs]);
+
+      // Get max invocations for scaling
+      const maxInvocations = Math.max(...Object.values(agentPerformance).map(a => a.invocations), 1);
+
       return (
         <div>
-          <div className="health-indicator">
+          {/* Hero Health Banner */}
+          <div className="health-indicator" style={{ marginBottom: '24px' }}>
             <div className={`health-score ${health.class}`}>{health.score}</div>
             <div className="health-details">
               <div className="health-title">{health.title}</div>
               <div className="health-message">{health.message}</div>
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               <span className="badge badge-success">{valueMetrics.roi.toFixed(0)}% ROI</span>
-              <span className="badge badge-info">v2.3.0</span>
+              <span className="badge badge-info">{valueMetrics.velocityMultiplier}x Velocity</span>
+              <span className="badge" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}>v2.4</span>
             </div>
           </div>
 
-          <div className="grid-4 mb-xl">
+          {/* Key Metrics Row */}
+          <div className="grid-5 mb-xl">
             <div className="metric-card">
               <span className="metric-label">Total Projects</span>
               <span className="metric-value text-blue">{stats.totalProjects}</span>
-              <span className="metric-change">All time</span>
+              <span className="metric-change">{stats.activeProjects} active</span>
             </div>
             <div className="metric-card">
-              <span className="metric-label">Success Rate</span>
-              <span className="metric-value text-green">{successRate}%</span>
-              <span className="metric-change">{stats.completedProjects} completed</span>
+              <span className="metric-label">Completed</span>
+              <span className="metric-value text-green">{stats.completedProjects}</span>
+              <span className="metric-change positive">{successRate}% success rate</span>
             </div>
             <div className="metric-card">
-              <span className="metric-label">Cost Savings</span>
-              <span className="metric-value text-green">${valueMetrics.costSavings.toFixed(0)}</span>
-              <span className="metric-change positive">↓ {valueMetrics.costSavingsPercent.toFixed(0)}% vs traditional</span>
+              <span className="metric-label">Blocked</span>
+              <span className="metric-value" style={{ color: stats.blockedProjects > 0 ? '#d32f2f' : 'var(--text-secondary)' }}>{stats.blockedProjects}</span>
+              <span className="metric-change">{stats.blockedProjects > 0 ? 'Needs attention' : 'All clear'}</span>
+            </div>
+            <div className="metric-card">
+              <span className="metric-label">AI Investment</span>
+              <span className="metric-value text-blue">${totalCost.toFixed(2)}</span>
+              <span className="metric-change positive">↓ {valueMetrics.costSavingsPercent.toFixed(0)}% vs manual</span>
             </div>
             <div className="metric-card">
               <span className="metric-label">Time Saved</span>
               <span className="metric-value" style={{ color: '#7b1fa2' }}>{valueMetrics.timeSaved}h</span>
-              <span className="metric-change positive">{valueMetrics.velocityMultiplier}x faster delivery</span>
+              <span className="metric-change positive">${valueMetrics.costSavings.toFixed(0)} value</span>
             </div>
           </div>
 
-          <div className="grid-2">
-            <div className="card">
-              <div className="section-header"><h3 className="section-title">Recent Projects</h3></div>
-              {projects.length === 0 ? (
-                <div className="empty-state"><div className="empty-state-icon"><AgentIcon src="assets/brand/icons/data-workflow.svg" size={32} /></div><div className="empty-state-title">No projects yet</div><p>Run /sdlc-start to begin</p></div>
-              ) : projects.slice(0, 4).map(p => <ProjectMini key={p.id} project={p} costs={costs} />)}
+          {/* SDLC Pipeline Flow */}
+          <div className="card mb-xl">
+            <div className="section-header">
+              <h3 className="section-title">SDLC Pipeline Flow</h3>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>End-to-end project progression</span>
             </div>
+            <div className="pipeline-flow">
+              {Object.entries(pipelineData).map(([id, stage], i) => (
+                <React.Fragment key={id}>
+                  <div className="pipeline-stage">
+                    <div className={`pipeline-stage-icon ${stage.active > 0 ? 'active' : stage.count > 0 ? 'completed' : ''}`}>
+                      <AgentIcon src={stage.icon} size={20} />
+                      {stage.active > 0 && <span className="stage-pulse"></span>}
+                    </div>
+                    <div className="pipeline-stage-label">{stage.label}</div>
+                    <div className="pipeline-stage-stats">
+                      <span className="stage-completed">{stage.count} done</span>
+                      {stage.active > 0 && <span className="stage-active">{stage.active} active</span>}
+                    </div>
+                  </div>
+                  {i < Object.keys(pipelineData).length - 1 && (
+                    <div className="pipeline-flow-arrow">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--border-color)" strokeWidth="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                      </svg>
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid-2 mb-xl">
+            {/* Agent Performance Grid */}
             <div className="card">
-              <div className="section-header"><h3 className="section-title">Value Highlights</h3></div>
-              <div className="value-stat">
-                <span className="value-stat-label">Defects Prevented</span>
-                <span className="value-stat-value text-green">{valueMetrics.defectsPrevented.toFixed(0)} bugs</span>
+              <div className="section-header">
+                <h3 className="section-title">Agent Performance</h3>
+                <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Invocations & cost by agent</span>
               </div>
-              <div className="value-stat">
-                <span className="value-stat-label">Test Coverage</span>
-                <span className="value-stat-value">{valueMetrics.testCoverage}%</span>
+              <div className="agent-perf-grid">
+                {PIPELINE_AGENTS.map(id => {
+                  const perf = agentPerformance[id];
+                  const agent = AGENTS.find(a => a.id === id);
+                  const barWidth = (perf.invocations / maxInvocations) * 100;
+                  return (
+                    <div key={id} className="agent-perf-row">
+                      <div className="agent-perf-info">
+                        <AgentIcon src={agent?.icon} size={16} />
+                        <span className="agent-perf-name">{perf.role || agent?.role}</span>
+                      </div>
+                      <div className="agent-perf-bar-container">
+                        <div className="agent-perf-bar" style={{ width: `${barWidth}%` }}></div>
+                      </div>
+                      <div className="agent-perf-stats">
+                        <span className="agent-perf-count">{perf.invocations}</span>
+                        <span className="agent-perf-cost">${perf.cost.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <div className="value-stat">
-                <span className="value-stat-label">Deploy Time</span>
-                <span className="value-stat-value text-green">{valueMetrics.deployTime}h vs {BENCHMARKS.manualDeployTime}h</span>
+            </div>
+
+            {/* Velocity Chart */}
+            <div className="card">
+              <div className="section-header">
+                <h3 className="section-title">Project Velocity</h3>
+                <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Weekly throughput</span>
               </div>
-              <div className="value-stat">
-                <span className="value-stat-label">AI Investment</span>
-                <span className="value-stat-value text-blue">${totalCost.toFixed(2)}</span>
+              <div className="velocity-chart">
+                {velocityData.map((week, i) => {
+                  const maxVal = Math.max(...velocityData.map(w => Math.max(w.completed, w.started)), 1);
+                  const completedHeight = (week.completed / maxVal) * 100;
+                  const startedHeight = (week.started / maxVal) * 100;
+                  return (
+                    <div key={i} className="velocity-week">
+                      <div className="velocity-bars">
+                        <div className="velocity-bar completed" style={{ height: `${Math.max(completedHeight, 5)}%` }} title={`${week.completed} completed`}></div>
+                        <div className="velocity-bar started" style={{ height: `${Math.max(startedHeight, 5)}%` }} title={`${week.started} started`}></div>
+                      </div>
+                      <div className="velocity-label">{week.label}</div>
+                      <div className="velocity-values">
+                        <span className="velocity-completed">{week.completed}</span>
+                        <span className="velocity-started">{week.started}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="velocity-legend">
+                <span><span className="legend-dot completed"></span> Completed</span>
+                <span><span className="legend-dot started"></span> Started</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid-3 mb-xl">
+            {/* Bottleneck Detection */}
+            <div className="card">
+              <div className="section-header">
+                <h3 className="section-title">Bottleneck Detection</h3>
+              </div>
+              {bottlenecks.length === 0 ? (
+                <div className="bottleneck-clear">
+                  <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--accent-green)" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  <span>No bottlenecks detected</span>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>All projects flowing smoothly</span>
+                </div>
+              ) : (
+                <div className="bottleneck-list">
+                  {bottlenecks.map((b, i) => (
+                    <div key={i} className="bottleneck-item">
+                      <div className="bottleneck-project">{b.name.substring(0, 30)}{b.name.length > 30 ? '...' : ''}</div>
+                      <div className="bottleneck-details">
+                        <span className="badge badge-danger">{b.stageName}</span>
+                        <span className="bottleneck-days">{b.days}d stuck</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Cost Distribution */}
+            <div className="card">
+              <div className="section-header">
+                <h3 className="section-title">Cost by Model</h3>
+              </div>
+              <div className="cost-breakdown">
+                {Object.entries(costByModel).map(([model, cost]) => {
+                  const total = Object.values(costByModel).reduce((a, b) => a + b, 0) || 1;
+                  const percent = (cost / total) * 100;
+                  const colors = { Opus: '#7b1fa2', Sonnet: '#0066cc', Haiku: '#00875a' };
+                  return (
+                    <div key={model} className="cost-model-row">
+                      <div className="cost-model-label">
+                        <span className="cost-model-dot" style={{ background: colors[model] }}></span>
+                        {model}
+                      </div>
+                      <div className="cost-model-bar-container">
+                        <div className="cost-model-bar" style={{ width: `${percent}%`, background: colors[model] }}></div>
+                      </div>
+                      <div className="cost-model-value">${cost.toFixed(2)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="cost-total">
+                <span>Total Spend</span>
+                <span className="cost-total-value">${totalCost.toFixed(2)}</span>
+              </div>
+            </div>
+
+            {/* Recent Activity */}
+            <div className="card">
+              <div className="section-header">
+                <h3 className="section-title">Recent Activity</h3>
+              </div>
+              <div className="activity-feed">
+                {activity.slice(0, 5).map((a, i) => {
+                  const agent = AGENTS.find(ag => ag.id === a.agent);
+                  const typeColors = { complete: 'var(--accent-green)', blocked: '#d32f2f', start: 'var(--deltek-blue)', progress: 'var(--text-muted)' };
+                  return (
+                    <div key={i} className="activity-item-mini">
+                      <div className="activity-dot" style={{ background: typeColors[a.type] || 'var(--text-muted)' }}></div>
+                      <div className="activity-content">
+                        <span className="activity-agent">{agent?.role || a.agent}</span>
+                        <span className="activity-action">{a.action?.substring(0, 40)}{a.action?.length > 40 ? '...' : ''}</span>
+                      </div>
+                      <span className="activity-time">{new Date(a.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="card">
+            <div className="section-header">
+              <h3 className="section-title">Quick Insights</h3>
+            </div>
+            <div className="insights-grid">
+              <div className="insight-card">
+                <div className="insight-icon text-blue">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                  </svg>
+                </div>
+                <div className="insight-content">
+                  <div className="insight-value">{Object.values(agentPerformance).reduce((a, b) => a + b.invocations, 0)}</div>
+                  <div className="insight-label">Total Agent Invocations</div>
+                </div>
+              </div>
+              <div className="insight-card">
+                <div className="insight-icon text-green">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                    <polyline points="17 6 23 6 23 12"/>
+                  </svg>
+                </div>
+                <div className="insight-content">
+                  <div className="insight-value">{velocityData.reduce((a, b) => a + b.completed, 0)}</div>
+                  <div className="insight-label">Completed (4 weeks)</div>
+                </div>
+              </div>
+              <div className="insight-card">
+                <div className="insight-icon" style={{ color: '#7b1fa2' }}>
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+                <div className="insight-content">
+                  <div className="insight-value">{valueMetrics.timeSaved}h</div>
+                  <div className="insight-label">Developer Time Saved</div>
+                </div>
+              </div>
+              <div className="insight-card">
+                <div className="insight-icon text-green">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <polyline points="9 12 11 14 15 10"/>
+                  </svg>
+                </div>
+                <div className="insight-content">
+                  <div className="insight-value">{valueMetrics.defectsPrevented.toFixed(0)}</div>
+                  <div className="insight-label">Defects Prevented</div>
+                </div>
               </div>
             </div>
           </div>
