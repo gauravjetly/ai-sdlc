@@ -76,6 +76,33 @@
       --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
     }
 
+    /* Dark Theme */
+    [data-theme="dark"] {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --bg-card: #161b22;
+      --bg-hover: #21262d;
+
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+
+      --deltek-light: #1c2333;
+      --border-color: #30363d;
+      --border-light: #21262d;
+
+      --accent-green-light: rgba(0, 135, 90, 0.15);
+      --accent-yellow-light: rgba(255, 152, 0, 0.15);
+      --accent-red-light: rgba(211, 47, 47, 0.15);
+      --accent-purple-light: rgba(109, 24, 241, 0.15);
+      --accent-blue-light: rgba(23, 66, 246, 0.15);
+
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 2px 8px rgba(0,0,0,0.4);
+      --shadow-lg: 0 4px 16px rgba(0,0,0,0.5);
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
@@ -1224,6 +1251,151 @@
     .modal-wide {
       max-width: 720px;
     }
+
+    /* === THEME TOGGLE === */
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--deltek-blue);
+    }
+
+    .theme-toggle svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--text-secondary);
+      transition: all 0.3s;
+    }
+
+    [data-theme="dark"] .theme-toggle svg.sun-icon { display: block; }
+    [data-theme="dark"] .theme-toggle svg.moon-icon { display: none; }
+    .theme-toggle svg.sun-icon { display: none; }
+    .theme-toggle svg.moon-icon { display: block; }
+
+    /* === EXPORT BUTTON === */
+    .btn-export {
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-export:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--deltek-blue);
+      color: var(--deltek-blue);
+    }
+
+    /* === BUDGET INDICATOR === */
+    .budget-bar {
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .budget-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    .budget-bar-fill.safe { background: var(--accent-green); }
+    .budget-bar-fill.warning { background: var(--accent-yellow); }
+    .budget-bar-fill.danger { background: var(--accent-red); }
+
+    /* === NOTIFICATION SETTINGS === */
+    .settings-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+
+    .settings-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+
+    .setting-label {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .setting-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .toggle-switch {
+      width: 48px;
+      height: 26px;
+      background: var(--bg-tertiary);
+      border-radius: 13px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .toggle-switch.active {
+      background: var(--accent-green);
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle-switch.active::after {
+      left: 24px;
+    }
   </style>
 </head>
 <body>
@@ -1642,6 +1814,259 @@
       );
     }
 
+    // Settings Component with Budget & Notifications
+    function Settings({ totalCost }) {
+      const [budget, setBudget] = useState(() => parseFloat(localStorage.getItem('sdlc-budget') || '10'));
+      const [budgetAlert, setBudgetAlert] = useState(() => parseFloat(localStorage.getItem('sdlc-budget-alert') || '80'));
+      const [slackWebhook, setSlackWebhook] = useState(() => localStorage.getItem('sdlc-slack-webhook') || '');
+      const [teamsWebhook, setTeamsWebhook] = useState(() => localStorage.getItem('sdlc-teams-webhook') || '');
+      const [emailEnabled, setEmailEnabled] = useState(() => localStorage.getItem('sdlc-email-enabled') === 'true');
+      const [notifyOnComplete, setNotifyOnComplete] = useState(() => localStorage.getItem('sdlc-notify-complete') !== 'false');
+      const [notifyOnBlocked, setNotifyOnBlocked] = useState(() => localStorage.getItem('sdlc-notify-blocked') !== 'false');
+      const [notifyOnBudget, setNotifyOnBudget] = useState(() => localStorage.getItem('sdlc-notify-budget') !== 'false');
+
+      const saveBudget = () => {
+        localStorage.setItem('sdlc-budget', budget.toString());
+        localStorage.setItem('sdlc-budget-alert', budgetAlert.toString());
+        alert('Budget settings saved!');
+      };
+
+      const saveNotifications = () => {
+        localStorage.setItem('sdlc-slack-webhook', slackWebhook);
+        localStorage.setItem('sdlc-teams-webhook', teamsWebhook);
+        localStorage.setItem('sdlc-email-enabled', emailEnabled.toString());
+        localStorage.setItem('sdlc-notify-complete', notifyOnComplete.toString());
+        localStorage.setItem('sdlc-notify-blocked', notifyOnBlocked.toString());
+        localStorage.setItem('sdlc-notify-budget', notifyOnBudget.toString());
+        alert('Notification settings saved!');
+      };
+
+      const budgetUsed = (totalCost / budget) * 100;
+      const budgetStatus = budgetUsed >= 100 ? 'danger' : budgetUsed >= budgetAlert ? 'warning' : 'safe';
+
+      return (
+        <div className="settings-view">
+          {/* Budget Settings */}
+          <div className="settings-section">
+            <div className="settings-section-title">
+              <AgentIcon src="assets/brand/icons/calculator.svg" size={20} />
+              Cost Budget
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Monthly Budget (USD)</label>
+              <input
+                type="number"
+                className="form-input"
+                value={budget}
+                onChange={e => setBudget(parseFloat(e.target.value) || 0)}
+                min="1"
+                step="1"
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Alert Threshold (%)</label>
+              <input
+                type="number"
+                className="form-input"
+                value={budgetAlert}
+                onChange={e => setBudgetAlert(parseFloat(e.target.value) || 80)}
+                min="50"
+                max="100"
+              />
+              <div className="form-hint">Get alerted when spending reaches this percentage of budget</div>
+            </div>
+
+            <div style={{ padding: '16px', background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Current Spending</span>
+                <span style={{ fontSize: '14px', fontWeight: 600 }}>${totalCost.toFixed(2)} / ${budget.toFixed(2)}</span>
+              </div>
+              <div className="budget-bar">
+                <div className={`budget-bar-fill ${budgetStatus}`} style={{ width: `${Math.min(budgetUsed, 100)}%` }}></div>
+              </div>
+              <div style={{ fontSize: '12px', color: budgetStatus === 'danger' ? 'var(--accent-red)' : budgetStatus === 'warning' ? 'var(--accent-yellow)' : 'var(--accent-green)', marginTop: '8px' }}>
+                {budgetUsed.toFixed(1)}% of budget used
+              </div>
+            </div>
+
+            <button className="btn btn-secondary" onClick={saveBudget}>Save Budget Settings</button>
+          </div>
+
+          {/* Notification Settings */}
+          <div className="settings-section">
+            <div className="settings-section-title">
+              <AgentIcon src="assets/brand/icons/network-activity.svg" size={20} />
+              Notifications
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Slack Webhook URL</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="https://hooks.slack.com/services/..."
+                value={slackWebhook}
+                onChange={e => setSlackWebhook(e.target.value)}
+              />
+              <div className="form-hint">Get workflow alerts in your Slack channel</div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Microsoft Teams Webhook URL</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="https://outlook.office.com/webhook/..."
+                value={teamsWebhook}
+                onChange={e => setTeamsWebhook(e.target.value)}
+              />
+            </div>
+
+            <div style={{ borderTop: '1px solid var(--border-light)', marginTop: '16px', paddingTop: '16px' }}>
+              <div className="setting-row">
+                <div>
+                  <div className="setting-label">Project Completed</div>
+                  <div className="setting-desc">Notify when a project completes successfully</div>
+                </div>
+                <div className={`toggle-switch ${notifyOnComplete ? 'active' : ''}`} onClick={() => setNotifyOnComplete(!notifyOnComplete)}></div>
+              </div>
+
+              <div className="setting-row">
+                <div>
+                  <div className="setting-label">Project Blocked</div>
+                  <div className="setting-desc">Alert when a project is blocked by an agent</div>
+                </div>
+                <div className={`toggle-switch ${notifyOnBlocked ? 'active' : ''}`} onClick={() => setNotifyOnBlocked(!notifyOnBlocked)}></div>
+              </div>
+
+              <div className="setting-row">
+                <div>
+                  <div className="setting-label">Budget Alert</div>
+                  <div className="setting-desc">Notify when spending exceeds threshold</div>
+                </div>
+                <div className={`toggle-switch ${notifyOnBudget ? 'active' : ''}`} onClick={() => setNotifyOnBudget(!notifyOnBudget)}></div>
+              </div>
+            </div>
+
+            <button className="btn btn-secondary" onClick={saveNotifications} style={{ marginTop: '16px' }}>Save Notification Settings</button>
+          </div>
+
+          {/* Integration Guide */}
+          <div className="settings-section">
+            <div className="settings-section-title">
+              <AgentIcon src="assets/brand/icons/gear-integration.svg" size={20} />
+              Integration Guide
+            </div>
+
+            <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              <p style={{ marginBottom: '12px' }}><strong>Slack Setup:</strong></p>
+              <ol style={{ paddingLeft: '20px', marginBottom: '16px' }}>
+                <li>Go to your Slack workspace settings</li>
+                <li>Create an Incoming Webhook app</li>
+                <li>Copy the webhook URL and paste above</li>
+              </ol>
+
+              <p style={{ marginBottom: '12px' }}><strong>Teams Setup:</strong></p>
+              <ol style={{ paddingLeft: '20px', marginBottom: '16px' }}>
+                <li>Open your Teams channel</li>
+                <li>Click ... → Connectors → Incoming Webhook</li>
+                <li>Configure and copy the webhook URL</li>
+              </ol>
+
+              <p style={{ marginBottom: '12px' }}><strong>CLI Notifications:</strong></p>
+              <code style={{ display: 'block', padding: '12px', background: 'var(--bg-tertiary)', borderRadius: '6px', fontSize: '12px' }}>
+                # Set webhook in shell<br/>
+                export SLACK_WEBHOOK="your-webhook-url"<br/>
+                # Then notifications auto-send from agents
+              </code>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Theme Toggle Component
+    function ThemeToggle({ theme, onToggle }) {
+      return (
+        <button className="theme-toggle" onClick={onToggle} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+          <svg className="sun-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
+          </svg>
+          <svg className="moon-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+          </svg>
+        </button>
+      );
+    }
+
+    // Export Report Button Component
+    function ExportButton({ projects, costs }) {
+      const [showMenu, setShowMenu] = useState(false);
+
+      const exportCSV = () => {
+        const headers = ['Project ID', 'Name', 'Status', 'Created', 'Phases', 'Cost'];
+        const rows = projects.map(p => [
+          p.id,
+          p.name || '',
+          p.status,
+          p.createdAt,
+          (p.phases || []).length,
+          p.cost?.total_cost || 0
+        ]);
+        const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `sdlc-report-${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        setShowMenu(false);
+      };
+
+      const exportJSON = () => {
+        const data = { projects, costs, exportedAt: new Date().toISOString() };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `sdlc-report-${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        setShowMenu(false);
+      };
+
+      return (
+        <div style={{ position: 'relative' }}>
+          <button className="btn-export" onClick={() => setShowMenu(!showMenu)}>
+            <AgentIcon src="assets/brand/icons/data-flow.svg" size={14} />
+            Export
+          </button>
+          {showMenu && (
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              right: 0,
+              marginTop: '4px',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
+              borderRadius: 'var(--radius-md)',
+              boxShadow: 'var(--shadow-lg)',
+              zIndex: 100,
+              minWidth: '140px'
+            }}>
+              <div style={{ padding: '8px 12px', cursor: 'pointer', fontSize: '13px', borderBottom: '1px solid var(--border-light)' }} onClick={exportCSV}>
+                Export as CSV
+              </div>
+              <div style={{ padding: '8px 12px', cursor: 'pointer', fontSize: '13px' }} onClick={exportJSON}>
+                Export as JSON
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     function App() {
       const [activeView, setActiveView] = useState('executive');
       const [projects, setProjects] = useState([]);
@@ -1655,7 +2080,16 @@
       const [showRunModal, setShowRunModal] = useState(false);
       const [sdlcRunning, setSdlcRunning] = useState(false);
       const [sdlcStatus, setSdlcStatus] = useState(null);
+      const [theme, setTheme] = useState(() => localStorage.getItem('sdlc-theme') || 'light');
       const lastActivityRef = useRef(null);
+
+      // Theme effect - apply and persist
+      useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('sdlc-theme', theme);
+      }, [theme]);
+
+      const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
       // Check for new activity and create notifications
       const checkForNewActivity = useCallback((newActivity, oldActivity) => {
@@ -1728,10 +2162,76 @@
         }
       }, []);
 
+      // Real-time updates via SSE
       useEffect(() => {
-        fetchData();
-        const interval = setInterval(fetchData, 3000); // Faster refresh for notifications
-        return () => clearInterval(interval);
+        fetchData(); // Initial fetch
+
+        // Connect to SSE for real-time updates
+        let eventSource = null;
+        let reconnectTimer = null;
+
+        const connect = () => {
+          eventSource = new EventSource('/api/events');
+
+          eventSource.addEventListener('init', (e) => {
+            try {
+              const data = JSON.parse(e.data);
+              setProjects(data.projects || []);
+              setActivity(data.activity || []);
+              setCosts(data.costs || []);
+              const p = data.projects || [];
+              setStats({
+                totalProjects: p.length,
+                completedProjects: p.filter(isCompleted).length,
+                activeProjects: p.filter(isActive).length,
+                blockedProjects: p.filter(x => x.status === 'blocked').length
+              });
+              setLastUpdate(new Date());
+              console.log('SSE: Connected');
+            } catch (err) { console.error('SSE init error:', err); }
+          });
+
+          eventSource.addEventListener('update', (e) => {
+            try {
+              const data = JSON.parse(e.data);
+              if (data.projects) {
+                setProjects(data.projects);
+                const p = data.projects;
+                setStats({
+                  totalProjects: p.length,
+                  completedProjects: p.filter(isCompleted).length,
+                  activeProjects: p.filter(isActive).length,
+                  blockedProjects: p.filter(x => x.status === 'blocked').length
+                });
+              }
+              if (data.activity) {
+                if (lastActivityRef.current) {
+                  checkForNewActivity(data.activity, lastActivityRef.current);
+                }
+                lastActivityRef.current = data.activity;
+                setActivity(data.activity);
+              }
+              setLastUpdate(new Date());
+            } catch (err) { console.error('SSE update error:', err); }
+          });
+
+          eventSource.onerror = () => {
+            console.log('SSE: Connection lost, reconnecting...');
+            eventSource.close();
+            reconnectTimer = setTimeout(connect, 3000);
+          };
+        };
+
+        connect();
+
+        // Fallback polling (less frequent since we have SSE)
+        const fallbackInterval = setInterval(fetchData, 30000);
+
+        return () => {
+          if (eventSource) eventSource.close();
+          if (reconnectTimer) clearTimeout(reconnectTimer);
+          clearInterval(fallbackInterval);
+        };
       }, []);
 
       const totalCost = costs.reduce((s, c) => s + (c.total_cost || 0), 0);
@@ -1806,7 +2306,8 @@
                   { id: 'agents', icon: 'assets/brand/icons/workflow-team.svg', label: 'Agents' },
                   { id: 'learning', icon: 'assets/brand/icons/brain-lightbulb.svg', label: 'AI Learning' },
                   { id: 'activity', icon: 'assets/brand/icons/network-activity.svg', label: 'Activity' },
-                  { id: 'help', icon: 'assets/brand/icons/book.svg', label: 'Help & Docs', badge: 'v2.3' }
+                  { id: 'settings', icon: 'assets/brand/icons/gear-integration.svg', label: 'Settings' },
+                  { id: 'help', icon: 'assets/brand/icons/book.svg', label: 'Help & Docs', badge: 'v2.4' }
                 ].map(nav => (
                   <div
                     key={nav.id}
@@ -1831,10 +2332,11 @@
           <main className="main-content">
             <div className="top-bar">
               <h1 className="page-title">
-                {{ executive: 'Executive Dashboard', value: 'Value & ROI', projects: 'Projects', analytics: 'Analytics', agents: 'Agents', learning: 'AI Learning & Cheat Codes', activity: 'Activity', help: 'Help & Documentation' }[activeView]}
+                {{ executive: 'Executive Dashboard', value: 'Value & ROI', projects: 'Projects', analytics: 'Analytics', agents: 'Agents', learning: 'AI Learning & Cheat Codes', activity: 'Activity', settings: 'Settings', help: 'Help & Documentation' }[activeView]}
               </h1>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <span style={{ fontSize: '13px', color: '#5a6b7c' }}>Last updated: {lastUpdate.toLocaleTimeString()}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Last updated: {lastUpdate.toLocaleTimeString()}</span>
+                <ExportButton projects={projects} costs={costs} />
                 <button className="btn-run-sdlc" onClick={() => setShowRunModal(true)}>
                   <AgentIcon src="assets/brand/icons/team-workflow.svg" size={16} style={{ filter: 'brightness(0) invert(1)' }} />
                   Run SDLC
@@ -1847,6 +2349,7 @@
                   setUnreadCount={setUnreadCount}
                   setNotifications={setNotifications}
                 />
+                <ThemeToggle theme={theme} onToggle={toggleTheme} />
                 <button className="btn btn-secondary" onClick={fetchData}>↻ Refresh</button>
               </div>
             </div>
@@ -1859,6 +2362,7 @@
               {activeView === 'agents' && <Agents costs={costs} />}
               {activeView === 'learning' && <AILearning />}
               {activeView === 'activity' && <ActivityView activity={activity} />}
+              {activeView === 'settings' && <Settings totalCost={totalCost} />}
               {activeView === 'help' && <HelpDocs />}
             </div>
           </main>

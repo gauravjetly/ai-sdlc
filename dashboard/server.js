@@ -214,6 +214,40 @@ function getCostByProjectId(projectId) {
   }
 }
 
+// SSE clients for real-time updates
+const sseClients = new Set();
+
+// Broadcast to all SSE clients
+function broadcast(event, data) {
+  const message = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+  sseClients.forEach(client => {
+    try {
+      client.write(message);
+    } catch (e) {
+      sseClients.delete(client);
+    }
+  });
+}
+
+// Watch activity log for changes and broadcast
+let lastActivitySize = 0;
+function watchActivityLog() {
+  try {
+    if (fs.existsSync(ACTIVITY_LOG)) {
+      const stats = fs.statSync(ACTIVITY_LOG);
+      if (stats.size > lastActivitySize) {
+        lastActivitySize = stats.size;
+        const activity = getActivityLog(10);
+        const projects = getAllProjects();
+        const registry = getRegistryData();
+        broadcast('update', { activity, projects, registry });
+      }
+    }
+  } catch (e) {
+    // Ignore errors
+  }
+}
+
 // Create HTTP server
 const server = http.createServer((req, res) => {
   // Enable CORS
@@ -224,6 +258,31 @@ const server = http.createServer((req, res) => {
   if (req.method === 'OPTIONS') {
     res.writeHead(200);
     res.end();
+    return;
+  }
+
+  // SSE endpoint for real-time updates
+  if (req.url === '/api/events') {
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive'
+    });
+
+    // Send initial data
+    const projects = getAllProjects();
+    const activity = getActivityLog(20);
+    const registry = getRegistryData();
+    const costs = getAllCosts();
+    res.write(`event: init\ndata: ${JSON.stringify({ projects, activity, registry, costs })}\n\n`);
+
+    sseClients.add(res);
+    console.log(`  SSE client connected (${sseClients.size} total)`);
+
+    req.on('close', () => {
+      sseClients.delete(res);
+      console.log(`  SSE client disconnected (${sseClients.size} total)`);
+    });
     return;
   }
 
@@ -504,6 +563,11 @@ server.listen(PORT, async () => {
   }, 60000);
 
   console.log('  Auto-fix: Enabled (runs every 60s)');
+  console.log('');
+
+  // Set up activity log watcher for real-time SSE updates
+  setInterval(watchActivityLog, 2000);
+  console.log('  Real-time: SSE enabled (polls every 2s)');
   console.log('');
   console.log('  Press Ctrl+C to stop');
   console.log('');
