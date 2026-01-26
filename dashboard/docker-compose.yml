@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  sdlc-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: aisdlc-dashboard:2.4.0
+    container_name: sdlc-control-center
+
+    # Auto-restart policy - will restart on crashes
+    restart: unless-stopped
+
+    # Port mapping
+    ports:
+      - "3030:3030"
+
+    # Volume mounts - mount host .claude directory to container
+    volumes:
+      - ${HOME}/.claude:/home/sdlc/.claude:ro
+      # Read-only mount for security - dashboard only reads data
+
+    # Environment variables
+    environment:
+      - NODE_ENV=production
+      - PORT=3030
+      - HOME=/home/sdlc
+
+    # Resource limits to prevent resource exhaustion
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3030/api/registry', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Network mode
+    network_mode: bridge
+
+    # Container labels
+    labels:
+      - "com.aisdlc.service=dashboard"
+      - "com.aisdlc.version=2.4.0"
+      - "com.aisdlc.description=AI-SDLC Control Center Dashboard"
+
+networks:
+  default:
+    name: aisdlc-network

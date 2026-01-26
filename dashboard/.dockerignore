@@ -1,0 +1,30 @@
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode
+.idea
+
+# Logs
+*.log
+logs/
+
+# LaunchDaemon plist (not needed in container)
+com.aisdlc.dashboard.plist
+
+# Temporary files
+*.tmp
+*.temp

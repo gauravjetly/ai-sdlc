@@ -4444,8 +4444,8 @@
 
         connect();
 
-        // Fallback polling (less frequent since we have SSE)
-        const fallbackInterval = setInterval(fetchData, 30000);
+        // Fallback polling - reduced from 30s to 10s for better reliability
+        const fallbackInterval = setInterval(fetchData, 10000);
 
         return () => {
           if (eventSource) eventSource.close();

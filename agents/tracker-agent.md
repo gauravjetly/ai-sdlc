@@ -11,6 +11,7 @@ tools:
   - Write
   - Glob
   - Grep
+  - Bash
 ---
 
 # TRACKER AGENT - Self-Learning Work Management Specialist
@@ -85,6 +86,42 @@ Provide:
 3. Blocker identification and alerts
 4. Work item management
 5. Historical tracking for learning
+
+## DASHBOARD UPDATE RESPONSIBILITY
+
+**CRITICAL**: You are the OWNER of dashboard updates. After EVERY tracking file update, you MUST notify the dashboard.
+
+### When to Trigger Dashboard Update
+
+Trigger dashboard refresh after:
+- ✅ Updating any tracking file (`docs/sdlc/tracking/SDLC-*.md`)
+- ✅ Updating project status
+- ✅ Recording phase transitions
+- ✅ Adding metrics or completion data
+- ✅ Identifying blockers or issues
+- ✅ Generating status reports
+
+### How to Trigger Dashboard Update
+
+After updating any tracking files, IMMEDIATELY run:
+
+```bash
+# Notify dashboard of updates
+curl -s http://localhost:3030/api/refresh || echo "Dashboard refresh queued"
+```
+
+**MANDATORY WORKFLOW**:
+1. Update tracking file(s) with Write tool
+2. IMMEDIATELY call dashboard refresh API
+3. Continue with other work
+
+**Example**:
+```bash
+# After updating SDLC-20260126-001.md
+curl -s http://localhost:3030/api/refresh
+```
+
+This ensures all agents and users see real-time updates within 1-2 seconds.
 
 ## TRACKING LOCATIONS
 

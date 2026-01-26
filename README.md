@@ -2,8 +2,28 @@
 
 ## Complete Enterprise Software Development Automation
 
-**Version**: 2.4.0
+**Version**: 2.4.1
 **Author**: Deltek Cloud Engineering
+
+---
+
+## What's New in v2.4.1
+
+### Dashboard Auto-Update System 🔄
+- **Real-Time Updates** - Dashboard automatically refreshes when agents update project data
+- **Agent Responsibility** - Tracker Agent and Conductor Agent trigger dashboard updates
+- **Dual Safety Mechanism** - Agent-triggered updates + file-watching backup (1s polling)
+- **Instant Visibility** - All updates appear within 1-2 seconds across all clients
+- **Refresh API** - New `/api/refresh` endpoint for manual/agent-triggered updates
+- **Comprehensive File Watching** - Monitors activity logs, registry, projects, and costs
+- **SSE Heartbeat** - 30-second heartbeat keeps connections alive
+- **Zero Manual Refresh** - No more F5/reload needed for latest data
+
+**Technical Implementation:**
+- Dashboard Server: Enhanced with comprehensive file watching and SSE broadcasting
+- Tracker Agent: Now calls dashboard refresh API after all tracking updates
+- Conductor Agent: Triggers dashboard refresh on project lifecycle events
+- Documentation: Complete implementation guide in `dashboard/DASHBOARD-AUTO-UPDATE.md`
 
 ---
 

@@ -232,6 +232,21 @@ Classify incoming requests:
 
 This registers the project in `~/.claude/sdlc-registry/` so it appears in the Control Center dashboard at `http://localhost:3030`.
 
+3. **IMMEDIATELY notify dashboard** after creating tracking file and registering project:
+
+```bash
+curl -s http://localhost:3030/api/refresh || echo "Dashboard refresh queued"
+```
+
+**CRITICAL**: Always trigger dashboard refresh after:
+- Creating new tracking files
+- Updating phase status
+- Recording agent completion
+- Identifying blockers
+- Updating any SDLC tracking data
+
+This ensures real-time visibility across all agents and the dashboard.
+
 ### Step 3: Execute Agent Sequence
 
 For EACH agent phase, follow this exact workflow:
@@ -264,7 +279,12 @@ Instructions:
 
 4. **Update tracking file** with phase status and deliverables
 
-5. **Check for blockers** - if agent reported blocking issues, handle per Step 4
+5. **IMMEDIATELY notify dashboard** of phase completion:
+```bash
+curl -s http://localhost:3030/api/refresh || echo "Dashboard refresh queued"
+```
+
+6. **Check for blockers** - if agent reported blocking issues, handle per Step 4
 
 6. **Proceed to next phase** or escalate if blocked
 
@@ -278,7 +298,11 @@ After each phase:
 ~/.claude/sdlc-registry/sdlc-registry.sh block "SDLC-[ID]" "[agent-name]" "[blocker reason]"
 ```
 4. Update tracking file with blocker details
-5. **CRITICAL: Invoke Ask Tom Agent** if:
+5. **IMMEDIATELY notify dashboard** of blocker:
+```bash
+curl -s http://localhost:3030/api/refresh || echo "Dashboard refresh queued"
+```
+6. **CRITICAL: Invoke Ask Tom Agent** if:
    - Blocker is unclear or complex
    - Same phase has failed 3+ times
    - No progress for >2 hours
@@ -321,7 +345,12 @@ When all phases complete successfully:
 ~/.claude/sdlc-registry/sdlc-registry.sh finish "SDLC-[ID]"
 ```
 
-2. **Generate completion report**:
+2. **IMMEDIATELY notify dashboard** of project completion:
+```bash
+curl -s http://localhost:3030/api/refresh || echo "Dashboard refresh queued"
+```
+
+3. **Generate completion report**:
 
 ```markdown
 # SDLC Complete: [Title]

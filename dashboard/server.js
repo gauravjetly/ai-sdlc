@@ -3,6 +3,11 @@
 /**
  * AI-SDLC Control Center - Web Server
  * Serves the dashboard UI and provides real-time registry data
+ *
+ * ENHANCED: Comprehensive file watching for automatic updates
+ * - Watches activity.log, registry.json, projects/*.json, and costs/*.json
+ * - Uses debounced broadcasting to prevent update flooding
+ * - Maintains file modification timestamps for change detection
  */
 
 const http = require('http');
@@ -18,18 +23,172 @@ const ACTIVITY_LOG = path.join(REGISTRY_DIR, 'activity.log');
 const FINOPS_DIR = path.join(process.env.HOME, '.claude', 'finops-registry', 'costs');
 const REGISTRY_SCRIPT = path.join(REGISTRY_DIR, 'sdlc-registry.sh');
 
+// ============================================================================
+// FILE CHANGE TRACKING - Comprehensive monitoring for all data sources
+// ============================================================================
+
+// Track file modification times for change detection
+const fileTracker = {
+  activityLog: { mtime: 0, size: 0 },
+  registry: { mtime: 0 },
+  projects: new Map(), // filename -> mtime
+  costs: new Map()     // filename -> mtime
+};
+
+// Debounce timer for broadcasting updates
+let broadcastTimer = null;
+const BROADCAST_DEBOUNCE_MS = 500; // Wait 500ms after last change before broadcasting
+
+// Flag to track if changes are pending
+let changesPending = false;
+
+/**
+ * Check if a file has been modified since last check
+ */
+function hasFileChanged(filepath, tracker) {
+  try {
+    if (!fs.existsSync(filepath)) {
+      return false;
+    }
+    const stats = fs.statSync(filepath);
+    const mtime = stats.mtimeMs;
+
+    if (tracker.mtime === undefined || mtime > tracker.mtime) {
+      tracker.mtime = mtime;
+      if (tracker.size !== undefined) {
+        tracker.size = stats.size;
+      }
+      return true;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Check if any files in a directory have changed
+ */
+function hasDirectoryChanged(dirPath, trackerMap, extension) {
+  try {
+    if (!fs.existsSync(dirPath)) {
+      return false;
+    }
+
+    let changed = false;
+    const files = fs.readdirSync(dirPath).filter(f => f.endsWith(extension));
+
+    // Check for new or modified files
+    for (const file of files) {
+      const filepath = path.join(dirPath, file);
+      const stats = fs.statSync(filepath);
+      const mtime = stats.mtimeMs;
+
+      if (!trackerMap.has(file) || trackerMap.get(file) < mtime) {
+        trackerMap.set(file, mtime);
+        changed = true;
+      }
+    }
+
+    // Check for deleted files
+    for (const [file] of trackerMap) {
+      if (!files.includes(file)) {
+        trackerMap.delete(file);
+        changed = true;
+      }
+    }
+
+    return changed;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Schedule a debounced broadcast to all SSE clients
+ */
+function scheduleBroadcast() {
+  changesPending = true;
+
+  // Clear existing timer
+  if (broadcastTimer) {
+    clearTimeout(broadcastTimer);
+  }
+
+  // Schedule new broadcast after debounce period
+  broadcastTimer = setTimeout(() => {
+    if (changesPending) {
+      broadcastUpdate();
+      changesPending = false;
+    }
+  }, BROADCAST_DEBOUNCE_MS);
+}
+
+/**
+ * Broadcast full update to all SSE clients
+ */
+function broadcastUpdate() {
+  if (sseClients.size === 0) {
+    return; // No clients connected
+  }
+
+  const activity = getActivityLog(20);
+  const projects = getAllProjects();
+  const registry = getRegistryData();
+  const costs = getAllCosts();
+
+  broadcast('update', { activity, projects, registry, costs });
+  console.log(`  [${new Date().toISOString().slice(11,19)}] Broadcast update to ${sseClients.size} client(s)`);
+}
+
+/**
+ * Comprehensive file watcher - checks all data sources for changes
+ */
+function watchAllFiles() {
+  let anyChanges = false;
+
+  // Check activity log
+  if (hasFileChanged(ACTIVITY_LOG, fileTracker.activityLog)) {
+    anyChanges = true;
+  }
+
+  // Check registry.json
+  if (hasFileChanged(REGISTRY_FILE, fileTracker.registry)) {
+    anyChanges = true;
+  }
+
+  // Check projects directory
+  if (hasDirectoryChanged(PROJECTS_DIR, fileTracker.projects, '.json')) {
+    anyChanges = true;
+  }
+
+  // Check costs directory
+  if (hasDirectoryChanged(FINOPS_DIR, fileTracker.costs, '.json')) {
+    anyChanges = true;
+  }
+
+  // Schedule broadcast if any changes detected
+  if (anyChanges) {
+    scheduleBroadcast();
+  }
+}
+
+// ============================================================================
+// AUTO-FIX FUNCTIONALITY
+// ============================================================================
+
 // Auto-fix stalled projects - runs the registry autofix command
 function runAutofix() {
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(REGISTRY_SCRIPT)) {
-      console.log('  ⚠️  Registry script not found, skipping autofix');
+      console.log('  Registry script not found, skipping autofix');
       resolve({ fixed: 0, checked: 0 });
       return;
     }
 
     exec(`bash "${REGISTRY_SCRIPT}" autofix`, (error, stdout, stderr) => {
       if (error) {
-        console.error('  ⚠️  Autofix error:', error.message);
+        console.error('  Autofix error:', error.message);
         resolve({ fixed: 0, checked: 0, error: error.message });
         return;
       }
@@ -45,13 +204,17 @@ function runAutofix() {
       };
 
       if (result.fixed > 0) {
-        console.log(`  ✅ Auto-fixed ${result.fixed} stalled projects`);
+        console.log(`  Auto-fixed ${result.fixed} stalled projects`);
       }
 
       resolve(result);
     });
   });
 }
+
+// ============================================================================
+// DATA READING FUNCTIONS
+// ============================================================================
 
 // Read registry data
 function getRegistryData() {
@@ -143,7 +306,7 @@ function getAllCosts() {
 
     const files = fs.readdirSync(FINOPS_DIR);
     const costs = files
-      .filter(f => f.endsWith('-costs.json'))
+      .filter(f => f.endsWith('-costs.json') || f.endsWith('.json'))
       .map(f => {
         try {
           const data = fs.readFileSync(path.join(FINOPS_DIR, f), 'utf8');
@@ -214,6 +377,10 @@ function getCostByProjectId(projectId) {
   }
 }
 
+// ============================================================================
+// SSE (Server-Sent Events) HANDLING
+// ============================================================================
+
 // SSE clients for real-time updates
 const sseClients = new Set();
 
@@ -229,30 +396,27 @@ function broadcast(event, data) {
   });
 }
 
-// Watch activity log for changes and broadcast
-let lastActivitySize = 0;
-function watchActivityLog() {
-  try {
-    if (fs.existsSync(ACTIVITY_LOG)) {
-      const stats = fs.statSync(ACTIVITY_LOG);
-      if (stats.size > lastActivitySize) {
-        lastActivitySize = stats.size;
-        const activity = getActivityLog(10);
-        const projects = getAllProjects();
-        const registry = getRegistryData();
-        broadcast('update', { activity, projects, registry });
-      }
+// Send heartbeat to keep SSE connections alive
+function sendHeartbeat() {
+  const heartbeat = `: heartbeat\n\n`;
+  sseClients.forEach(client => {
+    try {
+      client.write(heartbeat);
+    } catch (e) {
+      sseClients.delete(client);
     }
-  } catch (e) {
-    // Ignore errors
-  }
+  });
 }
+
+// ============================================================================
+// HTTP SERVER
+// ============================================================================
 
 // Create HTTP server
 const server = http.createServer((req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
@@ -266,7 +430,8 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive'
+      'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no' // Disable nginx buffering if behind proxy
     });
 
     // Send initial data
@@ -277,12 +442,20 @@ const server = http.createServer((req, res) => {
     res.write(`event: init\ndata: ${JSON.stringify({ projects, activity, registry, costs })}\n\n`);
 
     sseClients.add(res);
-    console.log(`  SSE client connected (${sseClients.size} total)`);
+    console.log(`  [${new Date().toISOString().slice(11,19)}] SSE client connected (${sseClients.size} total)`);
 
     req.on('close', () => {
       sseClients.delete(res);
-      console.log(`  SSE client disconnected (${sseClients.size} total)`);
+      console.log(`  [${new Date().toISOString().slice(11,19)}] SSE client disconnected (${sseClients.size} total)`);
     });
+    return;
+  }
+
+  // API endpoint for forcing a refresh (manual trigger)
+  if (req.url === '/api/refresh') {
+    broadcastUpdate();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true, message: 'Refresh broadcast sent' }));
     return;
   }
 
@@ -351,6 +524,8 @@ const server = http.createServer((req, res) => {
   // API endpoint for autofix - manually trigger project status reconciliation
   if (req.url === '/api/autofix') {
     runAutofix().then(result => {
+      // Also broadcast update after autofix
+      scheduleBroadcast();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(result));
     }).catch(error => {
@@ -463,6 +638,9 @@ const server = http.createServer((req, res) => {
             return;
           }
 
+          // Schedule broadcast after project creation
+          scheduleBroadcast();
+
           // Generate command based on workflow
           let command = workflowCommands[workflow] || '/sdlc-start';
           command += ` ${description}`;
@@ -535,11 +713,15 @@ const server = http.createServer((req, res) => {
   res.end('Not found');
 });
 
+// ============================================================================
+// SERVER STARTUP
+// ============================================================================
+
 server.listen(PORT, async () => {
   console.log('');
-  console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log('║           AI-SDLC Control Center - LIVE                      ║');
-  console.log('╚══════════════════════════════════════════════════════════════╝');
+  console.log('==================================================================');
+  console.log('           AI-SDLC Control Center - LIVE                          ');
+  console.log('==================================================================');
   console.log('');
   console.log(`  Dashboard:     http://localhost:${PORT}`);
   console.log(`  API Registry:  http://localhost:${PORT}/api/registry`);
@@ -547,6 +729,7 @@ server.listen(PORT, async () => {
   console.log(`  API Costs:     http://localhost:${PORT}/api/costs`);
   console.log(`  API Activity:  http://localhost:${PORT}/api/activity`);
   console.log(`  API Autofix:   http://localhost:${PORT}/api/autofix`);
+  console.log(`  API Refresh:   http://localhost:${PORT}/api/refresh`);
   console.log('');
   console.log('  Registry: ' + (fs.existsSync(REGISTRY_FILE) ? 'Connected' : 'Not initialized'));
   console.log('  FinOps:   ' + (fs.existsSync(FINOPS_DIR) ? 'Connected' : 'No cost data'));
@@ -565,10 +748,21 @@ server.listen(PORT, async () => {
   console.log('  Auto-fix: Enabled (runs every 60s)');
   console.log('');
 
-  // Set up activity log watcher for real-time SSE updates
-  setInterval(watchActivityLog, 2000);
-  console.log('  Real-time: SSE enabled (polls every 2s)');
+  // ENHANCED: Set up comprehensive file watching (every 1 second)
+  // This watches: activity.log, registry.json, projects/*.json, costs/*.json
+  setInterval(watchAllFiles, 1000);
+  console.log('  Real-time: Comprehensive file watching enabled (1s interval)');
+  console.log('             - Watching: activity.log');
+  console.log('             - Watching: registry.json');
+  console.log('             - Watching: projects/*.json');
+  console.log('             - Watching: costs/*.json');
   console.log('');
+
+  // SSE heartbeat to keep connections alive (every 30 seconds)
+  setInterval(sendHeartbeat, 30000);
+  console.log('  SSE Heartbeat: Enabled (every 30s)');
+  console.log('');
+
   console.log('  Press Ctrl+C to stop');
   console.log('');
 
@@ -581,6 +775,14 @@ server.listen(PORT, async () => {
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
+  console.log('\n\n  Shutting down gracefully...');
+  server.close(() => {
+    console.log('  Server closed\n');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
   console.log('\n\n  Shutting down gracefully...');
   server.close(() => {
     console.log('  Server closed\n');

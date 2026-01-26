@@ -2,7 +2,7 @@
 
 Real-time web-based dashboard for monitoring AI-SDLC agent workflows across all projects.
 
-**Version**: 2.4.0
+**Version**: 2.4.1
 
 ---
 
@@ -10,6 +10,7 @@ Real-time web-based dashboard for monitoring AI-SDLC agent workflows across all 
 
 ### Core Dashboard
 - **Real-Time Updates** - SSE (Server-Sent Events) for instant notifications
+- **Comprehensive File Watching** - Auto-detects changes to activity logs, projects, registry, and costs (v2.4.1)
 - **Live Project Tracking** - Monitor all active, completed, and blocked projects
 - **Agent Activity Feed** - See what each agent is doing in real-time
 - **Visual Workflow** - Beautiful UI showing agent pipeline and progress
@@ -164,7 +165,9 @@ The dashboard server provides REST API endpoints:
 | `GET /api/costs/:projectId` | Specific project costs |
 | `GET /api/activity?limit=50` | Activity log (default 50 events) |
 | `GET /api/memory` | Agent memory stats |
-| `GET /events` | SSE endpoint for real-time updates |
+| `GET /api/events` | SSE endpoint for real-time updates |
+| `GET /api/refresh` | Force immediate broadcast to all clients (v2.4.1) |
+| `GET /api/autofix` | Auto-fix stalled projects |
 
 ### Example API Usage
 
@@ -423,6 +426,7 @@ For production/team use:
 
 | Version | Date | Features |
 |---------|------|----------|
+| 2.4.1 | 2026-01-26 | **Auto-Update Fix**: Comprehensive file watching for all data sources |
 | 2.4.0 | 2026-01-21 | 12 advanced features (Command Palette, Gantt, AI Insights, etc.) |
 | 2.3.0 | 2026-01-20 | Memory dashboard, cross-agent learning |
 | 2.1.1 | 2025-01-15 | Costs tab, FinOps integration |
@@ -430,6 +434,28 @@ For production/team use:
 
 ---
 
-**Built for AI-SDLC Framework v2.4.0**
+## v2.4.1 - Auto-Update Fix Details
+
+### Problem Solved
+The dashboard was not automatically updating because the server only watched `activity.log` for changes. Updates to project files, registry metadata, and cost data were not triggering real-time updates.
+
+### Solution Implemented
+1. **Comprehensive File Watching**: Server now monitors all data sources:
+   - `~/.claude/sdlc-registry/activity.log`
+   - `~/.claude/sdlc-registry/registry.json`
+   - `~/.claude/sdlc-registry/projects/*.json`
+   - `~/.claude/finops-registry/costs/*.json`
+
+2. **Debounced Broadcasting**: Changes are debounced (500ms) to prevent flooding clients with rapid successive updates.
+
+3. **SSE Heartbeat**: Added 30-second heartbeat to keep connections alive.
+
+4. **Manual Refresh API**: New `/api/refresh` endpoint for forcing immediate updates.
+
+5. **Reduced Fallback Polling**: Client fallback polling reduced from 30s to 10s.
+
+---
+
+**Built for AI-SDLC Framework v2.4.1**
 **Powered by Node.js + React 18**
-**Real-time SSE • Dark Mode • Command Palette • 12 Advanced Features**
+**Real-time SSE • Comprehensive File Watching • Auto-Update • Dark Mode • Command Palette**
