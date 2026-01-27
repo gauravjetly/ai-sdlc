@@ -3608,28 +3608,14 @@
               </div>
             </div>
 
-            {/* Tabs */}
-            <div style={{ display: 'flex', gap: '4px', padding: '16px 24px 0', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-secondary)' }}>
-              {tabs.map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  style={{
-                    padding: '8px 16px',
-                    border: 'none',
-                    background: activeTab === tab.id ? 'var(--bg-card)' : 'transparent',
-                    color: activeTab === tab.id ? 'var(--deltek-blue)' : 'var(--text-secondary)',
-                    borderRadius: '8px 8px 0 0',
-                    cursor: 'pointer',
-                    fontWeight: activeTab === tab.id ? 600 : 400,
-                    fontSize: '14px',
-                    transition: 'all 0.2s',
-                    borderBottom: activeTab === tab.id ? '2px solid var(--deltek-blue)' : 'none'
-                  }}
-                >
-                  {tab.icon} {tab.label}
-                </button>
-              ))}
+            {/* Comprehensive View - All Sections Visible */}
+            <div style={{ padding: '16px 24px', background: 'linear-gradient(135deg, #003d7a 0%, #002952 100%)', color: 'white', borderBottom: '3px solid var(--deltek-blue)' }}>
+              <div style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px' }}>
+                📊 COMPREHENSIVE PROJECT DETAILS - All Information Below
+              </div>
+              <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '4px' }}>
+                Complete project context • Agent workflow • Documentation • Implementation • Metrics
+              </div>
             </div>
 
             {/* Content */}
@@ -3647,7 +3633,7 @@
               ) : (
                 <>
                   {/* Overview Tab */}
-                  {activeTab === 'overview' && (
+                  { true && (
                     <div>
                       {/* Project Hierarchy: Main Project → Feature */}
                       {details.mainProject && details.mainProject.isFeatureAddition ? (
@@ -3939,7 +3925,7 @@
                   )}
 
                   {/* Agents & Workflow Tab */}
-                  {activeTab === 'agents' && (
+                  { true && (
                     <div>
                       <div style={{ marginBottom: '24px', padding: '20px', background: 'linear-gradient(135deg, var(--deltek-blue) 0%, #0052a3 100%)', borderRadius: '12px', color: 'white' }}>
                         <h3 style={{ margin: 0, marginBottom: '8px', fontSize: '20px' }}>👥 Complete Agent Workflow</h3>
@@ -4112,7 +4098,7 @@
                   )}
 
                   {/* Documentation Tab */}
-                  {activeTab === 'documentation' && (
+                  { true && (
                     <div>
                       {['requirements', 'architecture', 'security', 'testing', 'deployment', 'acceptance'].map(docType => {
                         const doc = details.documentation[docType];
@@ -4162,7 +4148,7 @@
                   )}
 
                   {/* README Tab */}
-                  {activeTab === 'readme' && (
+                  { true && (
                     <div>
                       {details.documentation.readme ? (
                         <div style={{ padding: '20px', background: 'var(--bg-card)', borderRadius: '8px', maxHeight: '600px', overflowY: 'auto' }}>
@@ -4186,7 +4172,7 @@
                   )}
 
                   {/* Implementation Tab */}
-                  {activeTab === 'implementation' && (
+                  { true && (
                     <div>
                       {/* Test Results */}
                       <div style={{ marginBottom: '32px', padding: '20px', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
@@ -4222,7 +4208,7 @@
                   )}
 
                   {/* Change Log Tab */}
-                  {activeTab === 'changelog' && (
+                  { true && (
                     <div>
                       <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>📝 Activity Timeline ({details.changelog.length} events)</h4>
                       <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
@@ -4256,7 +4242,7 @@
                   )}
 
                   {/* ADRs Tab */}
-                  {activeTab === 'adrs' && (
+                  { true && (
                     <div>
                       {details.documentation.adrs && details.documentation.adrs.length > 0 ? (
                         <>
@@ -6934,7 +6920,7 @@
           )}
 
           {/* Agent Guide Tab */}
-          {activeTab === 'agents' && (
+          { true && (
             <div>
               <div className="section-header mb-lg">
                 <div>
@@ -7538,7 +7524,7 @@
           )}
 
           {/* Getting Started Tab */}
-          {activeTab === 'readme' && (
+          { true && (
             <div>
               <div className="section-header mb-lg">
                 <div>

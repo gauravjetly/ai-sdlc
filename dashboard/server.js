@@ -529,30 +529,50 @@ function getProjectDetails(projectId) {
       }
     }
 
-    // Check if project data already has mainProject fields (explicit config)
-    if (projectData.mainProject) {
+    // PRIORITY 1: Check if project has projectContext (new enhanced format from tracker)
+    if (projectData.projectContext) {
+      if (projectData.projectContext.mainProject) {
+        mainProject = projectData.projectContext.mainProject;
+      }
+      if (projectData.projectContext.mainProjectRepo) {
+        mainProjectRepo = projectData.projectContext.mainProjectRepo;
+      }
+      if (projectData.projectContext.featureName) {
+        featureName = projectData.projectContext.featureName;
+      }
+    }
+
+    // PRIORITY 2: Check if project data has legacy mainProject fields (backward compatibility)
+    if (!mainProject && projectData.mainProject) {
       mainProject = projectData.mainProject;
     }
-    if (projectData.mainProjectRepo) {
+    if (!mainProjectRepo && projectData.mainProjectRepo) {
       mainProjectRepo = projectData.mainProjectRepo;
     }
-    if (projectData.featureName) {
+    if (!featureName && projectData.featureName) {
       featureName = projectData.featureName;
     }
 
     // If still no main project, try to infer from first output directory
     if (!mainProject && projectData.phases && projectData.phases.length > 0) {
+      // Common directories to exclude from project name detection
+      const excludedDirs = ['docs', 'src', 'tests', 'test', 'dist', 'build', 'lib', 'node_modules', 'config', 'scripts', 'public', 'assets', 'components'];
+
       for (const phase of projectData.phases) {
         if (phase.outputs && phase.outputs.length > 0) {
           const firstOutput = phase.outputs[0];
           // Pattern like "src/claude-admin/" or "claude-admin/src"
           const pathMatch = firstOutput.match(/(?:^|\/)(([a-z]+-?)+(?:-admin|-app|-system|-service|-api)?)/i);
           if (pathMatch && pathMatch[1] && !mainProject) {
-            mainProject = pathMatch[1]
-              .split(/[-_]/)
-              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(' ');
-            break;
+            const candidate = pathMatch[1].toLowerCase();
+            // Only use if it's not a common directory name
+            if (!excludedDirs.includes(candidate) && candidate.length > 2) {
+              mainProject = pathMatch[1]
+                .split(/[-_]/)
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+              break;
+            }
           }
         }
       }
@@ -634,6 +654,14 @@ function getProjectDetails(projectId) {
       }
     }
 
+    // Determine if this is a feature addition
+    // Priority 1: Use explicit value from projectContext
+    // Priority 2: Infer from presence of mainProject
+    let isFeatureAddition = !!mainProject;
+    if (projectData.projectContext && typeof projectData.projectContext.isFeatureAddition === 'boolean') {
+      isFeatureAddition = projectData.projectContext.isFeatureAddition;
+    }
+
     // 9. Build comprehensive response
     return {
       // Basic project info
@@ -644,7 +672,8 @@ function getProjectDetails(projectId) {
         name: mainProject || 'Standalone Project',
         repository: mainProjectRepo || githubUrl,
         featureName: featureName,
-        isFeatureAddition: !!mainProject // true if this is adding to existing project
+        isFeatureAddition: isFeatureAddition,
+        projectType: projectData.projectContext?.projectType || (isFeatureAddition ? 'FEATURE_ADDITION' : 'STANDALONE')
       },
 
       // Cost data
