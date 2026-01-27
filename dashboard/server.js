@@ -377,6 +377,241 @@ function getCostByProjectId(projectId) {
   }
 }
 
+// Get comprehensive project details including all documentation
+function getProjectDetails(projectId) {
+  try {
+    const SDLC_DOCS_DIR = path.join(__dirname, '..', 'docs', 'sdlc');
+
+    // 1. Get basic project data
+    const projectFile = path.join(PROJECTS_DIR, `${projectId}.json`);
+    if (!fs.existsSync(projectFile)) {
+      return null;
+    }
+
+    const projectData = JSON.parse(fs.readFileSync(projectFile, 'utf8'));
+
+    // 2. Get cost data
+    const costData = getCostByProjectId(projectId);
+
+    // 3. Find all related documentation files
+    const docs = {
+      requirements: null,
+      architecture: null,
+      security: null,
+      testing: null,
+      deployment: null,
+      acceptance: null,
+      tracking: null,
+      readme: null,
+      adrs: []
+    };
+
+    // Helper to find and read a file matching pattern
+    const findAndReadDoc = (dir, pattern) => {
+      try {
+        if (!fs.existsSync(dir)) return null;
+        const files = fs.readdirSync(dir);
+        const matchedFile = files.find(f => f.includes(projectId) || f.includes(pattern));
+        if (matchedFile) {
+          const content = fs.readFileSync(path.join(dir, matchedFile), 'utf8');
+          return {
+            filename: matchedFile,
+            content: content,
+            path: path.join(dir, matchedFile)
+          };
+        }
+      } catch (e) {
+        return null;
+      }
+      return null;
+    };
+
+    // Read documentation from each phase
+    docs.requirements = findAndReadDoc(path.join(SDLC_DOCS_DIR, 'requirements'), projectId);
+    docs.architecture = findAndReadDoc(path.join(SDLC_DOCS_DIR, 'architecture'), projectId);
+    docs.security = findAndReadDoc(path.join(SDLC_DOCS_DIR, 'security'), projectId);
+    docs.testing = findAndReadDoc(path.join(SDLC_DOCS_DIR, 'testing'), projectId);
+    docs.deployment = findAndReadDoc(path.join(SDLC_DOCS_DIR, 'deployments'), projectId);
+    docs.acceptance = findAndReadDoc(path.join(SDLC_DOCS_DIR, 'acceptance'), projectId);
+    docs.tracking = findAndReadDoc(path.join(SDLC_DOCS_DIR, 'tracking'), projectId);
+
+    // Find ADRs related to this project (by date or mentioned in architecture doc)
+    try {
+      const adrDir = path.join(SDLC_DOCS_DIR, 'architecture');
+      if (fs.existsSync(adrDir)) {
+        const adrFiles = fs.readdirSync(adrDir).filter(f => f.startsWith('ADR-') && f.endsWith('.md'));
+        // Get recent ADRs or all if project-specific search fails
+        const relevantADRs = adrFiles.slice(-5); // Last 5 ADRs
+        docs.adrs = relevantADRs.map(filename => ({
+          filename: filename,
+          content: fs.readFileSync(path.join(adrDir, filename), 'utf8').substring(0, 1000), // First 1000 chars
+          path: path.join(adrDir, filename)
+        }));
+      }
+    } catch (e) {
+      // ADRs are optional
+    }
+
+    // 4. Check for README in project outputs
+    if (projectData.phases && projectData.phases.length > 0) {
+      for (const phase of projectData.phases) {
+        if (phase.outputs && phase.outputs.length > 0) {
+          for (const output of phase.outputs) {
+            const readmePath = path.join(__dirname, '..', output, 'README.md');
+            if (fs.existsSync(readmePath)) {
+              docs.readme = {
+                filename: 'README.md',
+                content: fs.readFileSync(readmePath, 'utf8'),
+                path: readmePath
+              };
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // 5. Extract GitHub repository URL from documentation or project
+    let githubUrl = null;
+    const githubPatterns = [
+      /github\.com[\/:]([a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+)/gi,
+      /https?:\/\/github\.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+/gi
+    ];
+
+    // Search in documentation for GitHub URLs
+    const searchContent = [
+      docs.readme?.content,
+      docs.architecture?.content,
+      docs.deployment?.content
+    ].filter(Boolean).join('\n');
+
+    for (const pattern of githubPatterns) {
+      const match = pattern.exec(searchContent);
+      if (match) {
+        githubUrl = match[0].startsWith('http') ? match[0] : `https://github.com/${match[1]}`;
+        break;
+      }
+    }
+
+    // 6. Extract deployment/end URLs
+    const deploymentUrls = [];
+    const urlPattern = /https?:\/\/[a-zA-Z0-9.-]+(:[0-9]+)?(\/[^\s]*)?/gi;
+
+    if (docs.deployment?.content) {
+      const urls = docs.deployment.content.match(urlPattern) || [];
+      deploymentUrls.push(...urls.filter(url =>
+        !url.includes('github.com') &&
+        !url.includes('localhost') &&
+        !url.includes('example.com')
+      ));
+    }
+
+    // 7. Build change log from activity
+    const projectActivity = getActivityLog(1000).filter(a => a.projectId === projectId);
+    const changelog = projectActivity.map(a => ({
+      timestamp: a.timestamp,
+      event: a.event,
+      agent: a.agent,
+      message: a.message || a.description,
+      phase: a.phase
+    }));
+
+    // 8. Extract implementation summary
+    const implementation = {
+      filesCreated: [],
+      technologies: [],
+      features: [],
+      tests: {
+        total: 0,
+        passing: 0,
+        coverage: 0
+      }
+    };
+
+    // Parse outputs to get file list
+    if (projectData.phases) {
+      projectData.phases.forEach(phase => {
+        if (phase.outputs) {
+          implementation.filesCreated.push(...phase.outputs);
+        }
+      });
+    }
+
+    // Extract technologies from architecture doc
+    if (docs.architecture?.content) {
+      const techPatterns = [
+        /Node\.js/gi, /TypeScript/gi, /JavaScript/gi, /Python/gi, /Java/gi,
+        /React/gi, /Vue/gi, /Angular/gi, /Express/gi, /PostgreSQL/gi, /MongoDB/gi,
+        /Docker/gi, /Kubernetes/gi, /AWS/gi, /Azure/gi, /GCP/gi
+      ];
+
+      const foundTechs = new Set();
+      techPatterns.forEach(pattern => {
+        const matches = docs.architecture.content.match(pattern);
+        if (matches) {
+          foundTechs.add(matches[0]);
+        }
+      });
+      implementation.technologies = Array.from(foundTechs);
+    }
+
+    // Extract test results from testing doc
+    if (docs.testing?.content) {
+      const testMatch = docs.testing.content.match(/(\d+)\s+tests?\s+passed?/i);
+      const coverageMatch = docs.testing.content.match(/coverage[:\s]+(\d+)%/i);
+
+      if (testMatch) {
+        implementation.tests.passing = parseInt(testMatch[1]);
+        implementation.tests.total = implementation.tests.passing;
+      }
+      if (coverageMatch) {
+        implementation.tests.coverage = parseInt(coverageMatch[1]);
+      }
+    }
+
+    // 9. Build comprehensive response
+    return {
+      // Basic project info
+      project: projectData,
+
+      // Cost data
+      costs: costData,
+
+      // All documentation
+      documentation: docs,
+
+      // Links
+      links: {
+        github: githubUrl,
+        deployment: deploymentUrls.length > 0 ? deploymentUrls[0] : null,
+        allUrls: deploymentUrls
+      },
+
+      // Implementation summary
+      implementation: implementation,
+
+      // Change log
+      changelog: changelog,
+
+      // Metrics
+      metrics: {
+        duration: projectData.completedAt && projectData.createdAt
+          ? Math.round((new Date(projectData.completedAt) - new Date(projectData.createdAt)) / 1000 / 60)
+          : 0,
+        phases: projectData.phases?.length || 0,
+        filesCreated: implementation.filesCreated.length,
+        technologies: implementation.technologies.length,
+        testCoverage: implementation.tests.coverage,
+        totalCost: costData?.total_cost || 0
+      }
+    };
+
+  } catch (error) {
+    console.error(`Error getting project details for ${projectId}:`, error);
+    return null;
+  }
+}
+
 // ============================================================================
 // SSE (Server-Sent Events) HANDLING
 // ============================================================================
@@ -518,6 +753,22 @@ const server = http.createServer((req, res) => {
     const activity = getActivityLog(limit);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(activity));
+    return;
+  }
+
+  // API endpoint for comprehensive project details
+  if (req.url.match(/^\/api\/projects\/[^/]+\/details$/)) {
+    const urlParts = req.url.split('/');
+    const projectId = urlParts[3];
+    const details = getProjectDetails(projectId);
+
+    if (details) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(details));
+    } else {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Project not found' }));
+    }
     return;
   }
 

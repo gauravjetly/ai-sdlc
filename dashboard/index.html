@@ -3515,18 +3515,69 @@
     // FEATURE SET 2: Advanced Dashboard Components
     // ================================================================
 
-    // 1. Project Detail Modal
+    // 1. Project Detail Modal - Comprehensive Interactive View
     function ProjectDetailModal({ project, costs, activity, onClose }) {
+      const [details, setDetails] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [activeTab, setActiveTab] = useState('overview');
+      const [expandedDocs, setExpandedDocs] = useState({});
+
+      useEffect(() => {
+        if (!project) return;
+
+        // Fetch comprehensive project details
+        fetch(`/api/projects/${project.id}/details`)
+          .then(res => res.json())
+          .then(data => {
+            setDetails(data);
+            setLoading(false);
+          })
+          .catch(err => {
+            console.error('Failed to fetch project details:', err);
+            setLoading(false);
+          });
+      }, [project]);
+
       if (!project) return null;
 
-      const cost = costs.find(c => c.project_id === project.id);
-      const projectActivity = activity.filter(a => a.project === project.id);
-      const phases = Array.isArray(project.phases) ? project.phases : [];
+      const toggleDoc = (docType) => {
+        setExpandedDocs(prev => ({ ...prev, [docType]: !prev[docType] }));
+      };
+
+      const renderMarkdown = (content) => {
+        if (!content) return null;
+        // Simple markdown rendering - converts basic markdown to HTML
+        return content
+          .split('\n')
+          .map((line, i) => {
+            // Headers
+            if (line.startsWith('### ')) return <h4 key={i} style={{ marginTop: '16px', marginBottom: '8px' }}>{line.replace('### ', '')}</h4>;
+            if (line.startsWith('## ')) return <h3 key={i} style={{ marginTop: '20px', marginBottom: '10px' }}>{line.replace('## ', '')}</h3>;
+            if (line.startsWith('# ')) return <h2 key={i} style={{ marginTop: '24px', marginBottom: '12px' }}>{line.replace('# ', '')}</h2>;
+            // Lists
+            if (line.startsWith('- ')) return <li key={i} style={{ marginLeft: '20px' }}>{line.replace('- ', '')}</li>;
+            // Code blocks
+            if (line.startsWith('```')) return <div key={i} style={{ background: 'var(--bg-tertiary)', padding: '2px 8px', borderRadius: '4px', fontFamily: 'monospace', fontSize: '12px', margin: '8px 0' }}>```</div>;
+            // Regular paragraphs
+            if (line.trim()) return <p key={i} style={{ marginBottom: '8px', lineHeight: '1.6' }}>{line}</p>;
+            return <br key={i} />;
+          });
+      };
+
+      const tabs = [
+        { id: 'overview', label: 'Overview', icon: '📊' },
+        { id: 'documentation', label: 'Documentation', icon: '📚' },
+        { id: 'readme', label: 'README', icon: '📖' },
+        { id: 'implementation', label: 'Implementation', icon: '⚙️' },
+        { id: 'changelog', label: 'Change Log', icon: '📝' },
+        { id: 'adrs', label: 'ADRs', icon: '🏛️' }
+      ];
 
       return (
-        <div className="project-detail-modal" onClick={onClose}>
-          <div className="project-detail-content" onClick={e => e.stopPropagation()}>
-            <div className="project-detail-header">
+        <div className="project-detail-modal" onClick={onClose} style={{ zIndex: 10000 }}>
+          <div className="project-detail-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '1200px', maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            {/* Header */}
+            <div className="project-detail-header" style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '16px', marginBottom: '0' }}>
               <div>
                 <div className="project-detail-title">{project.description || project.name || project.id}</div>
                 <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{project.id}</div>
@@ -3539,65 +3590,328 @@
               </div>
             </div>
 
-            <div className="project-detail-body">
-              <div className="grid-4" style={{ marginBottom: '24px' }}>
-                <div className="agent-stat-card">
-                  <div className="agent-stat-value">{phases.length}</div>
-                  <div className="agent-stat-label">Phases</div>
-                </div>
-                <div className="agent-stat-card">
-                  <div className="agent-stat-value">{phases.filter(p => p.status === 'complete' || p.status === 'completed').length}</div>
-                  <div className="agent-stat-label">Completed</div>
-                </div>
-                <div className="agent-stat-card">
-                  <div className="agent-stat-value">${(cost?.total_cost || 0).toFixed(2)}</div>
-                  <div className="agent-stat-label">Total Cost</div>
-                </div>
-                <div className="agent-stat-card">
-                  <div className="agent-stat-value">{projectActivity.length}</div>
-                  <div className="agent-stat-label">Events</div>
-                </div>
-              </div>
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: '4px', padding: '16px 24px 0', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-secondary)' }}>
+              {tabs.map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  style={{
+                    padding: '8px 16px',
+                    border: 'none',
+                    background: activeTab === tab.id ? 'var(--bg-card)' : 'transparent',
+                    color: activeTab === tab.id ? 'var(--deltek-blue)' : 'var(--text-secondary)',
+                    borderRadius: '8px 8px 0 0',
+                    cursor: 'pointer',
+                    fontWeight: activeTab === tab.id ? 600 : 400,
+                    fontSize: '14px',
+                    transition: 'all 0.2s',
+                    borderBottom: activeTab === tab.id ? '2px solid var(--deltek-blue)' : 'none'
+                  }}
+                >
+                  {tab.icon} {tab.label}
+                </button>
+              ))}
+            </div>
 
-              <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>Phase Timeline</h4>
-              <div className="phase-timeline">
-                {phases.map((phase, i) => {
-                  const agent = AGENTS.find(a => a.id === phase.agent);
-                  const status = phase.status === 'complete' || phase.status === 'completed' ? 'completed' : phase.status === 'in_progress' || phase.status === 'active' ? 'active' : phase.status === 'blocked' ? 'blocked' : '';
-                  return (
-                    <div key={i} className={`phase-item ${status}`}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <AgentIcon src={agent?.icon} size={20} />
-                          <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{agent?.name || phase.agent}</span>
+            {/* Content */}
+            <div className="project-detail-body" style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+              {loading ? (
+                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+                  <div style={{ fontSize: '24px', marginBottom: '12px' }}>⏳</div>
+                  <div>Loading comprehensive project details...</div>
+                </div>
+              ) : !details ? (
+                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
+                  <div style={{ fontSize: '24px', marginBottom: '12px' }}>⚠️</div>
+                  <div>Failed to load project details</div>
+                </div>
+              ) : (
+                <>
+                  {/* Overview Tab */}
+                  {activeTab === 'overview' && (
+                    <div>
+                      {/* Quick Stats */}
+                      <div className="grid-4" style={{ marginBottom: '32px' }}>
+                        <div className="agent-stat-card">
+                          <div className="agent-stat-value">{details.metrics.phases}</div>
+                          <div className="agent-stat-label">Phases</div>
                         </div>
-                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{phase.duration || ''}</span>
+                        <div className="agent-stat-card">
+                          <div className="agent-stat-value">{details.metrics.duration}m</div>
+                          <div className="agent-stat-label">Duration</div>
+                        </div>
+                        <div className="agent-stat-card">
+                          <div className="agent-stat-value">${details.metrics.totalCost.toFixed(2)}</div>
+                          <div className="agent-stat-label">Total Cost</div>
+                        </div>
+                        <div className="agent-stat-card">
+                          <div className="agent-stat-value">{details.metrics.testCoverage}%</div>
+                          <div className="agent-stat-label">Test Coverage</div>
+                        </div>
                       </div>
-                      {phase.outputs && phase.outputs.length > 0 && (
-                        <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-                          Outputs: {phase.outputs.join(', ')}
+
+                      {/* Links */}
+                      {(details.links.github || details.links.deployment) && (
+                        <div style={{ marginBottom: '32px', padding: '20px', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                          <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>🔗 Project Links</h4>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {details.links.github && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontSize: '20px' }}>📦</span>
+                                <a href={details.links.github} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--deltek-blue)', textDecoration: 'none', fontWeight: 500 }}>
+                                  {details.links.github}
+                                </a>
+                              </div>
+                            )}
+                            {details.links.deployment && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontSize: '20px' }}>🚀</span>
+                                <a href={details.links.deployment} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--deltek-blue)', textDecoration: 'none', fontWeight: 500 }}>
+                                  {details.links.deployment}
+                                </a>
+                              </div>
+                            )}
+                            {details.links.allUrls.length > 1 && (
+                              <div style={{ marginTop: '8px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
+                                <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Additional URLs:</div>
+                                {details.links.allUrls.slice(1).map((url, i) => (
+                                  <div key={i} style={{ fontSize: '13px', marginBottom: '4px' }}>
+                                    <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)' }}>{url}</a>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Technologies */}
+                      {details.implementation.technologies.length > 0 && (
+                        <div style={{ marginBottom: '32px' }}>
+                          <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>🛠️ Technologies Used</h4>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                            {details.implementation.technologies.map((tech, i) => (
+                              <span key={i} style={{ padding: '6px 12px', background: 'var(--bg-tertiary)', borderRadius: '16px', fontSize: '13px', color: 'var(--text-primary)' }}>
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Phase Timeline */}
+                      <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>📅 Phase Timeline</h4>
+                      <div className="phase-timeline">
+                        {details.project.phases && details.project.phases.map((phase, i) => {
+                          const agent = AGENTS.find(a => a.id === phase.agent);
+                          const status = phase.status === 'complete' || phase.status === 'completed' ? 'completed' : phase.status === 'in_progress' || phase.status === 'active' ? 'active' : phase.status === 'blocked' ? 'blocked' : '';
+                          return (
+                            <div key={i} className={`phase-item ${status}`}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <AgentIcon src={agent?.icon} size={20} />
+                                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{agent?.name || phase.agent}</span>
+                                </div>
+                                <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{phase.duration || ''}</span>
+                              </div>
+                              {phase.outputs && phase.outputs.length > 0 && (
+                                <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+                                  Outputs: {phase.outputs.join(', ')}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Documentation Tab */}
+                  {activeTab === 'documentation' && (
+                    <div>
+                      {['requirements', 'architecture', 'security', 'testing', 'deployment', 'acceptance'].map(docType => {
+                        const doc = details.documentation[docType];
+                        if (!doc) return null;
+
+                        const icons = {
+                          requirements: '📋',
+                          architecture: '🏗️',
+                          security: '🔒',
+                          testing: '🧪',
+                          deployment: '🚀',
+                          acceptance: '✅'
+                        };
+
+                        return (
+                          <div key={docType} style={{ marginBottom: '24px', border: '1px solid var(--border-color)', borderRadius: '8px', overflow: 'hidden' }}>
+                            <div
+                              onClick={() => toggleDoc(docType)}
+                              style={{
+                                padding: '16px',
+                                background: 'var(--bg-tertiary)',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                fontWeight: 600
+                              }}
+                            >
+                              <span>{icons[docType]} {docType.charAt(0).toUpperCase() + docType.slice(1)}</span>
+                              <span>{expandedDocs[docType] ? '▼' : '▶'}</span>
+                            </div>
+                            {expandedDocs[docType] && (
+                              <div style={{ padding: '20px', maxHeight: '400px', overflowY: 'auto', fontSize: '13px', lineHeight: '1.6', background: 'var(--bg-card)' }}>
+                                <div style={{ marginBottom: '12px', fontSize: '11px', color: 'var(--text-muted)' }}>
+                                  📄 {doc.filename}
+                                </div>
+                                <div style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '12px' }}>
+                                  {doc.content.substring(0, 2000)}
+                                  {doc.content.length > 2000 && '... (truncated)'}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* README Tab */}
+                  {activeTab === 'readme' && (
+                    <div>
+                      {details.documentation.readme ? (
+                        <div style={{ padding: '20px', background: 'var(--bg-card)', borderRadius: '8px', maxHeight: '600px', overflowY: 'auto' }}>
+                          <div style={{ marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid var(--border-color)' }}>
+                            <h3>📖 {details.documentation.readme.filename}</h3>
+                            <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
+                              {details.documentation.readme.path}
+                            </div>
+                          </div>
+                          <div style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '13px', lineHeight: '1.6' }}>
+                            {details.documentation.readme.content}
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
+                          <div style={{ fontSize: '48px', marginBottom: '16px' }}>📄</div>
+                          <div>No README file found for this project</div>
                         </div>
                       )}
                     </div>
-                  );
-                })}
-              </div>
+                  )}
 
-              {projectActivity.length > 0 && (
-                <>
-                  <h4 style={{ marginTop: '24px', marginBottom: '16px', color: 'var(--text-primary)' }}>Recent Activity</h4>
-                  <div className="agent-activity-list">
-                    {projectActivity.slice(0, 10).map((a, i) => (
-                      <div key={i} className="activity-item-mini">
-                        <div className="activity-dot" style={{ background: a.type === 'complete' ? 'var(--accent-green)' : a.type === 'blocked' ? 'var(--accent-red)' : 'var(--deltek-blue)' }}></div>
-                        <div className="activity-content">
-                          <span className="activity-agent">{AGENTS.find(ag => ag.id === a.agent)?.name || a.agent}</span>
-                          <span className="activity-action">{a.action}</span>
+                  {/* Implementation Tab */}
+                  {activeTab === 'implementation' && (
+                    <div>
+                      {/* Test Results */}
+                      <div style={{ marginBottom: '32px', padding: '20px', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                        <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>🧪 Test Results</h4>
+                        <div className="grid-3">
+                          <div className="agent-stat-card">
+                            <div className="agent-stat-value">{details.implementation.tests.total}</div>
+                            <div className="agent-stat-label">Total Tests</div>
+                          </div>
+                          <div className="agent-stat-card">
+                            <div className="agent-stat-value" style={{ color: 'var(--accent-green)' }}>{details.implementation.tests.passing}</div>
+                            <div className="agent-stat-label">Passing</div>
+                          </div>
+                          <div className="agent-stat-card">
+                            <div className="agent-stat-value">{details.implementation.tests.coverage}%</div>
+                            <div className="agent-stat-label">Coverage</div>
+                          </div>
                         </div>
-                        <span className="activity-time">{new Date(a.timestamp).toLocaleString()}</span>
                       </div>
-                    ))}
-                  </div>
+
+                      {/* Files Created */}
+                      <div>
+                        <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>📁 Files Created ({details.implementation.filesCreated.length})</h4>
+                        <div style={{ maxHeight: '400px', overflowY: 'auto', background: 'var(--bg-card)', borderRadius: '8px', padding: '16px' }}>
+                          {details.implementation.filesCreated.map((file, i) => (
+                            <div key={i} style={{ padding: '8px 12px', marginBottom: '4px', background: 'var(--bg-tertiary)', borderRadius: '4px', fontSize: '13px', fontFamily: 'monospace' }}>
+                              {file}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Change Log Tab */}
+                  {activeTab === 'changelog' && (
+                    <div>
+                      <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>📝 Activity Timeline ({details.changelog.length} events)</h4>
+                      <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                        {details.changelog.map((entry, i) => (
+                          <div key={i} style={{ padding: '16px', marginBottom: '12px', background: 'var(--bg-card)', borderLeft: '3px solid var(--deltek-blue)', borderRadius: '4px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{entry.event}</span>
+                              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                                {new Date(entry.timestamp).toLocaleString()}
+                              </span>
+                            </div>
+                            {entry.agent && (
+                              <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                                Agent: {AGENTS.find(a => a.id === entry.agent)?.name || entry.agent}
+                              </div>
+                            )}
+                            {entry.phase && (
+                              <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                                Phase: {entry.phase}
+                              </div>
+                            )}
+                            {entry.message && (
+                              <div style={{ fontSize: '13px', color: 'var(--text-primary)', marginTop: '8px' }}>
+                                {entry.message}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ADRs Tab */}
+                  {activeTab === 'adrs' && (
+                    <div>
+                      {details.documentation.adrs && details.documentation.adrs.length > 0 ? (
+                        <>
+                          <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>🏛️ Architecture Decision Records ({details.documentation.adrs.length})</h4>
+                          {details.documentation.adrs.map((adr, i) => (
+                            <div key={i} style={{ marginBottom: '24px', border: '1px solid var(--border-color)', borderRadius: '8px', overflow: 'hidden' }}>
+                              <div
+                                onClick={() => toggleDoc(`adr-${i}`)}
+                                style={{
+                                  padding: '16px',
+                                  background: 'var(--bg-tertiary)',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  fontWeight: 600
+                                }}
+                              >
+                                <span>📜 {adr.filename}</span>
+                                <span>{expandedDocs[`adr-${i}`] ? '▼' : '▶'}</span>
+                              </div>
+                              {expandedDocs[`adr-${i}`] && (
+                                <div style={{ padding: '20px', maxHeight: '400px', overflowY: 'auto', fontSize: '13px', lineHeight: '1.6', background: 'var(--bg-card)' }}>
+                                  <div style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '12px' }}>
+                                    {adr.content}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </>
+                      ) : (
+                        <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
+                          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🏛️</div>
+                          <div>No Architecture Decision Records found for this project</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </>
               )}
             </div>
