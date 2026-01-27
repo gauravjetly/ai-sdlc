@@ -3649,35 +3649,124 @@
                   {/* Overview Tab */}
                   {activeTab === 'overview' && (
                     <div>
-                      {/* Project Info Banner */}
-                      <div style={{ marginBottom: '32px', padding: '24px', background: 'linear-gradient(135deg, var(--deltek-blue) 0%, #0052a3 100%)', borderRadius: '12px', color: 'white' }}>
-                        <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                          Full AI-SDLC Project
+                      {/* Project Hierarchy: Main Project → Feature */}
+                      {details.mainProject && details.mainProject.isFeatureAddition ? (
+                        <div style={{ marginBottom: '32px' }}>
+                          {/* Main Project */}
+                          <div style={{ padding: '20px 24px', background: 'linear-gradient(135deg, #003d7a 0%, #002952 100%)', borderRadius: '12px 12px 0 0', color: 'white', borderBottom: '3px solid var(--deltek-blue)' }}>
+                            <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: 600 }}>
+                              🏢 Main Project
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+                              <div style={{ flex: 1, minWidth: '200px' }}>
+                                <div style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>
+                                  {details.mainProject.name}
+                                </div>
+                                <div style={{ fontSize: '13px', opacity: 0.85, fontStyle: 'italic' }}>
+                                  Using AI-SDLC to add features and enhancements
+                                </div>
+                              </div>
+                              {details.mainProject.repository && (
+                                <a
+                                  href={details.mainProject.repository}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    padding: '10px 16px',
+                                    background: 'rgba(255,255,255,0.15)',
+                                    borderRadius: '8px',
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    transition: 'all 0.2s',
+                                    border: '1px solid rgba(255,255,255,0.2)'
+                                  }}
+                                  onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.25)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                                  onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                                >
+                                  <span style={{ fontSize: '18px' }}>📦</span>
+                                  <span>View GitHub Repository</span>
+                                </a>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Connector */}
+                          <div style={{ display: 'flex', justifyContent: 'center', background: 'linear-gradient(to bottom, var(--bg-secondary), var(--bg-card))', padding: '12px 0', position: 'relative' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                              <div style={{ color: 'var(--deltek-blue)', fontSize: '28px', fontWeight: 'bold', lineHeight: 1 }}>↓</div>
+                              <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>
+                                AI-SDLC Adds
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Feature Being Added */}
+                          <div style={{ padding: '24px', background: 'linear-gradient(135deg, var(--deltek-blue) 0%, #0052a3 100%)', borderRadius: '0 0 12px 12px', color: 'white', boxShadow: '0 4px 12px rgba(0, 102, 204, 0.3)' }}>
+                            <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: 600 }}>
+                              ✨ Feature Being Added
+                            </div>
+                            <div style={{ fontSize: '22px', fontWeight: 700, marginBottom: '16px', lineHeight: 1.3 }}>
+                              {details.mainProject.featureName}
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px' }}>
+                              <div style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}>
+                                <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '4px' }}>Timeline</div>
+                                <div style={{ fontSize: '14px', fontWeight: 600 }}>
+                                  📅 {new Date(project.createdAt).toLocaleDateString()}
+                                  {project.completedAt && ` → ${new Date(project.completedAt).toLocaleDateString()}`}
+                                </div>
+                              </div>
+                              <div style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}>
+                                <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '4px' }}>Duration</div>
+                                <div style={{ fontSize: '14px', fontWeight: 600 }}>⏱️ {details.metrics.duration} minutes</div>
+                              </div>
+                              <div style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}>
+                                <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '4px' }}>Agents</div>
+                                <div style={{ fontSize: '14px', fontWeight: 600 }}>👥 {details.metrics.phases} collaborated</div>
+                              </div>
+                              <div style={{ padding: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}>
+                                <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '4px' }}>Cost</div>
+                                <div style={{ fontSize: '14px', fontWeight: 600 }}>💰 ${details.metrics.totalCost.toFixed(2)}</div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div style={{ fontSize: '24px', fontWeight: 700, marginBottom: '12px' }}>
-                          {project.description || project.name || project.id}
+                      ) : (
+                        /* Standalone Project */
+                        <div style={{ marginBottom: '32px', padding: '24px', background: 'linear-gradient(135deg, var(--deltek-blue) 0%, #0052a3 100%)', borderRadius: '12px', color: 'white', boxShadow: '0 4px 12px rgba(0, 102, 204, 0.3)' }}>
+                          <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                            🚀 Standalone AI-SDLC Project
+                          </div>
+                          <div style={{ fontSize: '24px', fontWeight: 700, marginBottom: '12px' }}>
+                            {project.description || project.name || project.id}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span style={{ fontSize: '16px' }}>📅</span>
+                              <span style={{ fontSize: '13px', opacity: 0.9 }}>
+                                {new Date(project.createdAt).toLocaleDateString()} - {project.completedAt ? new Date(project.completedAt).toLocaleDateString() : 'In Progress'}
+                              </span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span style={{ fontSize: '16px' }}>⏱️</span>
+                              <span style={{ fontSize: '13px', opacity: 0.9 }}>{details.metrics.duration} minutes</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span style={{ fontSize: '16px' }}>👥</span>
+                              <span style={{ fontSize: '13px', opacity: 0.9 }}>{details.metrics.phases} agents collaborated</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span style={{ fontSize: '16px' }}>💰</span>
+                              <span style={{ fontSize: '13px', opacity: 0.9 }}>${details.metrics.totalCost.toFixed(2)} total cost</span>
+                            </div>
+                          </div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span style={{ fontSize: '16px' }}>📅</span>
-                            <span style={{ fontSize: '13px', opacity: 0.9 }}>
-                              {new Date(project.createdAt).toLocaleDateString()} - {project.completedAt ? new Date(project.completedAt).toLocaleDateString() : 'In Progress'}
-                            </span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span style={{ fontSize: '16px' }}>⏱️</span>
-                            <span style={{ fontSize: '13px', opacity: 0.9 }}>{details.metrics.duration} minutes</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span style={{ fontSize: '16px' }}>👥</span>
-                            <span style={{ fontSize: '13px', opacity: 0.9 }}>{details.metrics.phases} agents collaborated</span>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span style={{ fontSize: '16px' }}>💰</span>
-                            <span style={{ fontSize: '13px', opacity: 0.9 }}>${details.metrics.totalCost.toFixed(2)} total cost</span>
-                          </div>
-                        </div>
-                      </div>
+                      )}
 
                       {/* Agent Contributions */}
                       <div style={{ marginBottom: '32px' }}>
