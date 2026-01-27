@@ -3566,6 +3566,7 @@
 
       const tabs = [
         { id: 'overview', label: 'Overview', icon: '📊' },
+        { id: 'agents', label: 'Agents & Workflow', icon: '👥' },
         { id: 'documentation', label: 'Documentation', icon: '📚' },
         { id: 'readme', label: 'README', icon: '📖' },
         { id: 'implementation', label: 'Implementation', icon: '⚙️' },
@@ -3579,6 +3580,23 @@
             {/* Header */}
             <div className="project-detail-header" style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '16px', marginBottom: '0' }}>
               <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                  <span style={{
+                    padding: '4px 12px',
+                    background: 'var(--deltek-blue)',
+                    color: 'white',
+                    borderRadius: '6px',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    🚀 Full Project
+                  </span>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                    {project.phases ? project.phases.length : 0} agents collaborated
+                  </span>
+                </div>
                 <div className="project-detail-title">{project.description || project.name || project.id}</div>
                 <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{project.id}</div>
               </div>
@@ -3631,23 +3649,127 @@
                   {/* Overview Tab */}
                   {activeTab === 'overview' && (
                     <div>
+                      {/* Project Info Banner */}
+                      <div style={{ marginBottom: '32px', padding: '24px', background: 'linear-gradient(135deg, var(--deltek-blue) 0%, #0052a3 100%)', borderRadius: '12px', color: 'white' }}>
+                        <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                          Full AI-SDLC Project
+                        </div>
+                        <div style={{ fontSize: '24px', fontWeight: 700, marginBottom: '12px' }}>
+                          {project.description || project.name || project.id}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ fontSize: '16px' }}>📅</span>
+                            <span style={{ fontSize: '13px', opacity: 0.9 }}>
+                              {new Date(project.createdAt).toLocaleDateString()} - {project.completedAt ? new Date(project.completedAt).toLocaleDateString() : 'In Progress'}
+                            </span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ fontSize: '16px' }}>⏱️</span>
+                            <span style={{ fontSize: '13px', opacity: 0.9 }}>{details.metrics.duration} minutes</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ fontSize: '16px' }}>👥</span>
+                            <span style={{ fontSize: '13px', opacity: 0.9 }}>{details.metrics.phases} agents collaborated</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ fontSize: '16px' }}>💰</span>
+                            <span style={{ fontSize: '13px', opacity: 0.9 }}>${details.metrics.totalCost.toFixed(2)} total cost</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Agent Contributions */}
+                      <div style={{ marginBottom: '32px' }}>
+                        <h4 style={{ marginBottom: '20px', color: 'var(--text-primary)', fontSize: '18px', fontWeight: 600 }}>
+                          👥 Agents Who Worked On This Project
+                        </h4>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+                          {details.project.phases && details.project.phases.map((phase, i) => {
+                            const agent = AGENTS.find(a => a.id === phase.agent);
+                            const phaseStatus = phase.status === 'complete' || phase.status === 'completed' ? 'completed' : phase.status === 'in_progress' || phase.status === 'active' ? 'active' : phase.status === 'blocked' ? 'blocked' : 'pending';
+
+                            return (
+                              <div key={i} style={{
+                                padding: '16px',
+                                background: 'var(--bg-card)',
+                                border: '2px solid ' + (phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--deltek-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--border-color)'),
+                                borderRadius: '8px',
+                                transition: 'all 0.2s',
+                                cursor: 'default'
+                              }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                                  <AgentIcon src={agent?.icon} size={32} />
+                                  <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '15px' }}>
+                                      {agent?.name || phase.agent}
+                                    </div>
+                                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                                      {agent?.role || phase.agent}
+                                    </div>
+                                  </div>
+                                  <span style={{
+                                    padding: '4px 12px',
+                                    borderRadius: '12px',
+                                    fontSize: '11px',
+                                    fontWeight: 600,
+                                    background: phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--deltek-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--text-muted)',
+                                    color: 'white'
+                                  }}>
+                                    {phaseStatus === 'completed' ? '✓ Done' : phaseStatus === 'active' ? '⏳ Working' : phaseStatus === 'blocked' ? '⚠ Blocked' : '○ Pending'}
+                                  </span>
+                                </div>
+
+                                {phase.duration && (
+                                  <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                                    ⏱️ Duration: {phase.duration}
+                                  </div>
+                                )}
+
+                                {phase.outputs && phase.outputs.length > 0 && (
+                                  <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid var(--border-color)' }}>
+                                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                      Deliverables:
+                                    </div>
+                                    {phase.outputs.slice(0, 3).map((output, j) => (
+                                      <div key={j} style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px', paddingLeft: '12px', position: 'relative' }}>
+                                        <span style={{ position: 'absolute', left: 0 }}>→</span>
+                                        {output.replace(/^.*\//, '').substring(0, 40)}{output.length > 40 ? '...' : ''}
+                                      </div>
+                                    ))}
+                                    {phase.outputs.length > 3 && (
+                                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', fontStyle: 'italic' }}>
+                                        +{phase.outputs.length - 3} more files
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
                       {/* Quick Stats */}
+                      <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)', fontSize: '18px', fontWeight: 600 }}>
+                        📊 Project Metrics
+                      </h4>
                       <div className="grid-4" style={{ marginBottom: '32px' }}>
                         <div className="agent-stat-card">
                           <div className="agent-stat-value">{details.metrics.phases}</div>
-                          <div className="agent-stat-label">Phases</div>
+                          <div className="agent-stat-label">Agents Involved</div>
                         </div>
                         <div className="agent-stat-card">
-                          <div className="agent-stat-value">{details.metrics.duration}m</div>
-                          <div className="agent-stat-label">Duration</div>
-                        </div>
-                        <div className="agent-stat-card">
-                          <div className="agent-stat-value">${details.metrics.totalCost.toFixed(2)}</div>
-                          <div className="agent-stat-label">Total Cost</div>
+                          <div className="agent-stat-value">{details.metrics.filesCreated}</div>
+                          <div className="agent-stat-label">Files Created</div>
                         </div>
                         <div className="agent-stat-card">
                           <div className="agent-stat-value">{details.metrics.testCoverage}%</div>
                           <div className="agent-stat-label">Test Coverage</div>
+                        </div>
+                        <div className="agent-stat-card">
+                          <div className="agent-stat-value">{details.changelog.length}</div>
+                          <div className="agent-stat-label">Total Events</div>
                         </div>
                       </div>
 
@@ -3723,6 +3845,179 @@
                             </div>
                           );
                         })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Agents & Workflow Tab */}
+                  {activeTab === 'agents' && (
+                    <div>
+                      <div style={{ marginBottom: '24px', padding: '20px', background: 'linear-gradient(135deg, var(--deltek-blue) 0%, #0052a3 100%)', borderRadius: '12px', color: 'white' }}>
+                        <h3 style={{ margin: 0, marginBottom: '8px', fontSize: '20px' }}>👥 Complete Agent Workflow</h3>
+                        <p style={{ margin: 0, fontSize: '14px', opacity: 0.9 }}>
+                          This project was built using AI-SDLC's full agent workflow. Each agent contributed specific expertise to deliver production-ready code.
+                        </p>
+                      </div>
+
+                      {/* SDLC Pipeline Visualization */}
+                      <div style={{ marginBottom: '32px' }}>
+                        <h4 style={{ marginBottom: '20px', color: 'var(--text-primary)', fontSize: '18px', fontWeight: 600 }}>
+                          🔄 SDLC Pipeline Flow
+                        </h4>
+                        <div style={{ position: 'relative' }}>
+                          {details.project.phases && details.project.phases.map((phase, i) => {
+                            const agent = AGENTS.find(a => a.id === phase.agent);
+                            const phaseStatus = phase.status === 'complete' || phase.status === 'completed' ? 'completed' : phase.status === 'in_progress' || phase.status === 'active' ? 'active' : phase.status === 'blocked' ? 'blocked' : 'pending';
+                            const isLast = i === details.project.phases.length - 1;
+
+                            return (
+                              <div key={i} style={{ position: 'relative', marginBottom: isLast ? 0 : '24px' }}>
+                                <div style={{
+                                  display: 'flex',
+                                  alignItems: 'flex-start',
+                                  gap: '20px',
+                                  padding: '20px',
+                                  background: 'var(--bg-card)',
+                                  border: '2px solid ' + (phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--deltek-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--border-color)'),
+                                  borderRadius: '12px',
+                                  transition: 'all 0.3s',
+                                  position: 'relative'
+                                }}>
+                                  {/* Step Number */}
+                                  <div style={{
+                                    width: '40px',
+                                    height: '40px',
+                                    borderRadius: '50%',
+                                    background: phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--deltek-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--text-muted)',
+                                    color: 'white',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontWeight: 700,
+                                    fontSize: '16px',
+                                    flexShrink: 0
+                                  }}>
+                                    {i + 1}
+                                  </div>
+
+                                  {/* Agent Icon & Info */}
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
+                                    <AgentIcon src={agent?.icon} size={48} />
+                                    <div style={{ flex: 1 }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+                                        <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                                          {agent?.name || phase.agent}
+                                        </span>
+                                        <span style={{
+                                          padding: '4px 12px',
+                                          borderRadius: '12px',
+                                          fontSize: '11px',
+                                          fontWeight: 600,
+                                          background: phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--deltek-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--text-muted)',
+                                          color: 'white'
+                                        }}>
+                                          {phaseStatus === 'completed' ? '✓ Completed' : phaseStatus === 'active' ? '⏳ In Progress' : phaseStatus === 'blocked' ? '⚠ Blocked' : '○ Pending'}
+                                        </span>
+                                      </div>
+                                      <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                                        {agent?.role || phase.agent}
+                                      </div>
+                                      {phase.duration && (
+                                        <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+                                          ⏱️ Duration: {phase.duration}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  {/* Phase Status Icon */}
+                                  <div style={{ fontSize: '32px', opacity: 0.3 }}>
+                                    {phaseStatus === 'completed' ? '✅' : phaseStatus === 'active' ? '⏳' : phaseStatus === 'blocked' ? '⚠️' : '○'}
+                                  </div>
+                                </div>
+
+                                {/* Deliverables */}
+                                {phase.outputs && phase.outputs.length > 0 && (
+                                  <div style={{ marginTop: '12px', marginLeft: '60px', padding: '16px', background: 'var(--bg-tertiary)', borderRadius: '8px', borderLeft: '3px solid ' + (phaseStatus === 'completed' ? 'var(--accent-green)' : 'var(--deltek-blue)') }}>
+                                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>
+                                      📦 Deliverables ({phase.outputs.length}):
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                      {phase.outputs.slice(0, 5).map((output, j) => (
+                                        <div key={j} style={{ fontSize: '13px', color: 'var(--text-secondary)', fontFamily: 'monospace', paddingLeft: '12px', position: 'relative' }}>
+                                          <span style={{ position: 'absolute', left: 0, color: phaseStatus === 'completed' ? 'var(--accent-green)' : 'var(--deltek-blue)' }}>→</span>
+                                          {output}
+                                        </div>
+                                      ))}
+                                      {phase.outputs.length > 5 && (
+                                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', fontStyle: 'italic', paddingLeft: '12px' }}>
+                                          ... and {phase.outputs.length - 5} more files
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Connector Arrow */}
+                                {!isLast && (
+                                  <div style={{
+                                    position: 'absolute',
+                                    left: '40px',
+                                    bottom: '-24px',
+                                    width: '2px',
+                                    height: '24px',
+                                    background: phaseStatus === 'completed' ? 'var(--accent-green)' : 'var(--border-color)',
+                                    zIndex: 0
+                                  }}>
+                                    <div style={{
+                                      position: 'absolute',
+                                      bottom: '-6px',
+                                      left: '-4px',
+                                      width: 0,
+                                      height: 0,
+                                      borderLeft: '5px solid transparent',
+                                      borderRight: '5px solid transparent',
+                                      borderTop: '8px solid ' + (phaseStatus === 'completed' ? 'var(--accent-green)' : 'var(--border-color)')
+                                    }}></div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Summary Stats */}
+                      <div style={{ padding: '20px', background: 'var(--bg-tertiary)', borderRadius: '12px' }}>
+                        <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)', fontSize: '16px', fontWeight: 600 }}>
+                          📈 Workflow Summary
+                        </h4>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                          <div>
+                            <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--deltek-blue)' }}>
+                              {details.project.phases.filter(p => p.status === 'complete' || p.status === 'completed').length}
+                            </div>
+                            <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Agents Completed</div>
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--accent-green)' }}>
+                              {details.metrics.filesCreated}
+                            </div>
+                            <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total Files Created</div>
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--deltek-blue)' }}>
+                              {details.metrics.duration}m
+                            </div>
+                            <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total Duration</div>
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--accent-green)' }}>
+                              ${details.metrics.totalCost.toFixed(2)}
+                            </div>
+                            <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total Cost</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
