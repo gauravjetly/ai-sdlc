@@ -1,0 +1,888 @@
+# =============================================================================
+# DELTEK ENGINEERING GOVERNANCE POLICY TEMPLATE
+# =============================================================================
+#
+# This template defines the complete policy structure for the Agent Intelligence
+# & Governance System. Customize this template for your organization.
+#
+# Location: ~/.claude/governance/policies/org/deltek-engineering.yaml
+#
+# Schema Version: 1.0.0
+# Last Updated: 2026-01-26
+# Author: Jets (Architect Agent)
+#
+# =============================================================================
+
+version: "1.0.0"
+name: "Deltek Engineering Standards"
+description: |
+  Mandatory governance policies for all Deltek engineering projects.
+  These policies are enforced automatically by the Agent Intelligence System.
+
+effective_date: "2026-01-01"
+last_updated: "2026-01-26"
+owner: "engineering-governance@deltek.com"
+
+# =============================================================================
+# POLICY INHERITANCE
+# =============================================================================
+# Policies can extend other policy files. Child policies inherit all rules
+# from parent policies and can override specific settings.
+
+extends:
+  # Base security policies (OWASP, CWE)
+  - "base/security-baseline.yaml"
+  # Base code quality policies
+  - "base/quality-baseline.yaml"
+
+# =============================================================================
+# REPOSITORY GOVERNANCE
+# =============================================================================
+# Rules for repository usage, branching, commits, and pull requests.
+
+repository:
+  # Allowed GitHub organizations
+  allowed_organizations:
+    - "github.com/DLTKEngineering"
+    - "github.com/deltek-internal"
+    - "github.com/deltek-labs"  # For experimental projects
+
+  # Repository naming convention
+  naming:
+    pattern: "^[a-z][a-z0-9-]*[a-z0-9]$"
+    max_length: 50
+    examples:
+      - "billing-service"
+      - "auth-gateway"
+      - "costpoint-integration"
+    error_message: "Repository name must be lowercase, use hyphens, start with letter"
+
+  # Branch naming conventions
+  branch_naming:
+    pattern: "^(feature|bugfix|hotfix|release|chore)/[A-Z]+-[0-9]+-[a-z0-9-]+$"
+    examples:
+      - "feature/JIRA-123-add-oauth-support"
+      - "bugfix/JIRA-456-fix-null-pointer"
+      - "hotfix/JIRA-789-critical-security-patch"
+      - "release/v2.0.0"
+    exceptions:
+      - "main"
+      - "develop"
+      - "release/*"
+    error_message: "Branch must follow pattern: {type}/{JIRA-ticket}-{description}"
+    enforcement: "block"
+
+  # Commit message format (Conventional Commits)
+  commit_message:
+    pattern: "^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([a-z-]+\\))?!?: .{10,100}$"
+    types:
+      feat: "New feature"
+      fix: "Bug fix"
+      docs: "Documentation only"
+      style: "Code style (formatting, semicolons, etc.)"
+      refactor: "Code refactoring (no feature change)"
+      perf: "Performance improvement"
+      test: "Adding or updating tests"
+      build: "Build system or dependencies"
+      ci: "CI/CD configuration"
+      chore: "Maintenance tasks"
+      revert: "Reverting changes"
+    examples:
+      - "feat(auth): implement OAuth 2.0 with PKCE"
+      - "fix(security): remediate SQL injection vulnerability"
+      - "docs: update API documentation for v2"
+    error_message: "Commit must follow Conventional Commits format"
+    enforcement: "warn"  # Warn, not block, to avoid disrupting flow
+
+  # Pull request requirements
+  pull_requests:
+    required_approvals: 2
+
+    required_reviewers:
+      - role: "senior-engineer"
+        count: 1
+        required_for: "all"
+      - role: "security-engineer"
+        count: 1
+        required_for:
+          - "security-sensitive"
+          - "authentication"
+          - "authorization"
+          - "encryption"
+          - "payment"
+      - role: "architect"
+        count: 1
+        required_for:
+          - "architecture-change"
+          - "new-service"
+          - "database-schema"
+
+    required_checks:
+      - name: "lint"
+        required: true
+      - name: "type-check"
+        required: true
+      - name: "unit-tests"
+        required: true
+      - name: "integration-tests"
+        required: true
+      - name: "security-scan"
+        required: true
+      - name: "coverage"
+        required: true
+        threshold: 80
+
+    merge_strategy: "squash"
+    delete_branch_on_merge: true
+    require_linear_history: true
+
+    labels:
+      required_for_merge:
+        - one_of: ["size/xs", "size/s", "size/m", "size/l", "size/xl"]
+      auto_add:
+        - label: "needs-security-review"
+          when: "files_match('**/auth/**', '**/security/**', '**/crypto/**')"
+        - label: "needs-docs"
+          when: "files_match('**/api/**') AND NOT files_match('**/docs/**')"
+
+  # Protected branches
+  protected_branches:
+    - name: "main"
+      enforce_admins: true
+      require_signed_commits: true
+      require_status_checks: true
+      require_up_to_date: true
+      dismiss_stale_reviews: true
+
+    - name: "release/*"
+      enforce_admins: true
+      require_signed_commits: true
+      allowed_pushers:
+        - "release-managers"
+
+# =============================================================================
+# ARCHITECTURE STANDARDS
+# =============================================================================
+# Mandatory architecture patterns and principles.
+
+architecture:
+  # Required architecture pattern
+  mandatory_pattern: "layered"
+
+  # Layer definitions
+  layers:
+    presentation:
+      directory: "src/presentation"
+      responsibilities:
+        - "HTTP request handling"
+        - "Input validation"
+        - "Response transformation"
+        - "API documentation"
+        - "Error response formatting"
+      allowed_dependencies:
+        - "application"
+        - "domain"
+      forbidden_dependencies:
+        - "infrastructure"
+      allowed_imports:
+        - "express"
+        - "fastify"
+        - "zod"
+        - "joi"
+        - "class-validator"
+
+    application:
+      directory: "src/application"
+      responsibilities:
+        - "Use case orchestration"
+        - "Transaction management"
+        - "DTO transformation"
+        - "Event publishing"
+      allowed_dependencies:
+        - "domain"
+      forbidden_dependencies:
+        - "infrastructure"
+        - "presentation"
+      notes: "Application layer should NOT contain business logic"
+
+    domain:
+      directory: "src/domain"
+      responsibilities:
+        - "Business logic"
+        - "Domain entities"
+        - "Value objects"
+        - "Domain services"
+        - "Repository interfaces (NOT implementations)"
+        - "Domain events"
+      allowed_dependencies: []  # NO external dependencies
+      forbidden_dependencies:
+        - "infrastructure"
+        - "presentation"
+        - "application"
+      forbidden_imports:
+        - "express"
+        - "fastify"
+        - "typeorm"
+        - "prisma"
+        - "mongoose"
+        - "pg"
+        - "mysql"
+        - "axios"
+        - "fetch"
+      notes: "Domain layer must be pure - no framework or I/O dependencies"
+
+    infrastructure:
+      directory: "src/infrastructure"
+      responsibilities:
+        - "Repository implementations"
+        - "Database access"
+        - "External API clients"
+        - "Message queue integration"
+        - "File storage"
+        - "Caching"
+      allowed_dependencies:
+        - "domain"
+      forbidden_dependencies:
+        - "presentation"
+        - "application"
+
+  # SOLID principles enforcement
+  principles:
+    single_responsibility:
+      enforcement: "strict"
+      max_responsibilities_per_class: 1
+      violations_block: true
+
+    open_closed:
+      enforcement: "warn"
+      notes: "Prefer extension over modification"
+
+    liskov_substitution:
+      enforcement: "strict"
+      violations_block: true
+
+    interface_segregation:
+      enforcement: "warn"
+      max_methods_per_interface: 5
+
+    dependency_inversion:
+      enforcement: "strict"
+      violations_block: true
+      notes: "Domain must define interfaces, infrastructure implements"
+
+  # Other principles
+  dry:
+    enforcement: "warn"
+    max_duplication_lines: 5
+    allowed_exceptions:
+      - "test files"
+      - "generated code"
+
+  yagni:
+    enforcement: "warn"
+    check_unused_exports: true
+
+# =============================================================================
+# CODE QUALITY STANDARDS
+# =============================================================================
+# Test coverage, linting, complexity, and documentation requirements.
+
+code_quality:
+  # Test coverage requirements
+  test_coverage:
+    minimum_total: 80
+    by_layer:
+      domain: 90
+      application: 80
+      presentation: 70
+      infrastructure: 60
+    enforcement: "block"
+    exclude_patterns:
+      - "**/index.ts"
+      - "**/types.ts"
+      - "**/*.d.ts"
+      - "**/generated/**"
+
+  # Linting
+  linting:
+    zero_warnings: true
+    zero_errors: true
+    enforcement: "block"
+    configs:
+      javascript: ".eslintrc.js"
+      typescript: ".eslintrc.js"
+      python: "pyproject.toml"
+      go: ".golangci.yml"
+
+  # Type safety
+  type_safety:
+    typescript:
+      strict_mode: true
+      no_any: true
+      no_implicit_any: true
+      no_explicit_any: true
+      strict_null_checks: true
+      strict_function_types: true
+    enforcement: "block"
+
+  # Code complexity
+  complexity:
+    cyclomatic:
+      max: 10
+      enforcement: "warn"
+    cognitive:
+      max: 15
+      enforcement: "warn"
+    function_length:
+      max_lines: 50
+      enforcement: "warn"
+    file_length:
+      max_lines: 300
+      enforcement: "warn"
+    nesting_depth:
+      max: 4
+      enforcement: "warn"
+
+  # Naming conventions
+  naming:
+    files:
+      pattern: "kebab-case"
+      exceptions:
+        - "README.md"
+        - "CHANGELOG.md"
+        - "Dockerfile"
+    classes:
+      pattern: "PascalCase"
+    functions:
+      pattern: "camelCase"
+    constants:
+      pattern: "UPPER_SNAKE_CASE"
+    interfaces:
+      pattern: "PascalCase"
+      prefix: ""  # No 'I' prefix (TypeScript convention)
+    types:
+      pattern: "PascalCase"
+    enforcement: "warn"
+
+  # Error handling
+  error_handling:
+    no_empty_catch: true
+    require_error_type: true
+    no_throw_literal: true
+    prefer_result_type: true
+    enforcement: "warn"
+
+# =============================================================================
+# SECURITY POLICIES
+# =============================================================================
+# Authentication, authorization, encryption, and vulnerability requirements.
+
+security:
+  # Authentication requirements
+  authentication:
+    required: true
+    methods:
+      preferred:
+        - "OAuth 2.0"
+        - "OpenID Connect"
+      acceptable:
+        - "SAML 2.0"
+        - "mTLS"
+      forbidden:
+        - "Basic Auth (in production)"
+        - "Custom token schemes"
+
+    mfa:
+      required_for:
+        - "admin"
+        - "privileged"
+        - "financial"
+      methods:
+        - "TOTP"
+        - "WebAuthn"
+        - "Push notification"
+
+    session:
+      max_duration_seconds: 3600      # 1 hour
+      idle_timeout_seconds: 900       # 15 minutes
+      secure_cookies: true
+      httponly_cookies: true
+      samesite: "strict"
+
+    tokens:
+      access_token:
+        type: "JWT"
+        max_expiry_seconds: 900       # 15 minutes
+        algorithm: "RS256"
+      refresh_token:
+        rotation: true
+        max_lifetime_days: 30
+        secure_storage: true
+
+  # Authorization requirements
+  authorization:
+    model: "RBAC"
+    require_on_all_endpoints: true
+    default_deny: true
+    audit_access_decisions: true
+
+    roles:
+      standard:
+        - "viewer"
+        - "editor"
+        - "admin"
+        - "super-admin"
+      custom_allowed: true
+
+    permissions:
+      granularity: "resource-level"
+      inheritance: true
+
+  # Encryption requirements
+  encryption:
+    at_rest:
+      algorithm: "AES-256-GCM"
+      key_management: "AWS KMS"
+      required_for:
+        - "PII"
+        - "financial"
+        - "credentials"
+        - "PHI"
+
+    in_transit:
+      minimum_tls: "1.3"
+      required: true
+      certificate_validation: true
+
+    algorithms:
+      approved:
+        symmetric: ["AES-256-GCM", "ChaCha20-Poly1305"]
+        asymmetric: ["RSA-2048+", "ECDSA-P256+", "Ed25519"]
+        hashing: ["SHA-256", "SHA-384", "SHA-512", "BLAKE2b"]
+        password: ["argon2id", "bcrypt", "scrypt"]
+      forbidden:
+        - "MD5"
+        - "SHA1"
+        - "DES"
+        - "3DES"
+        - "RC4"
+        - "RSA-1024"
+
+  # Input validation
+  input_validation:
+    required: true
+    validate_on_boundary: true
+    sanitize_output: true
+    enforcement: "block"
+
+    patterns:
+      email: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+      phone: "^\\+?[1-9]\\d{1,14}$"
+      uuid: "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+
+  # SQL injection prevention
+  sql_injection:
+    parameterized_queries_only: true
+    no_string_concatenation: true
+    orm_required: true
+    enforcement: "block"
+
+  # Secrets management
+  secrets:
+    no_hardcoded: true
+    detection_tools:
+      - "gitleaks"
+      - "trufflehog"
+    management:
+      service: "AWS Secrets Manager"
+      alternatives:
+        - "HashiCorp Vault"
+        - "Azure Key Vault"
+    rotation:
+      api_keys: "90 days"
+      database_passwords: "90 days"
+      certificates: "365 days"
+    enforcement: "block"
+
+  # Dependency security
+  dependencies:
+    vulnerability_scanning: true
+    scan_frequency: "daily"
+
+    blocking_thresholds:
+      cvss_critical: 9.0    # Block if >= 9.0
+      cvss_high: 7.0        # Block if >= 7.0
+      cvss_medium: null     # Don't block, but document
+
+    max_days_to_remediate:
+      critical: 1
+      high: 7
+      medium: 30
+      low: 90
+
+    tools:
+      javascript: ["npm audit", "snyk"]
+      python: ["pip-audit", "safety"]
+      go: ["govulncheck"]
+      general: ["snyk", "dependabot"]
+
+  # OWASP Top 10 checks
+  owasp_top_10:
+    enforcement: "block"
+    checks:
+      A01_broken_access_control:
+        enabled: true
+        rules:
+          - "Authorization on all endpoints"
+          - "No privilege escalation"
+          - "CORS properly configured"
+
+      A02_cryptographic_failures:
+        enabled: true
+        rules:
+          - "TLS 1.3+ required"
+          - "Strong algorithms only"
+          - "No sensitive data in URLs"
+
+      A03_injection:
+        enabled: true
+        rules:
+          - "Parameterized queries"
+          - "Input validation"
+          - "Output encoding"
+
+      A04_insecure_design:
+        enabled: true
+        rules:
+          - "Threat modeling for security-sensitive features"
+          - "Defense in depth"
+
+      A05_security_misconfiguration:
+        enabled: true
+        rules:
+          - "No default credentials"
+          - "Error messages don't leak info"
+          - "Security headers configured"
+
+      A06_vulnerable_components:
+        enabled: true
+        rules:
+          - "Daily dependency scanning"
+          - "No critical CVEs"
+
+      A07_auth_failures:
+        enabled: true
+        rules:
+          - "Strong password policy"
+          - "Rate limiting on auth"
+          - "MFA for privileged"
+
+      A08_software_integrity:
+        enabled: true
+        rules:
+          - "Dependency integrity verified"
+          - "Lock files committed"
+
+      A09_logging_failures:
+        enabled: true
+        rules:
+          - "Security events logged"
+          - "No sensitive data in logs"
+
+      A10_ssrf:
+        enabled: true
+        rules:
+          - "URL validation"
+          - "Allowlist for external"
+
+# =============================================================================
+# COMPLIANCE REQUIREMENTS
+# =============================================================================
+# Regulatory and standards compliance.
+
+compliance:
+  # DCAA (Government Contractors)
+  dcaa:
+    applies_to:
+      tags: ["govcon", "government"]
+      products: ["Costpoint", "GovWin"]
+    requirements:
+      - id: "DCAA-TIME"
+        name: "Timekeeping compliance"
+        description: "Labor hours must be recorded accurately with audit trail"
+        implementation: "Immutable time entries with approval workflow"
+      - id: "DCAA-COST"
+        name: "Cost accumulation"
+        description: "Costs must be tracked by contract/project"
+        implementation: "Project-based cost accounting"
+    enforcement: "block"
+
+  # SOX (Financial)
+  sox:
+    applies_to:
+      tags: ["financial", "accounting"]
+    requirements:
+      - id: "SOX-AUDIT"
+        name: "Audit trail"
+        description: "All financial transactions must be logged"
+        implementation: "Event sourcing for financial operations"
+      - id: "SOX-ACCESS"
+        name: "Access controls"
+        description: "Segregation of duties for financial operations"
+        implementation: "RBAC with incompatible role checking"
+      - id: "SOX-CHANGE"
+        name: "Change management"
+        description: "All changes require approval"
+        implementation: "PR approval workflow"
+    enforcement: "block"
+
+  # GDPR (EU Data Privacy)
+  gdpr:
+    applies_to:
+      tags: ["pii", "eu-data", "personal-data"]
+    requirements:
+      - id: "GDPR-CONSENT"
+        name: "Consent management"
+        description: "Track and respect user consent"
+        implementation: "Consent service with audit log"
+      - id: "GDPR-ACCESS"
+        name: "Right of access"
+        description: "Users can request their data"
+        implementation: "Data export API"
+      - id: "GDPR-ERASURE"
+        name: "Right to erasure"
+        description: "Users can request deletion"
+        implementation: "Soft delete with hard delete workflow"
+      - id: "GDPR-PORTABLE"
+        name: "Data portability"
+        description: "Export data in machine-readable format"
+        implementation: "JSON/CSV export"
+    enforcement: "block"
+
+  # HIPAA (Healthcare)
+  hipaa:
+    applies_to:
+      tags: ["phi", "healthcare", "medical"]
+    requirements:
+      - id: "HIPAA-ENCRYPT"
+        name: "PHI encryption"
+        description: "All PHI must be encrypted at rest and in transit"
+        implementation: "AES-256 + TLS 1.3"
+      - id: "HIPAA-AUDIT"
+        name: "Access audit"
+        description: "All PHI access must be logged"
+        implementation: "Comprehensive audit logging"
+      - id: "HIPAA-MIN"
+        name: "Minimum necessary"
+        description: "Limit PHI access to minimum needed"
+        implementation: "Fine-grained RBAC"
+    enforcement: "block"
+
+  # PCI-DSS (Payment Cards)
+  pci_dss:
+    applies_to:
+      tags: ["payment", "card-data", "pci"]
+    requirements:
+      - id: "PCI-ENCRYPT"
+        name: "Card data encryption"
+        description: "Card data encrypted in transit and at rest"
+        implementation: "Tokenization + AES-256"
+      - id: "PCI-LOG"
+        name: "Logging"
+        description: "Log all access to card data"
+        implementation: "Audit logging (no card numbers in logs)"
+      - id: "PCI-SEGMENT"
+        name: "Network segmentation"
+        description: "Isolate card processing systems"
+        implementation: "VPC + security groups"
+    enforcement: "block"
+
+# =============================================================================
+# DOCUMENTATION STANDARDS
+# =============================================================================
+# Required documentation and formats.
+
+documentation:
+  # Required files
+  required_files:
+    - path: "README.md"
+      required_sections:
+        - "Overview"
+        - "Prerequisites"
+        - "Installation"
+        - "Configuration"
+        - "Usage"
+        - "Testing"
+        - "Deployment"
+        - "Contributing"
+      enforcement: "warn"
+
+    - path: "CHANGELOG.md"
+      format: "Keep a Changelog"
+      enforcement: "warn"
+
+    - path: "docs/ARCHITECTURE.md"
+      when: "new-project"
+      required_sections:
+        - "Overview"
+        - "Components"
+        - "Data Flow"
+        - "Security"
+      enforcement: "warn"
+
+    - path: "docs/api/openapi.yaml"
+      when: "api-project"
+      format: "OpenAPI 3.0+"
+      enforcement: "block"
+
+  # Architecture Decision Records
+  adr:
+    required_for:
+      - "technology-choice"
+      - "architecture-pattern"
+      - "security-decision"
+      - "integration-approach"
+      - "data-model-design"
+
+    location: "docs/adr/"
+    format: "ADR-{number:03d}-{title}.md"
+
+    template:
+      sections:
+        - "Title"
+        - "Status"
+        - "Context"
+        - "Decision"
+        - "Consequences"
+        - "References"
+
+    enforcement: "warn"
+
+  # Code documentation
+  code_documentation:
+    public_api_docs: true
+    complex_logic_comments: true
+    jsdoc_required_for:
+      - "exported functions"
+      - "public methods"
+      - "interfaces"
+    no_todo_in_production: true
+    enforcement: "warn"
+
+# =============================================================================
+# ENFORCEMENT CONFIGURATION
+# =============================================================================
+# How and when policies are enforced.
+
+enforcement:
+  # Pre-generation checks (before agent starts)
+  pre_generation:
+    - check: "repository_allowed"
+      action: "block"
+      message: "Repository {repository} not in allowed organizations"
+
+    - check: "user_authorized"
+      action: "block"
+      message: "User {user} not authorized for {agent_type}"
+
+    - check: "branch_naming"
+      action: "warn"
+      message: "Branch name does not follow convention"
+
+    - check: "required_context"
+      action: "warn"
+      message: "Missing context: {missing_items}"
+
+  # During-generation checks (real-time)
+  during_generation:
+    - check: "hardcoded_secrets"
+      action: "block"
+      message: "Potential hardcoded secret detected"
+      auto_fix: true
+      fix_template: "Use environment variable: process.env.{SECRET_NAME}"
+
+    - check: "sql_injection"
+      action: "block"
+      message: "String interpolation in SQL query detected"
+      auto_fix: true
+      fix_template: "Use parameterized query"
+
+    - check: "architecture_violation"
+      action: "warn"
+      message: "Layer dependency violation: {from_layer} -> {to_layer}"
+
+  # Post-generation checks (after agent completes)
+  post_generation:
+    - check: "test_coverage"
+      action: "block"
+      condition: "coverage < minimum_coverage"
+      message: "Test coverage {coverage}% below minimum {minimum}%"
+
+    - check: "security_scan"
+      action: "block"
+      condition: "critical_count > 0 OR high_count > 0"
+      message: "{critical_count} critical and {high_count} high vulnerabilities"
+
+    - check: "lint_errors"
+      action: "block"
+      condition: "error_count > 0"
+      message: "{error_count} linting errors found"
+
+    - check: "type_errors"
+      action: "block"
+      condition: "error_count > 0"
+      message: "{error_count} type errors found"
+
+# =============================================================================
+# ALERTS AND NOTIFICATIONS
+# =============================================================================
+# When to alert humans about policy events.
+
+alerts:
+  channels:
+    slack:
+      webhook: "${SLACK_GOVERNANCE_WEBHOOK}"
+      channel: "#engineering-governance"
+
+    email:
+      recipients:
+        - "engineering-governance@deltek.com"
+
+  triggers:
+    - event: "critical_violation"
+      channels: ["slack", "email"]
+      message: "CRITICAL: {violation_message} in {project}"
+
+    - event: "high_violation_repeated"
+      threshold: 3
+      window: "24h"
+      channels: ["slack"]
+      message: "Repeated high-severity violations in {project}"
+
+    - event: "policy_update"
+      channels: ["slack"]
+      message: "Policy updated: {policy_name} by {user}"
+
+# =============================================================================
+# METADATA
+# =============================================================================
+
+metadata:
+  # Schema validation
+  schema_version: "1.0.0"
+
+  # Policy testing
+  test_mode: false
+
+  # Gradual rollout
+  rollout:
+    percentage: 100
+    exclude_projects: []
+
+  # Override capability (requires approval)
+  override:
+    allowed: true
+    requires_approval_from:
+      - "security-team"
+      - "engineering-leadership"
+    audit: true
