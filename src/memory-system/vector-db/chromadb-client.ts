@@ -283,7 +283,7 @@ export class VectorDBClient {
 
     try {
       const collections = await this.client.listCollections();
-      return collections.map(c => c.name);
+      return collections.map(c => typeof c === 'string' ? c : (c as any).name);
     } catch (error) {
       console.error('[VectorDB] Failed to list collections:', error);
       return [];

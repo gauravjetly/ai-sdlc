@@ -222,15 +222,58 @@ export const policySchema = {
         },
         naming: {
           type: 'object',
-          additionalProperties: {
-            type: 'object',
-            properties: {
-              pattern: {
-                type: 'string',
-                enum: ['camelCase', 'PascalCase', 'kebab-case', 'UPPER_SNAKE_CASE', 'snake_case'],
+          properties: {
+            enforcement: { $ref: '#/definitions/enforcementLevel' },
+            files: {
+              type: 'object',
+              properties: {
+                pattern: {
+                  type: 'string',
+                  enum: ['camelCase', 'PascalCase', 'kebab-case', 'UPPER_SNAKE_CASE', 'snake_case'],
+                },
+                prefix: { type: 'string' },
+                exceptions: { type: 'array', items: { type: 'string' } },
               },
-              prefix: { type: 'string' },
-              exceptions: { type: 'array', items: { type: 'string' } },
+            },
+            classes: {
+              type: 'object',
+              properties: {
+                pattern: { type: 'string', enum: ['camelCase', 'PascalCase', 'kebab-case', 'UPPER_SNAKE_CASE', 'snake_case'] },
+                prefix: { type: 'string' },
+                exceptions: { type: 'array', items: { type: 'string' } },
+              },
+            },
+            functions: {
+              type: 'object',
+              properties: {
+                pattern: { type: 'string', enum: ['camelCase', 'PascalCase', 'kebab-case', 'UPPER_SNAKE_CASE', 'snake_case'] },
+                prefix: { type: 'string' },
+                exceptions: { type: 'array', items: { type: 'string' } },
+              },
+            },
+            constants: {
+              type: 'object',
+              properties: {
+                pattern: { type: 'string', enum: ['camelCase', 'PascalCase', 'kebab-case', 'UPPER_SNAKE_CASE', 'snake_case'] },
+                prefix: { type: 'string' },
+                exceptions: { type: 'array', items: { type: 'string' } },
+              },
+            },
+            interfaces: {
+              type: 'object',
+              properties: {
+                pattern: { type: 'string', enum: ['camelCase', 'PascalCase', 'kebab-case', 'UPPER_SNAKE_CASE', 'snake_case'] },
+                prefix: { type: 'string' },
+                exceptions: { type: 'array', items: { type: 'string' } },
+              },
+            },
+            types: {
+              type: 'object',
+              properties: {
+                pattern: { type: 'string', enum: ['camelCase', 'PascalCase', 'kebab-case', 'UPPER_SNAKE_CASE', 'snake_case'] },
+                prefix: { type: 'string' },
+                exceptions: { type: 'array', items: { type: 'string' } },
+              },
             },
           },
         },
