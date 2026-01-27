@@ -2,8 +2,9 @@
 
 **Real-time mission control for your AI-driven software development lifecycle**
 
-**Version**: 2.4.1
+**Version**: 2.5.0
 **Status**: Production Ready
+**Latest**: Comprehensive Project Details View (Click any project to see everything)
 
 ---
 
@@ -293,6 +294,7 @@ CEO: "How do we compare to last month?"
 - **Search & Filter**: Find by name, filter by status (In Progress, Completed, Blocked)
 - **Archive System**: Clean up completed projects
 - **Quick Actions**: Click to view details, archive, export
+- **🆕 COMPREHENSIVE PROJECT DETAILS** (v2.5.0): Click any project card to open interactive modal
 
 **How to Use It**:
 
@@ -302,11 +304,41 @@ CEO: "How do we compare to last month?"
    - See all active work
    - Identify which are advancing vs stuck
 
-2. Click any project for details:
-   - Phase timeline (which stages completed)
-   - Cost breakdown (spending by agent)
-   - Activity log (recent events)
-   - Predicted completion time
+2. Click any project for COMPREHENSIVE DETAILS:
+   📊 Overview Tab:
+      - Quick stats (phases, duration, cost, coverage)
+      - GitHub repository link (clickable)
+      - Deployment URL (clickable)
+      - Technologies used (badges)
+      - Complete phase timeline
+
+   📚 Documentation Tab:
+      - All SDLC documentation (expandable sections)
+      - Requirements (REQ-*.md)
+      - Architecture (ARCH-*.md)
+      - Security Review (SECURITY-REVIEW-*.md)
+      - Testing Report (TEST-REPORT-*.md)
+      - Deployment Record (DEPLOY-*.md)
+      - Acceptance Report (UAT-*.md)
+
+   📖 README Tab:
+      - Full project README with formatting
+      - Easy copy/paste for reference
+
+   ⚙️ Implementation Tab:
+      - Test results (total, passing, coverage)
+      - Complete file list (all created files)
+      - Technologies used
+
+   📝 Change Log Tab:
+      - Complete activity timeline
+      - Every event with timestamp, agent, phase
+      - Full project history
+
+   🏛️ ADRs Tab:
+      - Architecture Decision Records
+      - Expandable sections
+      - Understand architectural choices
 
 3. Address blocked projects:
    - See which agent is blocking
@@ -1045,10 +1077,11 @@ Without dashboard:
 | **Dark Mode** | Toggle between light and dark themes | Comfortable viewing in any environment |
 | **Keyboard Shortcuts** | `⌘K` / `Ctrl+K` for command palette | Fast navigation without mouse |
 
-### Advanced Features (v2.4.0)
+### Advanced Features (v2.4.0+)
 
 | Feature | Description | Use Case |
 |---------|-------------|----------|
+| **🆕 Comprehensive Project Details** (v2.5.0) | 6 interactive tabs with ALL project info | Click any project → see documentation, README, GitHub links, deployment URLs, changelog, ADRs, implementation details |
 | **Project Detail Modal** | Click any project for full history | Deep dive into project details |
 | **Command Palette** | VS Code-style quick actions (`⌘K`) | Navigate faster, find projects instantly |
 | **Sparkline Charts** | Mini trend visualizations in cards | Spot trends at a glance |
@@ -1854,11 +1887,48 @@ mv SDLC-001.json archive/
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| **2.5.0** | 2026-01-26 | **🚀 Comprehensive Project Details View**: Interactive modal with 6 tabs (Overview, Documentation, README, Implementation, Change Log, ADRs), GitHub/deployment links, complete project information hub |
 | **2.4.1** | 2026-01-26 | **Auto-Update Fix**: Comprehensive file watching for all data sources, debounced broadcasting, SSE heartbeat |
 | **2.4.0** | 2026-01-21 | **12 Advanced Features**: Command Palette, Gantt Timeline, Project Comparison, AI Insights, Predictive Analytics, Integration Hub, PDF Export, Sparklines |
 | **2.3.0** | 2026-01-20 | Memory dashboard, cross-agent learning visualization |
 | **2.1.1** | 2025-01-15 | Costs tab, FinOps integration, budget alerts |
 | **2.1.0** | 2025-01-15 | Initial dashboard release with real-time SSE |
+
+### v2.5.0 Details - Comprehensive Project Details View
+
+**Feature**: Click any project card to see ALL project information in one interactive modal.
+
+**What's Included**:
+- **6 Interactive Tabs**:
+  1. **📊 Overview**: Quick stats, GitHub/deployment links, technologies, phase timeline
+  2. **📚 Documentation**: All SDLC docs (requirements, architecture, security, testing, deployment, acceptance)
+  3. **📖 README**: Full project README with original formatting
+  4. **⚙️ Implementation**: Test results, files created, technologies used
+  5. **📝 Change Log**: Complete activity timeline with all events
+  6. **🏛️ ADRs**: Architecture Decision Records with expandable views
+
+**Backend**:
+- New API endpoint: `GET /api/projects/:projectId/details`
+- Aggregates data from 10+ sources (project files, documentation, activity logs, cost data)
+- Smart extraction of GitHub URLs and deployment URLs from documentation
+- Technology detection from architecture docs
+- Complete changelog from activity log
+
+**Frontend**:
+- Enhanced ProjectDetailModal with tabbed interface
+- Expandable documentation sections
+- Clickable external links (GitHub, deployment URLs)
+- Real-time data fetching
+- Loading states and error handling
+
+**Why It Matters**:
+- No more hunting through multiple files and folders
+- Complete project context in one click
+- Direct links to GitHub repos and deployed apps
+- All documentation accessible instantly
+- Understand project evolution through complete changelog
+
+**See**: `dashboard/FEATURE-PROJECT-DETAILS.md` for complete guide
 
 ### v2.4.1 Details - Auto-Update Fix
 

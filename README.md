@@ -314,6 +314,13 @@ node server.js
 - ✅ Agent utilization heatmaps
 - ✅ Quality metrics visualization
 - ✅ Downloadable reports (CSV, PDF)
+- ✅ **Comprehensive Project Details View** (NEW in v2.5.0)
+  - Click any project to see complete information in one place
+  - 6 interactive tabs: Overview, Documentation, README, Implementation, Change Log, ADRs
+  - Direct links to GitHub repos and deployment URLs
+  - All SDLC documentation with expandable sections
+  - Complete activity timeline and test results
+  - See `dashboard/FEATURE-PROJECT-DETAILS.md` for full guide
 
 **Dashboard Documentation**: `dashboard/README.md`
 
