@@ -471,8 +471,12 @@ function getProjectDetails(projectId) {
       }
     }
 
-    // 5. Extract GitHub repository URL from documentation or project
+    // 5. Extract GitHub repository URL and determine main project context
     let githubUrl = null;
+    let mainProject = null;
+    let mainProjectRepo = null;
+    let featureName = projectData.description || projectData.name || 'Feature Development';
+
     const githubPatterns = [
       /github\.com[\/:]([a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+)/gi,
       /https?:\/\/github\.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+/gi
@@ -482,14 +486,75 @@ function getProjectDetails(projectId) {
     const searchContent = [
       docs.readme?.content,
       docs.architecture?.content,
-      docs.deployment?.content
+      docs.deployment?.content,
+      docs.requirements?.content
     ].filter(Boolean).join('\n');
 
     for (const pattern of githubPatterns) {
       const match = pattern.exec(searchContent);
       if (match) {
         githubUrl = match[0].startsWith('http') ? match[0] : `https://github.com/${match[1]}`;
+        // This is likely the main project repo
+        mainProjectRepo = githubUrl;
+        // Extract main project name from repo URL
+        const repoMatch = githubUrl.match(/github\.com\/[^/]+\/([^/\.]+)/);
+        if (repoMatch) {
+          mainProject = repoMatch[1]
+            .split(/[-_]/)
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+        }
         break;
+      }
+    }
+
+    // Try to extract main project info from description patterns
+    // Patterns like: "Add X to Y project" or "Build X for Y" or "Enhance Y with X"
+    const description = projectData.description || '';
+    const descPatterns = [
+      /(?:for|to|in)\s+([A-Z][a-zA-Z0-9-_]+)\s+(?:project|repo|repository)/i,
+      /([A-Z][a-zA-Z0-9-_]+)\s+(?:project|application|app)/i,
+      /(?:Enhance|Update|Improve|Fix|Modify)\s+([A-Z][a-zA-Z0-9-_]+)/i
+    ];
+
+    for (const pattern of descPatterns) {
+      const match = description.match(pattern);
+      if (match && match[1] && !mainProject) {
+        const candidate = match[1];
+        // Only use if it looks like a project name
+        if (candidate.length > 2 && /^[A-Z]/.test(candidate)) {
+          mainProject = candidate;
+          break;
+        }
+      }
+    }
+
+    // Check if project data already has mainProject fields (explicit config)
+    if (projectData.mainProject) {
+      mainProject = projectData.mainProject;
+    }
+    if (projectData.mainProjectRepo) {
+      mainProjectRepo = projectData.mainProjectRepo;
+    }
+    if (projectData.featureName) {
+      featureName = projectData.featureName;
+    }
+
+    // If still no main project, try to infer from first output directory
+    if (!mainProject && projectData.phases && projectData.phases.length > 0) {
+      for (const phase of projectData.phases) {
+        if (phase.outputs && phase.outputs.length > 0) {
+          const firstOutput = phase.outputs[0];
+          // Pattern like "src/claude-admin/" or "claude-admin/src"
+          const pathMatch = firstOutput.match(/(?:^|\/)(([a-z]+-?)+(?:-admin|-app|-system|-service|-api)?)/i);
+          if (pathMatch && pathMatch[1] && !mainProject) {
+            mainProject = pathMatch[1]
+              .split(/[-_]/)
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ');
+            break;
+          }
+        }
       }
     }
 
@@ -574,6 +639,14 @@ function getProjectDetails(projectId) {
       // Basic project info
       project: projectData,
 
+      // Main project context (the actual project this feature belongs to)
+      mainProject: {
+        name: mainProject || 'Standalone Project',
+        repository: mainProjectRepo || githubUrl,
+        featureName: featureName,
+        isFeatureAddition: !!mainProject // true if this is adding to existing project
+      },
+
       // Cost data
       costs: costData,
 
@@ -583,6 +656,7 @@ function getProjectDetails(projectId) {
       // Links
       links: {
         github: githubUrl,
+        mainProjectRepo: mainProjectRepo,
         deployment: deploymentUrls.length > 0 ? deploymentUrls[0] : null,
         allUrls: deploymentUrls
       },
