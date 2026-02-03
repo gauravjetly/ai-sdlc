@@ -1,0 +1,687 @@
+// Prisma Schema for Deltek Catalyst Platform
+// Real data persistence - NO MOCK DATA
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+// =============================================
+// DEPLOYMENTS
+// =============================================
+
+model Deployment {
+  id                  String   @id @default(uuid())
+  name                String
+  application         String
+  version             String
+  environment         Environment
+  cloud               CloudProvider
+  clusterArn          String
+  namespace           String
+  status              DeploymentStatus
+  statusMessage       String?
+  strategy            DeploymentStrategy
+  replicas            Int
+  k8sDeploymentName   String
+  k8sDeploymentUid    String?
+  imageRegistry       String
+  containerPort       Int?
+
+  // Resources
+  cpuRequest          String?
+  memoryRequest       String?
+  cpuLimit            String?
+  memoryLimit         String?
+
+  // Health check
+  healthCheckPath     String?
+  healthCheckPort     Int?
+
+  // Metadata
+  createdBy           String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  startedAt           DateTime?
+  completedAt         DateTime?
+
+  // Relations
+  logs                DeploymentLog[]
+
+  @@index([environment])
+  @@index([status])
+  @@index([application])
+  @@map("deployments")
+}
+
+model DeploymentLog {
+  id            String   @id @default(uuid())
+  deploymentId  String
+  timestamp     DateTime @default(now())
+  level         LogLevel
+  message       String
+  metadata      Json?
+
+  deployment    Deployment @relation(fields: [deploymentId], references: [id], onDelete: Cascade)
+
+  @@index([deploymentId])
+  @@index([timestamp])
+  @@map("deployment_logs")
+}
+
+// =============================================
+// CLOUD RESOURCES
+// =============================================
+
+model CloudResource {
+  id                String   @id @default(uuid())
+  name              String
+  resourceId        String   @unique // AWS VPC ID, ARN, etc.
+  resourceType      ResourceType
+  cloud             CloudProvider
+  region            String
+  environment       Environment
+  status            ResourceStatus
+
+  // Configuration (stored as JSON)
+  config            Json
+
+  // Metadata
+  createdBy         String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  deletedAt         DateTime?
+
+  // Relations
+  tags              ResourceTag[]
+
+  @@index([resourceType])
+  @@index([cloud])
+  @@index([environment])
+  @@index([status])
+  @@map("cloud_resources")
+}
+
+model ResourceTag {
+  id            String   @id @default(uuid())
+  resourceId    String
+  key           String
+  value         String
+
+  resource      CloudResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@unique([resourceId, key])
+  @@index([key])
+  @@index([value])
+  @@map("resource_tags")
+}
+
+// =============================================
+// AGENT EXECUTIONS
+// =============================================
+
+model AgentExecution {
+  id            String   @id @default(uuid())
+  agentId       AgentType
+  jobId         String   @unique // BullMQ job ID
+  taskType      String
+  taskParams    Json
+
+  status        ExecutionStatus
+  priority      TaskPriority @default(NORMAL)
+
+  startedAt     DateTime @default(now())
+  completedAt   DateTime?
+  timeout       Int? // milliseconds
+
+  result        Json?
+  error         String?
+  logs          String?  // Accumulated logs
+
+  createdBy     String?
+
+  @@index([agentId])
+  @@index([status])
+  @@index([startedAt])
+  @@map("agent_executions")
+}
+
+model ScheduledJob {
+  id            String   @id @default(uuid())
+  agentId       AgentType
+  name          String
+  schedule      String   // Cron expression
+  taskType      String
+  taskParams    Json
+
+  enabled       Boolean  @default(true)
+  nextRun       DateTime?
+  lastRun       DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([agentId, name])
+  @@index([enabled])
+  @@index([nextRun])
+  @@map("scheduled_jobs")
+}
+
+// =============================================
+// SECURITY SCANS
+// =============================================
+
+model VulnerabilityScan {
+  id            String   @id @default(uuid())
+  scanId        String   @unique
+  target        String
+  targetType    ScanTargetType
+
+  scannedAt     DateTime @default(now())
+
+  // Summary counts
+  criticalCount Int      @default(0)
+  highCount     Int      @default(0)
+  mediumCount   Int      @default(0)
+  lowCount      Int      @default(0)
+  totalCount    Int      @default(0)
+
+  // Full results stored as JSON
+  results       Json
+
+  // Metadata
+  createdBy     String?
+
+  vulnerabilities Vulnerability[]
+
+  @@index([target])
+  @@index([targetType])
+  @@index([scannedAt])
+  @@map("vulnerability_scans")
+}
+
+model Vulnerability {
+  id                String   @id @default(uuid())
+  scanId            String
+
+  cveId             String?
+  severity          VulnerabilitySeverity
+  packageName       String
+  installedVersion  String
+  fixedVersion      String?
+
+  title             String
+  description       String?
+
+  cvssScore         Float?
+  cvssVector        String?
+
+  publishedDate     DateTime?
+
+  scan              VulnerabilityScan @relation(fields: [scanId], references: [id], onDelete: Cascade)
+
+  @@index([scanId])
+  @@index([severity])
+  @@index([cveId])
+  @@map("vulnerabilities")
+}
+
+// =============================================
+// COST TRACKING
+// =============================================
+
+model CostRecord {
+  id            String   @id @default(uuid())
+  date          DateTime
+  cloud         CloudProvider
+  region        String?
+  service       String
+  environment   Environment?
+
+  cost          Float
+  currency      String   @default("USD")
+
+  // Breakdown
+  tags          Json?
+
+  createdAt     DateTime @default(now())
+
+  @@unique([date, cloud, service, region])
+  @@index([date])
+  @@index([cloud])
+  @@index([service])
+  @@map("cost_records")
+}
+
+model CostRecommendation {
+  id                String   @id @default(uuid())
+  type              RecommendationType
+  resourceId        String?
+  resourceName      String
+
+  currentConfig     Json
+  recommendedConfig Json
+
+  estimatedSavings  Float
+  currency          String   @default("USD")
+  risk              RiskLevel
+
+  action            String
+  autoApplyable     Boolean  @default(false)
+  applied           Boolean  @default(false)
+  appliedAt         DateTime?
+
+  createdAt         DateTime @default(now())
+
+  @@index([type])
+  @@index([applied])
+  @@index([createdAt])
+  @@map("cost_recommendations")
+}
+
+// =============================================
+// ENUMS
+// =============================================
+
+enum Environment {
+  dev
+  uat
+  production
+  dr
+}
+
+enum CloudProvider {
+  aws
+  oci
+  azure
+  gcp
+}
+
+enum DeploymentStatus {
+  pending
+  deploying
+  running
+  failed
+  rolled_back
+  completed
+}
+
+enum DeploymentStrategy {
+  rolling
+  blue_green
+  canary
+}
+
+enum ResourceType {
+  vpc
+  subnet
+  cluster
+  database
+  storage
+  load_balancer
+  security_group
+  iam_role
+}
+
+enum ResourceStatus {
+  creating
+  active
+  updating
+  deleting
+  deleted
+  failed
+}
+
+enum AgentType {
+  security_agent
+  developer_agent
+  sre_agent
+  qa_agent
+  finops_agent
+  release_manager
+  architect_agent
+  conductor_agent
+}
+
+enum ExecutionStatus {
+  queued
+  running
+  completed
+  failed
+  cancelled
+  timeout
+}
+
+enum TaskPriority {
+  LOW
+  NORMAL
+  HIGH
+  CRITICAL
+}
+
+enum LogLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+}
+
+enum ScanTargetType {
+  container
+  filesystem
+  repository
+}
+
+enum VulnerabilitySeverity {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+  UNKNOWN
+}
+
+enum RecommendationType {
+  rightsizing
+  reserved_instance
+  storage_lifecycle
+  unused_resource
+}
+
+enum RiskLevel {
+  low
+  medium
+  high
+}
+
+// =============================================
+// INFRASTRUCTURE DESIGNER - TEMPLATES & WORKFLOWS
+// =============================================
+
+model DesignTemplate {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  category        TemplateCategory
+  visibility      TemplateVisibility @default(private)
+  templateData    Json     // { nodes: [], edges: [], metadata: {} }
+  layerType       LayerType?
+  thumbnail       String?
+  version         String   @default("1.0.0")
+  tags            String[]
+  usageCount      Int      @default(0)
+  createdBy       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  versions        TemplateVersion[]
+
+  @@index([category, layerType, visibility])
+  @@index([createdBy])
+  @@index([usageCount])
+  @@map("design_templates")
+}
+
+model TemplateVersion {
+  id              String   @id @default(uuid())
+  templateId      String
+  versionNumber   String
+  templateData    Json
+  changeLog       String?
+  createdAt       DateTime @default(now())
+
+  template        DesignTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@unique([templateId, versionNumber])
+  @@index([createdAt])
+  @@map("template_versions")
+}
+
+model VisualDesign {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  designData      Json     // { nodes: [], edges: [], viewport: {} }
+  status          DesignStatus @default(draft)
+  environment     Environment?
+  cloud           CloudProvider?
+  region          String?
+
+  // Cost estimation
+  estimatedMonthlyCost Float?
+  currency        String   @default("USD")
+
+  // Metadata
+  createdBy       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  lastDeployedAt  DateTime?
+
+  // Relations
+  versions        DesignVersion[]
+  deployedResources DeployedResource[]
+  deploymentLogs  DesignDeploymentLog[]
+  workflow        DesignWorkflow?
+  terraformState  TerraformState?
+
+  @@index([status])
+  @@index([environment])
+  @@index([createdBy])
+  @@index([createdAt])
+  @@map("visual_designs")
+}
+
+model DesignVersion {
+  id              String   @id @default(uuid())
+  designId        String
+  versionNumber   Int
+  designData      Json
+  changeLog       String?
+  createdBy       String?
+  createdAt       DateTime @default(now())
+
+  design          VisualDesign @relation(fields: [designId], references: [id], onDelete: Cascade)
+
+  @@unique([designId, versionNumber])
+  @@index([createdAt])
+  @@map("design_versions")
+}
+
+model DesignWorkflow {
+  id                String   @id @default(uuid())
+  designId          String   @unique
+  currentLayer      LayerType?
+  currentStep       Int      @default(1)
+  networkComplete   Boolean  @default(false)
+  platformComplete  Boolean  @default(false)
+  devopsComplete    Boolean  @default(false)
+
+  // Layer data snapshots
+  networkData       Json?
+  platformData      Json?
+  devopsData        Json?
+
+  // Environment configurations
+  environments      Json     // { dev: {}, staging: {}, prod: {} }
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  design            VisualDesign @relation(fields: [designId], references: [id], onDelete: Cascade)
+  layers            DesignLayer[]
+
+  @@index([currentLayer])
+  @@map("design_workflows")
+}
+
+model DesignLayer {
+  id              String   @id @default(uuid())
+  workflowId      String
+  designId        String
+  layerType       LayerType
+  layerName       String
+  layerData       Json     // Layer-specific component data
+  status          LayerDeploymentStatus @default(pending)
+  deployedAt      DateTime?
+
+  // Dependencies (array of layer IDs)
+  dependsOn       String[]
+
+  // Environment-specific overrides
+  envOverrides    Json?    // { dev: {...}, staging: {...}, prod: {...} }
+
+  // Terraform state for this layer
+  terraformOutput Json?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workflow        DesignWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@unique([workflowId, layerType])
+  @@index([status])
+  @@index([layerType])
+  @@map("design_layers")
+}
+
+model DeployedResource {
+  id              String   @id @default(uuid())
+  designId        String
+  nodeId          String   // Node ID from design canvas
+  resourceId      String   // AWS resource ID (vpc-xxx, subnet-xxx, etc.)
+  resourceType    String   // vpc, subnet, eks_cluster, etc.
+  resourceArn     String?
+
+  cloud           CloudProvider
+  region          String
+  environment     Environment
+
+  status          ResourceStatus
+  config          Json     // Full resource configuration
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  design          VisualDesign @relation(fields: [designId], references: [id], onDelete: Cascade)
+
+  @@unique([designId, nodeId])
+  @@index([resourceId])
+  @@index([resourceType])
+  @@index([status])
+  @@map("deployed_resources")
+}
+
+model DesignDeploymentLog {
+  id            String   @id @default(uuid())
+  designId      String
+  timestamp     DateTime @default(now())
+  level         LogLevel
+  message       String
+  metadata      Json?
+
+  design        VisualDesign @relation(fields: [designId], references: [id], onDelete: Cascade)
+
+  @@index([designId])
+  @@index([timestamp])
+  @@map("design_deployment_logs")
+}
+
+model TerraformState {
+  id              String   @id @default(uuid())
+  designId        String   @unique
+  stateVersion    Int      @default(1)
+
+  // Terraform state file content
+  tfState         Json
+
+  // Backend configuration
+  backend         String   @default("local") // local, s3, remote
+  backendConfig   Json?
+
+  // Lock information
+  locked          Boolean  @default(false)
+  lockedBy        String?
+  lockedAt        DateTime?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  design          VisualDesign @relation(fields: [designId], references: [id], onDelete: Cascade)
+
+  @@index([locked])
+  @@map("terraform_states")
+}
+
+model AWSCredential {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+
+  // Encrypted credentials
+  accessKeyId     String
+  secretAccessKey String   // Encrypted
+  sessionToken    String?  // Encrypted (for temporary credentials)
+
+  region          String   @default("us-east-1")
+  accountId       String?
+
+  // Metadata
+  isDefault       Boolean  @default(false)
+  createdBy       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  expiresAt       DateTime?
+
+  @@unique([name])
+  @@index([isDefault])
+  @@map("aws_credentials")
+}
+
+// =============================================
+// INFRASTRUCTURE DESIGNER ENUMS
+// =============================================
+
+enum TemplateCategory {
+  network_foundation
+  compute_platform
+  storage_database
+  security
+  monitoring
+  fullstack
+  custom
+}
+
+enum TemplateVisibility {
+  private
+  organization
+  public
+}
+
+enum LayerType {
+  network
+  platform
+  devops
+  fullstack
+}
+
+enum DesignStatus {
+  draft
+  validated
+  deploying
+  deployed
+  failed
+  archived
+}
+
+enum LayerDeploymentStatus {
+  pending
+  validating
+  deploying
+  deployed
+  failed
+  rolled_back
+}

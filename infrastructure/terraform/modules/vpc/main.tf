@@ -74,28 +74,21 @@ resource "aws_subnet" "private" {
   })
 }
 
-# Elastic IP for NAT Gateway
-resource "aws_eip" "nat" {
-  domain = "vpc"
+# NAT Gateway disabled for dev (EIP limit reached)
+# Uncomment when EIP limit is increased or released
 
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-nat-eip"
-  })
+# resource "aws_eip" "nat" {
+#   domain = "vpc"
+#   tags = merge(var.tags, { Name = "${var.name_prefix}-nat-eip" })
+#   depends_on = [aws_internet_gateway.main]
+# }
 
-  depends_on = [aws_internet_gateway.main]
-}
-
-# NAT Gateway
-resource "aws_nat_gateway" "main" {
-  allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public[0].id
-
-  tags = merge(var.tags, {
-    Name = "${var.name_prefix}-nat"
-  })
-
-  depends_on = [aws_internet_gateway.main]
-}
+# resource "aws_nat_gateway" "main" {
+#   allocation_id = aws_eip.nat.id
+#   subnet_id     = aws_subnet.public[0].id
+#   tags = merge(var.tags, { Name = "${var.name_prefix}-nat" })
+#   depends_on = [aws_internet_gateway.main]
+# }
 
 # Public Route Table
 resource "aws_route_table" "public" {
@@ -111,14 +104,15 @@ resource "aws_route_table" "public" {
   })
 }
 
-# Private Route Table
+# Private Route Table (no NAT for dev - using public subnets)
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.main.id
-  }
+  # NAT route disabled - ECS tasks use public subnets with assign_public_ip = true
+  # route {
+  #   cidr_block     = "0.0.0.0/0"
+  #   nat_gateway_id = aws_nat_gateway.main.id
+  # }
 
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-private-rt"
@@ -154,5 +148,5 @@ output "private_subnet_ids" {
 }
 
 output "nat_gateway_ip" {
-  value = aws_eip.nat.public_ip
+  value = null  # NAT Gateway disabled for dev
 }

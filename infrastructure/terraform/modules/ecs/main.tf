@@ -254,7 +254,7 @@ resource "aws_ecs_service" "api" {
   network_configuration {
     subnets          = var.private_subnet_ids
     security_groups  = [aws_security_group.ecs.id]
-    assign_public_ip = false
+    assign_public_ip = true  # Required when no NAT Gateway
   }
 
   load_balancer {

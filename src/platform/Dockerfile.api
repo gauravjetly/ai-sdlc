@@ -1,25 +1,46 @@
-# API Dockerfile for Catalyst Platform - Debian-based for Prisma compatibility
+# API Dockerfile for Catalyst Platform - Builds from source
+# Multi-stage build for smaller production image
+
 FROM --platform=linux/amd64 node:18-slim AS builder
 
 WORKDIR /app
 
-# Install required system dependencies
-RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+# Install required system dependencies for build
+RUN apt-get update && apt-get install -y \
+    openssl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy package files and install ALL dependencies (for prisma generate)
+# Copy package files
 COPY package*.json ./
+
+# Install ALL dependencies (including dev for build)
 RUN npm ci
 
 # Copy Prisma schema and generate client for linux
 COPY prisma/ ./prisma/
 RUN npx prisma generate
 
+# Copy TypeScript source
+COPY tsconfig.json ./
+COPY api/ ./api/
+COPY utils/ ./utils/
+COPY cloud-abstraction/ ./cloud-abstraction/
+COPY mcp/ ./mcp/
+
+# Build TypeScript
+RUN npm run build
+
+# Generate JWT keys for container
+RUN mkdir -p keys && \
+    openssl genrsa -out keys/private.key 4096 && \
+    openssl rsa -in keys/private.key -pubout -out keys/public.key
+
 # Production image
 FROM --platform=linux/amd64 node:18-slim
 
 WORKDIR /app
 
-# Install required system dependencies for Prisma
+# Install required system dependencies for Prisma runtime
 RUN apt-get update && apt-get install -y \
     openssl \
     curl \
@@ -29,7 +50,7 @@ RUN apt-get update && apt-get install -y \
 # Create non-root user
 RUN groupadd -g 1001 nodejs && useradd -u 1001 -g nodejs nodejs
 
-# Copy package files and install production dependencies
+# Copy package files and install production dependencies only
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
@@ -37,13 +58,11 @@ RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=builder /app/node_modules/.prisma /app/node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma /app/node_modules/@prisma
 
-# Copy pre-compiled JavaScript from dist
-COPY dist/ ./dist/
+# Copy compiled JavaScript from builder
+COPY --from=builder /app/dist/ ./dist/
 
-# Create keys directory and copy keys with expected names
-RUN mkdir -p keys
-COPY api/keys/public.pem ./keys/public.key
-COPY api/keys/private.pem ./keys/private.key
+# Copy generated JWT keys from builder
+COPY --from=builder /app/keys/ ./keys/
 
 # Change ownership
 RUN chown -R nodejs:nodejs /app

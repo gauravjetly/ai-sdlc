@@ -1,0 +1,251 @@
+# OCI (Oracle Cloud Infrastructure) Configuration
+# This file defines OCI-specific defaults and mappings
+
+oci:
+  # Default authentication profile (uses ~/.oci/config)
+  default_profile: DEFAULT
+
+  # OCI Config file location
+  config_file: ~/.oci/config
+
+  # Default compartment (can be overridden per workflow)
+  # Get your compartment OCID from OCI Console > Identity > Compartments
+  default_compartment: ocid1.compartment.oc1..example
+
+  # VCN Configuration
+  vcn:
+    dns_label_prefix: "platform"
+    default_cidr: "10.0.0.0/16"
+    enable_flow_logs: false
+
+  # OKE (Oracle Kubernetes Engine) Configuration
+  oke:
+    # Kubernetes versions supported
+    supported_versions:
+      - "v1.28.2"
+      - "v1.27.2"
+      - "v1.26.2"
+
+    default_version: "v1.28.2"
+
+    # Instance shapes for node pools
+    node_pool_shapes:
+      small: "VM.Standard.E4.Flex"      # 1 OCPU, 16GB RAM (Flex)
+      medium: "VM.Standard2.4"          # 4 OCPUs, 60GB RAM
+      large: "VM.Standard2.8"           # 8 OCPUs, 120GB RAM
+      xlarge: "VM.Standard2.16"         # 16 OCPUs, 240GB RAM
+      memory_optimized: "VM.Optimized3.Flex"  # Memory optimized
+      gpu: "VM.GPU3.1"                  # GPU instance
+
+    # Shape configs for Flex shapes (OCPU and memory)
+    flex_shape_configs:
+      small:
+        ocpus: 1
+        memory_in_gbs: 16
+      medium:
+        ocpus: 4
+        memory_in_gbs: 60
+      large:
+        ocpus: 8
+        memory_in_gbs: 120
+      xlarge:
+        ocpus: 16
+        memory_in_gbs: 240
+      memory_optimized:
+        ocpus: 4
+        memory_in_gbs: 64
+
+    # Node pool defaults
+    node_pool:
+      enable_autoscaling: false
+      ssh_public_key: null  # Optional: provide SSH key for node access
+
+  # Autonomous Database Configuration
+  autonomous_db:
+    auto_scaling: true
+    license_model: "LICENSE_INCLUDED"  # or "BRING_YOUR_OWN_LICENSE"
+
+    # Database workload types
+    workload_types:
+      oltp: "OLTP"          # Transactional workload
+      dw: "DW"              # Data warehouse workload
+      apex: "APEX"          # Oracle APEX workload
+
+    # CPU core counts for instance classes
+    cpu_counts:
+      small_db: 1
+      medium_db: 2
+      large_db: 4
+      xlarge_db: 8
+
+    # Supported database versions
+    supported_versions:
+      oracle:
+        - "19c"
+        - "21c"
+        - "23c"
+      postgresql:
+        - "13"
+        - "14"
+        - "15"
+      mysql:
+        - "8.0"
+
+    # Backup configuration
+    backup:
+      retention_days: 30
+      auto_backup: true
+
+  # Object Storage Configuration
+  object_storage:
+    # Storage tiers
+    storage_tiers:
+      standard: "Standard"
+      infrequent_access: "InfrequentAccess"
+      archive: "Archive"
+
+    # Default tier
+    default_tier: "Standard"
+
+    # Lifecycle policies
+    lifecycle_policies:
+      enabled: true
+      transition_to_infrequent_access_days: 90
+      transition_to_archive_days: 180
+      delete_after_days: 365
+
+  # Networking Configuration
+  networking:
+    # Default security list rules
+    default_security_rules:
+      ingress:
+        - protocol: "TCP"
+          source: "0.0.0.0/0"
+          tcp_options:
+            destination_port_range:
+              min: 443
+              max: 443
+        - protocol: "TCP"
+          source: "0.0.0.0/0"
+          tcp_options:
+            destination_port_range:
+              min: 80
+              max: 80
+      egress:
+        - protocol: "ALL"
+          destination: "0.0.0.0/0"
+
+  # Tagging Configuration
+  tagging:
+    # Freeform tags applied to all resources
+    default_tags:
+      ManagedBy: "multicloud-devops-platform"
+      Platform: "oci"
+
+    # Cost tracking tags
+    cost_tracking:
+      enabled: true
+      tags:
+        - "CostCenter"
+        - "Project"
+        - "Environment"
+
+  # Resource Limits
+  limits:
+    max_vcns_per_compartment: 10
+    max_clusters_per_compartment: 5
+    max_databases_per_compartment: 10
+    max_buckets_per_namespace: 1000
+
+  # Monitoring and Logging
+  monitoring:
+    enable_metrics: true
+    enable_alarms: false
+
+  logging:
+    enable_audit_logs: true
+    enable_service_logs: false
+    log_retention_days: 90
+
+  # Cost Management
+  cost:
+    # Enable cost tracking
+    enable_cost_tracking: true
+
+    # Budgets (optional)
+    budgets:
+      enabled: false
+      monthly_limit: 1000  # USD
+      alert_threshold: 80  # Alert at 80% of budget
+
+  # Regions
+  regions:
+    # Primary regions
+    primary:
+      - "us-ashburn-1"      # US East (Ashburn, VA)
+      - "us-phoenix-1"      # US West (Phoenix, AZ)
+      - "eu-frankfurt-1"    # Germany Central (Frankfurt)
+      - "ap-tokyo-1"        # Japan East (Tokyo)
+
+    # All supported regions
+    all:
+      - "us-ashburn-1"
+      - "us-phoenix-1"
+      - "us-sanjose-1"
+      - "ca-toronto-1"
+      - "ca-montreal-1"
+      - "sa-saopaulo-1"
+      - "uk-london-1"
+      - "uk-cardiff-1"
+      - "eu-frankfurt-1"
+      - "eu-zurich-1"
+      - "eu-amsterdam-1"
+      - "ap-mumbai-1"
+      - "ap-tokyo-1"
+      - "ap-osaka-1"
+      - "ap-seoul-1"
+      - "ap-sydney-1"
+      - "ap-melbourne-1"
+      - "ap-singapore-1"
+      - "me-jeddah-1"
+      - "me-dubai-1"
+
+  # High Availability Configuration
+  high_availability:
+    # Availability domains
+    use_multiple_ads: true
+    min_availability_domains: 2
+
+    # Fault domains
+    use_fault_domains: true
+
+  # Performance Configuration
+  performance:
+    # Network performance
+    network:
+      use_fast_connect: false  # Oracle FastConnect for hybrid cloud
+
+    # Storage performance
+    storage:
+      use_ultra_high_performance: false
+
+  # Compliance and Security
+  compliance:
+    # Encryption at rest
+    encryption_at_rest: true
+
+    # Encryption in transit
+    encryption_in_transit: true
+
+    # Key management
+    use_vault: false  # OCI Vault for key management
+
+    # Security zones
+    use_security_zones: false
+
+  # Disaster Recovery
+  disaster_recovery:
+    enabled: false
+    backup_region: null
+    rpo_hours: 24  # Recovery Point Objective
+    rto_hours: 4   # Recovery Time Objective

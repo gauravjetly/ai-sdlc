@@ -16,7 +16,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "catalyst-terraform-state"
+    bucket         = "catalyst-tf-state-028306514199"
     key            = "catalyst-dev/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
@@ -134,7 +134,7 @@ module "ecs" {
 
   name_prefix           = local.name_prefix
   vpc_id                = module.vpc.vpc_id
-  private_subnet_ids    = module.vpc.private_subnet_ids
+  private_subnet_ids    = module.vpc.public_subnet_ids  # Using public subnets (no NAT Gateway)
   alb_target_group_arn  = module.alb.target_group_arn
   alb_security_group_id = module.alb.security_group_id
 
