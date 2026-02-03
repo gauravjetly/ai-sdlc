@@ -1,0 +1,60 @@
+# API Dockerfile for Catalyst Platform - Debian-based for Prisma compatibility
+FROM --platform=linux/amd64 node:18-slim AS builder
+
+WORKDIR /app
+
+# Install required system dependencies
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
+# Copy package files and install ALL dependencies (for prisma generate)
+COPY package*.json ./
+RUN npm ci
+
+# Copy Prisma schema and generate client for linux
+COPY prisma/ ./prisma/
+RUN npx prisma generate
+
+# Production image
+FROM --platform=linux/amd64 node:18-slim
+
+WORKDIR /app
+
+# Install required system dependencies for Prisma
+RUN apt-get update && apt-get install -y \
+    openssl \
+    curl \
+    dumb-init \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN groupadd -g 1001 nodejs && useradd -u 1001 -g nodejs nodejs
+
+# Copy package files and install production dependencies
+COPY package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+# Copy generated Prisma client from builder
+COPY --from=builder /app/node_modules/.prisma /app/node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma /app/node_modules/@prisma
+
+# Copy pre-compiled JavaScript from dist
+COPY dist/ ./dist/
+
+# Create keys directory and copy keys with expected names
+RUN mkdir -p keys
+COPY api/keys/public.pem ./keys/public.key
+COPY api/keys/private.pem ./keys/private.key
+
+# Change ownership
+RUN chown -R nodejs:nodejs /app
+
+USER nodejs
+
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:3000/health || exit 1
+
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "dist/api/server.js"]
