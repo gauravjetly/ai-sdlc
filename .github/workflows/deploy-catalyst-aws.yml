@@ -1,0 +1,216 @@
+# Deploy to Catalyst AWS Account
+# Builds and deploys the Infrastructure Designer to the dedicated Catalyst AWS account
+
+name: Deploy to Catalyst AWS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+env:
+  AWS_REGION: us-east-1
+  ECR_API_REPOSITORY: catalyst-dev-api
+  ECR_UI_REPOSITORY: catalyst-dev-ui
+  ECS_CLUSTER: catalyst-dev-cluster
+  ECS_API_SERVICE: catalyst-dev-api
+  ECS_UI_SERVICE: catalyst-dev-ui
+
+jobs:
+  build-and-push:
+    name: Build & Push Docker Images
+    runs-on: ubuntu-latest
+    outputs:
+      api_image: ${{ steps.build-api.outputs.image }}
+      ui_image: ${{ steps.build-ui.outputs.image }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push API image
+        id: build-api
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build API Docker image
+          docker build \
+            -t $ECR_REGISTRY/$ECR_API_REPOSITORY:$IMAGE_TAG \
+            -t $ECR_REGISTRY/$ECR_API_REPOSITORY:latest \
+            -f src/platform/api/Dockerfile \
+            src/platform/api
+
+          # Push to ECR
+          docker push $ECR_REGISTRY/$ECR_API_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_API_REPOSITORY:latest
+
+          echo "image=$ECR_REGISTRY/$ECR_API_REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push UI image
+        id: build-ui
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build UI Docker image
+          docker build \
+            -t $ECR_REGISTRY/$ECR_UI_REPOSITORY:$IMAGE_TAG \
+            -t $ECR_REGISTRY/$ECR_UI_REPOSITORY:latest \
+            -f src/platform/ui/Dockerfile \
+            src/platform/ui
+
+          # Push to ECR
+          docker push $ECR_REGISTRY/$ECR_UI_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_UI_REPOSITORY:latest
+
+          echo "image=$ECR_REGISTRY/$ECR_UI_REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    name: Deploy to ECS
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment:
+      name: catalyst-dev
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Download current task definitions
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition $ECS_API_SERVICE \
+            --query taskDefinition > api-task-def.json
+
+          aws ecs describe-task-definition \
+            --task-definition $ECS_UI_SERVICE \
+            --query taskDefinition > ui-task-def.json
+
+      - name: Update API task definition
+        id: api-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: api-task-def.json
+          container-name: api
+          image: ${{ needs.build-and-push.outputs.api_image }}
+
+      - name: Update UI task definition
+        id: ui-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ui-task-def.json
+          container-name: ui
+          image: ${{ needs.build-and-push.outputs.ui_image }}
+
+      - name: Deploy API service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.api-task-def.outputs.task-definition }}
+          service: ${{ env.ECS_API_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+      - name: Deploy UI service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.ui-task-def.outputs.task-definition }}
+          service: ${{ env.ECS_UI_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+      - name: Get ALB URL
+        id: deploy
+        run: |
+          ALB_DNS=$(aws elbv2 describe-load-balancers \
+            --names catalyst-dev-alb \
+            --query 'LoadBalancers[0].DNSName' \
+            --output text)
+          echo "url=http://$ALB_DNS" >> "$GITHUB_OUTPUT"
+          echo "## Deployment Complete" >> $GITHUB_STEP_SUMMARY
+          echo "Application URL: http://$ALB_DNS" >> $GITHUB_STEP_SUMMARY
+
+  health-check:
+    name: Health Check
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Wait for services to stabilize
+        run: sleep 30
+
+      - name: Check API health
+        run: |
+          ALB_DNS=$(aws elbv2 describe-load-balancers \
+            --names catalyst-dev-alb \
+            --query 'LoadBalancers[0].DNSName' \
+            --output text)
+
+          # Health check with retries
+          for i in {1..5}; do
+            if curl -sf "http://$ALB_DNS/health"; then
+              echo "Health check passed"
+              exit 0
+            fi
+            echo "Attempt $i failed, retrying..."
+            sleep 10
+          done
+
+          echo "Health check failed after 5 attempts"
+          exit 1
+
+      - name: Summary
+        if: success()
+        run: |
+          ALB_DNS=$(aws elbv2 describe-load-balancers \
+            --names catalyst-dev-alb \
+            --query 'LoadBalancers[0].DNSName' \
+            --output text)
+
+          echo "## Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Application URL:** http://$ALB_DNS" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Services:**" >> $GITHUB_STEP_SUMMARY
+          echo "- API: Running" >> $GITHUB_STEP_SUMMARY
+          echo "- UI: Running" >> $GITHUB_STEP_SUMMARY

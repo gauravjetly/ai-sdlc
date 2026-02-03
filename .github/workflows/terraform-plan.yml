@@ -1,0 +1,146 @@
+# Terraform Plan for Infrastructure Changes
+# Runs on PRs that modify infrastructure files
+
+name: Terraform Plan
+
+on:
+  pull_request:
+    paths:
+      - 'infrastructure/terraform/**'
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  TF_VAR_FILE: terraform.tfvars
+
+jobs:
+  terraform-plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infrastructure/terraform/environments/catalyst-dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.6.0"
+
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check -recursive
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: |
+          terraform init \
+            -backend-config="bucket=catalyst-terraform-state" \
+            -backend-config="key=catalyst-dev/terraform.tfstate" \
+            -backend-config="region=${{ env.AWS_REGION }}"
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -out=tfplan
+        continue-on-error: true
+
+      - name: Comment PR with Plan
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "${{ steps.plan.outputs.stdout }}"
+        with:
+          script: |
+            const output = `## Terraform Plan Results
+
+            #### Format Check: \`${{ steps.fmt.outcome }}\`
+            #### Initialization: \`${{ steps.init.outcome }}\`
+            #### Validation: \`${{ steps.validate.outcome }}\`
+            #### Plan: \`${{ steps.plan.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`terraform
+            ${process.env.PLAN}
+            \`\`\`
+
+            </details>
+
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+      - name: Save Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: infrastructure/terraform/environments/catalyst-dev/tfplan
+          retention-days: 5
+
+  terraform-apply:
+    name: Terraform Apply
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: catalyst-infrastructure
+    defaults:
+      run:
+        working-directory: infrastructure/terraform/environments/catalyst-dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.6.0"
+
+      - name: Terraform Init
+        run: |
+          terraform init \
+            -backend-config="bucket=catalyst-terraform-state" \
+            -backend-config="key=catalyst-dev/terraform.tfstate" \
+            -backend-config="region=${{ env.AWS_REGION }}"
+
+      - name: Download Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: infrastructure/terraform/environments/catalyst-dev
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+
+      - name: Output URLs
+        run: |
+          echo "## Infrastructure Updated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          terraform output -json | jq -r 'to_entries[] | "- **\(.key):** \(.value.value)"' >> $GITHUB_STEP_SUMMARY
