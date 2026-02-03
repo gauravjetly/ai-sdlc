@@ -100,13 +100,14 @@ Without these commands, projects won't appear in the Control Center dashboard at
 **Token Usage Estimation**:
 - **Requirements (BA)**: ~50K in, ~15K out (Sonnet) = $0.38
 - **Architecture (Jets)**: ~100K in, ~30K out (Opus) = $3.75
+- **UX Design**: ~80K in, ~25K out (Sonnet) = $0.61
 - **Development (Engineer)**: ~200K in, ~80K out (Sonnet) = $1.80
 - **Security**: ~80K in, ~20K out (Sonnet) = $0.54
 - **Testing (QA)**: ~100K in, ~30K out (Sonnet) = $0.75
 - **Deployment (Atlas)**: ~50K in, ~15K out (Sonnet) = $0.38
 - **Acceptance (Customer)**: ~40K in, ~10K out (Sonnet) = $0.27
 
-**Typical Project Cost**: $8-15 for AI tokens + infrastructure costs
+**Typical Project Cost**: $9-16 for AI tokens + infrastructure costs
 
 See "FinOps Integration - MANDATORY" section below for complete details.
 
@@ -127,16 +128,16 @@ User Request
      │
      ▼
 ┌─────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
-│   BA    │ → │ ARCHITECT│ → │ ENGINEER │ → │ SECURITY │
-│  Agent  │   │  (Jets)  │   │          │   │ (Review) │
+│   BA    │ → │ ARCHITECT│ → │    UX    │ → │ ENGINEER │
+│  Agent  │   │  (Jets)  │   │  Design  │   │          │
 └─────────┘   └──────────┘   └──────────┘   └──────────┘
                                                   │
      ┌────────────────────────────────────────────┘
      ▼
-┌─────────┐   ┌──────────┐   ┌──────────┐
-│   QA    │ → │  ATLAS   │ → │ CUSTOMER │ → ✅ Complete
-│ (Tests) │   │ (Deploy) │   │  (UAT)   │
-└─────────┘   └──────────┘   └──────────┘
+┌─────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
+│ SECURITY│ → │   QA     │ → │  ATLAS   │ → │ CUSTOMER │ → ✅ Complete
+│ (Review)│   │ (Tests)  │   │ (Deploy) │   │  (UAT)   │
+└─────────┘   └─────────┘   └──────────┘   └──────────┘
 ```
 
 ## Phase Responsibilities
@@ -145,11 +146,12 @@ User Request
 |-------|-------|-------|----------------|
 | 1 | BA Agent | Sonnet | Requirements, acceptance criteria |
 | 2 | Architect (Jets) | Opus | Architecture design, ADRs |
-| 3 | Software Engineer | Sonnet | Implementation, unit tests |
-| 4 | Security Agent | Sonnet | Security review (no deployment) |
-| 5 | QA Agent | Sonnet | Pre-deployment testing |
-| 6 | Atlas Agent | Sonnet | Deployment to staging/prod |
-| 7 | Customer Agent | Sonnet | Post-deployment acceptance |
+| **3** | **UX Agent** | **Sonnet** | **UX research, design system, wireframes, accessibility** |
+| 4 | Software Engineer | Sonnet | Implementation, unit tests |
+| 5 | Security Agent | Sonnet | Security review (no deployment) |
+| 6 | QA Agent | Sonnet | Pre-deployment testing |
+| 7 | Atlas Agent | Sonnet | Deployment to staging/prod |
+| 8 | Customer Agent | Sonnet | Post-deployment acceptance |
 | * | Tracker Agent | Haiku | Progress monitoring (parallel) |
 | **⚡** | **Ask Tom Agent** | **Opus** | **Problem-solving & root cause analysis (on-demand)** |
 
@@ -159,12 +161,12 @@ Classify incoming requests:
 
 | Type | Description | Full Workflow? |
 |------|-------------|----------------|
-| NEW_FEATURE | New functionality | ✅ All 7 phases |
-| BUG_FIX | Fix existing issue | Phases 3-7 |
-| ENHANCEMENT | Improve existing feature | Phases 2-7 |
-| MODERNIZATION | Refactor/upgrade | Phases 2-7 |
-| SECURITY_FIX | Security vulnerability | Phases 3-4, 6-7 |
-| HOTFIX | Critical production fix | Phases 3-4, 6-7 (expedited) |
+| NEW_FEATURE | New functionality | ✅ All 8 phases |
+| BUG_FIX | Fix existing issue | Phases 4-8 (skip UX if no UI changes) |
+| ENHANCEMENT | Improve existing feature | Phases 2-8 |
+| MODERNIZATION | Refactor/upgrade | Phases 2-8 |
+| SECURITY_FIX | Security vulnerability | Phases 4-5, 7-8 |
+| HOTFIX | Critical production fix | Phases 4-5, 7-8 (expedited) |
 
 ## Workflow Execution
 
@@ -202,6 +204,7 @@ Classify incoming requests:
 |-------|-------|--------|---------|-----------|
 | Requirements | BA Agent | ⏳ Pending | | |
 | Architecture | Architect | ⏳ Pending | | |
+| UX Design | UX Agent | ⏳ Pending | | |
 | Development | Engineer | ⏳ Pending | | |
 | Security Review | Security | ⏳ Pending | | |
 | Testing | QA Agent | ⏳ Pending | | |
@@ -211,6 +214,7 @@ Classify incoming requests:
 ## Deliverables
 - [ ] Requirements: `docs/sdlc/requirements/REQ-*.md`
 - [ ] Architecture: `docs/sdlc/architecture/ARCH-*.md`
+- [ ] UX Design: `docs/sdlc/ux/UX-*.md`
 - [ ] Code: `src/`
 - [ ] Security Review: `docs/sdlc/security/SECURITY-REVIEW-*.md`
 - [ ] Test Results: `docs/sdlc/testing/TEST-REPORT-*.md`
@@ -371,6 +375,12 @@ curl -s http://localhost:3030/api/refresh || echo "Dashboard refresh queued"
 - `docs/sdlc/architecture/ARCH-[ID].md`
 - `docs/sdlc/architecture/ADR-*.md`
 
+### UX Design
+- `docs/sdlc/ux/UX-RESEARCH-[ID].md`
+- `docs/sdlc/ux/DESIGN-SYSTEM-[ID].md`
+- `docs/sdlc/ux/WIREFRAMES-[ID].md`
+- `docs/sdlc/ux/components/` - Component library
+
 ### Implementation
 - `src/` - [description]
 - `tests/` - [X tests, Y% coverage]
@@ -435,6 +445,22 @@ Output expected:
 - docs/sdlc/architecture/ADR-*.md for key decisions
 ```
 
+### UX Agent
+```
+Use the ux-agent subagent to design the user experience.
+
+Context:
+- Tracking: docs/sdlc/tracking/SDLC-[ID].md
+- Requirements: docs/sdlc/requirements/REQ-[ID].md
+- Architecture: docs/sdlc/architecture/ARCH-[ID].md
+
+Output expected:
+- docs/sdlc/ux/UX-RESEARCH-[ID].md (user research, personas)
+- docs/sdlc/ux/DESIGN-SYSTEM-[ID].md (design system specs)
+- docs/sdlc/ux/WIREFRAMES-[ID].md (wireframes and mockups)
+- docs/sdlc/ux/components/ (component library)
+```
+
 ### Software Engineer
 ```
 Use the software-engineer subagent to implement the solution.
@@ -443,10 +469,12 @@ Context:
 - Tracking: docs/sdlc/tracking/SDLC-[ID].md
 - Requirements: docs/sdlc/requirements/REQ-[ID].md
 - Architecture: docs/sdlc/architecture/ARCH-[ID].md
+- UX Design: docs/sdlc/ux/DESIGN-SYSTEM-[ID].md
 
 Output expected:
 - src/ implementation following layered architecture
 - tests/ with >80% coverage
+- Implementation of UX design system
 - Updated tracking file
 ```
 
@@ -554,6 +582,9 @@ Ensure this structure exists:
 docs/sdlc/
 ├── requirements/     # BA Agent outputs
 ├── architecture/     # Architect Agent outputs
+├── ux/              # UX Agent outputs
+│   ├── components/  # Component library
+│   └── assets/      # Design assets
 ├── security/        # Security Agent outputs
 ├── testing/         # QA Agent outputs
 ├── deployments/     # DevOps/SRE Agent outputs
@@ -586,6 +617,7 @@ Use these exact agent names for registry commands:
 | Conductor | `conductor` |
 | BA Agent | `ba` |
 | Architect (Jets) | `jets` |
+| **UX Agent** | **`ux`** |
 | Software Engineer | `engineer` |
 | Security Agent | `security` |
 | QA Agent | `qa` |
@@ -610,6 +642,11 @@ Use these exact agent names for registry commands:
    Bash: ~/.claude/sdlc-registry/sdlc-registry.sh start "SDLC-20260115-001" "jets"
    Task: Invoke architect-jets
    Bash: ~/.claude/sdlc-registry/sdlc-registry.sh complete "SDLC-20260115-001" "jets" "docs/sdlc/architecture/ARCH-20260115-001.md"
+
+4. UX Design Phase:
+   Bash: ~/.claude/sdlc-registry/sdlc-registry.sh start "SDLC-20260115-001" "ux"
+   Task: Invoke ux-agent
+   Bash: ~/.claude/sdlc-registry/sdlc-registry.sh complete "SDLC-20260115-001" "ux" "docs/sdlc/ux/DESIGN-SYSTEM-20260115-001.md"
 
 ... (repeat for all phases)
 
@@ -666,12 +703,13 @@ The FinOps Agent tracks:
 | Conductor | Opus | 20K | 5K | $0.68 |
 | BA Agent | Sonnet | 50K | 15K | $0.38 |
 | Architect (Jets) | Opus | 100K | 30K | $3.75 |
+| **UX Agent** | **Sonnet** | **80K** | **25K** | **$0.61** |
 | Software Engineer | Sonnet | 200K | 80K | $1.80 |
 | Security Agent | Sonnet | 80K | 20K | $0.54 |
 | QA Agent | Sonnet | 100K | 30K | $0.75 |
 | Atlas Agent | Sonnet | 50K | 15K | $0.38 |
 | Customer Agent | Sonnet | 40K | 10K | $0.27 |
-| **TOTAL (Typical)** | | **640K** | **205K** | **$8.55** |
+| **TOTAL (Typical)** | | **720K** | **230K** | **$9.16** |
 
 ### Budget Management
 

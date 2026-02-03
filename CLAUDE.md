@@ -107,6 +107,13 @@ src/
 - [Integration requirements]
 - [Existing patterns to follow]
 
+### For UX Agent
+- [Design system preferences]
+- [Brand guidelines]
+- [Accessibility requirements (WCAG 2.1 AAA)]
+- [Target user personas]
+- [Performance budgets]
+
 ### For Software Engineer
 - [Coding standards specific to this project]
 - [Testing requirements]
