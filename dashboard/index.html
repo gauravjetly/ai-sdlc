@@ -2863,6 +2863,7 @@
       { id: 'conductor', name: 'Conductor', icon: 'assets/brand/icons/team-workflow.svg', color: '#0066cc', model: 'Opus', role: 'Orchestrator' },
       { id: 'ba', name: 'BA Agent', icon: 'assets/brand/icons/checklist.svg', color: '#0066cc', model: 'Sonnet', role: 'Requirements' },
       { id: 'jets', name: 'Jets', icon: 'assets/brand/icons/building-governance.svg', color: '#7b1fa2', model: 'Opus', role: 'Architecture' },
+      { id: 'ux', name: 'UX Agent', icon: 'assets/brand/icons/team-users.svg', color: '#e91e63', model: 'Sonnet', role: 'UX Design' },
       { id: 'engineer', name: 'Engineer', icon: 'assets/brand/icons/ai-chip.svg', color: '#0097a7', model: 'Sonnet', role: 'Development' },
       { id: 'security', name: 'Security', icon: 'assets/brand/icons/compliance.svg', color: '#d32f2f', model: 'Sonnet', role: 'Security' },
       { id: 'qa', name: 'QA Agent', icon: 'assets/brand/icons/data-workflow.svg', color: '#ff9800', model: 'Sonnet', role: 'Testing' },
@@ -2887,7 +2888,7 @@
       />
     );
 
-    const PIPELINE_AGENTS = ['ba', 'jets', 'engineer', 'security', 'qa', 'atlas', 'customer'];
+    const PIPELINE_AGENTS = ['ba', 'jets', 'ux', 'engineer', 'security', 'qa', 'atlas', 'customer'];
 
     // Value-Based Outcome Benchmarks (industry averages)
     const BENCHMARKS = {
@@ -5371,6 +5372,7 @@
           conductor: { count: 0, active: 0, label: 'Conductor', icon: 'assets/brand/icons/workflow-team.svg' },
           ba: { count: 0, active: 0, label: 'Requirements', icon: 'assets/brand/icons/checklist.svg' },
           jets: { count: 0, active: 0, label: 'Architecture', icon: 'assets/brand/icons/gear-integration.svg' },
+          ux: { count: 0, active: 0, label: 'UX Design', icon: 'assets/brand/icons/team-users.svg' },
           engineer: { count: 0, active: 0, label: 'Development', icon: 'assets/brand/icons/data-workflow.svg' },
           security: { count: 0, active: 0, label: 'Security', icon: 'assets/brand/icons/shield-badge.svg' },
           qa: { count: 0, active: 0, label: 'QA Testing', icon: 'assets/brand/icons/checkmark-badge.svg' },
@@ -6122,6 +6124,7 @@
                   {[
                     { phase: 'Requirements Gathering', icon: 'assets/brand/icons/checklist.svg', traditional: 8, ai: 0.5, agent: 'BA Agent', reason: 'AI extracts requirements from natural language, auto-generates user stories and acceptance criteria' },
                     { phase: 'Architecture Design', icon: 'assets/brand/icons/building-governance.svg', traditional: 16, ai: 1, agent: 'Jets (Architect)', reason: 'AI evaluates patterns, generates ADRs, and designs scalable architecture based on requirements' },
+                    { phase: 'UX Design', icon: 'assets/brand/icons/team-users.svg', traditional: 12, ai: 0.6, agent: 'UX Agent', reason: 'AI designs user experiences with WCAG 2.1 AAA accessibility, creates design systems, and ensures consistency' },
                     { phase: 'Development', icon: 'assets/brand/icons/ai-chip.svg', traditional: 24, ai: 2, agent: 'Software Engineer', reason: 'AI generates production-ready code following SOLID principles with comprehensive error handling' },
                     { phase: 'Security Review', icon: 'assets/brand/icons/compliance.svg', traditional: 8, ai: 0.3, agent: 'Security Agent', reason: 'Automated SAST, DAST, dependency scanning - no manual code review needed' },
                     { phase: 'Testing & QA', icon: 'assets/brand/icons/data-workflow.svg', traditional: 16, ai: 0.5, agent: 'QA Agent', reason: 'Auto-generated unit, integration, and E2E tests with 92%+ coverage' },
@@ -6241,6 +6244,7 @@
                   {[
                     { icon: 'assets/brand/icons/checklist.svg', title: 'Clear Requirements', desc: 'BA Agent ensures requirements are complete and unambiguous before development starts' },
                     { icon: 'assets/brand/icons/building-governance.svg', title: 'Solid Architecture', desc: 'Jets designs scalable, maintainable architecture following proven patterns' },
+                    { icon: 'assets/brand/icons/team-users.svg', title: 'World-Class UX', desc: 'UX Agent ensures WCAG 2.1 AAA accessibility, modern design, and consistent user experience' },
                     { icon: 'assets/brand/icons/ai-chip.svg', title: 'Clean Code', desc: 'Engineer follows SOLID principles, writes comprehensive error handling' },
                     { icon: 'assets/brand/icons/compliance.svg', title: 'Security-First', desc: 'Security Agent scans for vulnerabilities before any code is merged' },
                     { icon: 'assets/brand/icons/data-workflow.svg', title: 'Test-Driven', desc: 'QA Agent generates comprehensive tests achieving 92%+ coverage' },
@@ -6808,8 +6812,9 @@
         agents: [
           { name: 'Conductor', icon: 'assets/brand/icons/team-workflow.svg', model: 'Opus', desc: 'Orchestrates the entire SDLC workflow. Coordinates all agents and handles blockers.', when: 'Automatically invoked when you run /sdlc-start' },
           { name: 'BA Agent', icon: 'assets/brand/icons/checklist.svg', model: 'Sonnet', desc: 'Gathers requirements, creates user stories, defines acceptance criteria.', when: 'First phase of any new feature or change' },
-          { name: 'Jets (Architect)', icon: 'assets/brand/icons/building-governance.svg', model: 'Opus', desc: 'Designs system architecture, creates ADRs, evaluates technology choices.', when: 'After requirements are clear, before coding begins' },
-          { name: 'Software Engineer', icon: 'assets/brand/icons/ai-chip.svg', model: 'Sonnet', desc: 'Implements features following clean architecture and SOLID principles.', when: 'After architecture is approved' },
+          { name: 'Jets (Architect)', icon: 'assets/brand/icons/building-governance.svg', model: 'Opus', desc: 'Designs system architecture, creates ADRs, evaluates technology choices.', when: 'After requirements are clear, before UX design' },
+          { name: 'UX Agent', icon: 'assets/brand/icons/team-users.svg', model: 'Sonnet', desc: 'UX research, design systems, wireframes, WCAG 2.1 AAA accessibility.', when: 'After architecture design, before implementation' },
+          { name: 'Software Engineer', icon: 'assets/brand/icons/ai-chip.svg', model: 'Sonnet', desc: 'Implements features following clean architecture and SOLID principles.', when: 'After UX design is complete' },
           { name: 'Security Agent', icon: 'assets/brand/icons/compliance.svg', model: 'Sonnet', desc: 'SAST, DAST, dependency audit, compliance validation.', when: 'After code is written, before QA' },
           { name: 'QA Agent', icon: 'assets/brand/icons/data-workflow.svg', model: 'Sonnet', desc: 'Integration testing, E2E testing, performance validation.', when: 'After security review passes' },
           { name: 'Atlas (DevOps)', icon: 'assets/brand/icons/network-activity.svg', model: 'Sonnet', desc: 'Deployment, infrastructure, operational readiness.', when: 'After QA passes, ready for deployment' },
@@ -7136,6 +7141,7 @@
           { name: 'Conductor', model: 'Opus', role: 'Meta-orchestrator', desc: 'Classifies requests, tracks progress, orchestrates workflow, reports status' },
           { name: 'BA Agent', model: 'Sonnet', role: 'Requirements', desc: 'Gathers requirements, creates user stories, defines acceptance criteria' },
           { name: 'Architect (Jets)', model: 'Opus', role: 'Architecture', desc: 'System design, ADRs, technology decisions, AI-native patterns' },
+          { name: 'UX Agent', model: 'Sonnet', role: 'UX Design', desc: 'User research, design systems, WCAG 2.1 AAA accessibility, wireframes' },
           { name: 'Software Engineer', model: 'Sonnet', role: 'Implementation', desc: 'Code generation, TDD, clean architecture, SOLID principles' },
           { name: 'Security Agent', model: 'Sonnet', role: 'Security Review', desc: 'SAST, DAST, dependency audit, compliance validation' },
           { name: 'QA Agent', model: 'Sonnet', role: 'Testing', desc: 'Integration testing, E2E, performance validation' },
@@ -7148,6 +7154,7 @@
         workflow: [
           { phase: 'Requirements', agent: 'BA Agent', output: 'REQ-*.md' },
           { phase: 'Architecture', agent: 'Architect', output: 'ARCH-*.md, ADR-*.md' },
+          { phase: 'UX Design', agent: 'UX Agent', output: 'UX-RESEARCH-*.md, DESIGN-SYSTEM-*.md' },
           { phase: 'Implementation', agent: 'Engineer', output: 'src/, tests/' },
           { phase: 'Security', agent: 'Security', output: 'SECURITY-REVIEW-*.md' },
           { phase: 'Testing', agent: 'QA Agent', output: 'TEST-REPORT-*.md' },
@@ -7331,6 +7338,7 @@
                           agent.name === 'Conductor' ? 'assets/brand/icons/team-workflow.svg' :
                           agent.name === 'BA Agent' ? 'assets/brand/icons/checklist.svg' :
                           agent.name === 'Architect (Jets)' ? 'assets/brand/icons/building-governance.svg' :
+                          agent.name === 'UX Agent' ? 'assets/brand/icons/team-users.svg' :
                           agent.name === 'Software Engineer' ? 'assets/brand/icons/ai-chip.svg' :
                           agent.name === 'Security Agent' ? 'assets/brand/icons/compliance.svg' :
                           agent.name === 'QA Agent' ? 'assets/brand/icons/data-workflow.svg' :
