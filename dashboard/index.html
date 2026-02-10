@@ -4873,6 +4873,31 @@
       );
     }
 
+    // EmbeddedView Component - Renders external views in an iframe with security sandbox
+    function EmbeddedView({ src, title }) {
+      return (
+        <div style={{
+          width: '100%',
+          height: 'calc(100vh - 120px)',
+          border: 'none',
+          borderRadius: '8px',
+          overflow: 'hidden'
+        }}>
+          <iframe
+            src={src}
+            title={title}
+            style={{
+              width: '100%',
+              height: '100%',
+              border: 'none',
+              borderRadius: '8px'
+            }}
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
+          />
+        </div>
+      );
+    }
+
     function App() {
       const [activeView, setActiveView] = useState('executive');
       const [projects, setProjects] = useState([]);
@@ -4895,10 +4920,23 @@
       const [selectedAgent, setSelectedAgent] = useState(null);
       const [toasts, setToasts] = useState([]);
 
-      // Theme effect - apply and persist
+      // Theme effect - apply and persist, broadcast to iframes
       useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('sdlc-theme', theme);
+
+        // Broadcast theme change to all embedded iframes
+        const iframes = document.querySelectorAll('iframe');
+        iframes.forEach(iframe => {
+          try {
+            iframe.contentWindow?.postMessage({
+              type: 'THEME_CHANGE',
+              theme: theme
+            }, '*');
+          } catch (e) {
+            console.warn('Failed to send theme message to iframe:', e);
+          }
+        });
       }, [theme]);
 
       const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
@@ -5207,6 +5245,8 @@
                   { id: 'executive', icon: 'assets/brand/icons/calculator.svg', label: 'Executive' },
                   { id: 'value', icon: 'assets/brand/icons/checkmark-badge.svg', label: 'Value & ROI' },
                   { id: 'projects', icon: 'assets/brand/icons/checklist.svg', label: 'Projects' },
+                  { id: 'scheduling', icon: 'assets/brand/icons/checklist.svg', label: 'Scheduling', badge: 'New' },
+                  { id: 'tool-adoption', icon: 'assets/brand/icons/gear-integration.svg', label: 'Tool Adoption', badge: 'New' },
                   { id: 'timeline', icon: 'assets/brand/icons/data-flow.svg', label: 'Timeline', badge: 'New' },
                   { id: 'analytics', icon: 'assets/brand/icons/gear-integration.svg', label: 'Analytics' },
                   { id: 'compare', icon: 'assets/brand/icons/data-workflow.svg', label: 'Compare' },
@@ -5240,7 +5280,7 @@
           <main className="main-content">
             <div className="top-bar">
               <h1 className="page-title">
-                {{ executive: 'Executive Dashboard', value: 'Value & ROI', projects: 'Projects', analytics: 'Analytics', agents: 'Agents', learning: 'AI Learning & Cheat Codes', activity: 'Activity', settings: 'Settings', help: 'Help & Documentation' }[activeView]}
+                {{ executive: 'Executive Dashboard', value: 'Value & ROI', projects: 'Projects', scheduling: 'Multi-Project Scheduling', 'tool-adoption': 'Tool Adoption Analytics', timeline: 'Timeline', analytics: 'Analytics', compare: 'Compare', agents: 'Agents', integrations: 'Integrations', learning: 'AI Learning & Cheat Codes', activity: 'Activity', settings: 'Settings', help: 'Help & Documentation' }[activeView]}
               </h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Last updated: {lastUpdate.toLocaleTimeString()}</span>
@@ -5272,6 +5312,8 @@
 
               {activeView === 'value' && <ValueROI projects={projects} costs={costs} valueMetrics={valueMetrics} />}
               {activeView === 'projects' && <Projects projects={projects} costs={costs} onProjectClick={setSelectedProject} />}
+              {activeView === 'scheduling' && <EmbeddedView src="/platform/scheduling?embed=true" title="Multi-Project Scheduling" />}
+              {activeView === 'tool-adoption' && <EmbeddedView src="/platform/analytics?embed=true" title="Tool Adoption Analytics" />}
               {activeView === 'timeline' && <GanttTimeline projects={projects} />}
               {activeView === 'analytics' && <Analytics costs={costs} projects={projects} />}
               {activeView === 'compare' && <CompareProjectsView projects={projects} costs={costs} />}

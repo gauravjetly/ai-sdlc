@@ -747,11 +747,89 @@ function sendHeartbeat() {
 }
 
 // ============================================================================
+// REVERSE PROXY UTILITY
+// ============================================================================
+
+/**
+ * Proxy a request to a target server
+ * Forwards method, headers, body and pipes the response back to the client
+ *
+ * @param {http.IncomingMessage} req - Source request
+ * @param {http.ServerResponse} res - Response to client
+ * @param {string} targetUrl - Target server URL (e.g., 'http://localhost:3000')
+ * @param {string} targetPath - Optional path override (defaults to req.url)
+ */
+function proxyRequest(req, res, targetUrl, targetPath) {
+  const path = targetPath !== undefined ? targetPath : req.url;
+  const target = new URL(path, targetUrl);
+
+  // Prepare proxy request options
+  const options = {
+    hostname: target.hostname,
+    port: parseInt(target.port) || (target.protocol === 'https:' ? 443 : 80),
+    path: target.pathname + target.search,
+    method: req.method,
+    headers: {}
+  };
+
+  // Create proxy request to target server
+  const proxyReq = http.request(options, (proxyRes) => {
+    // Forward status code and headers from target to client
+    res.writeHead(proxyRes.statusCode, proxyRes.headers);
+
+    // Pipe response from target to client
+    proxyRes.pipe(res);
+  });
+
+  // Handle proxy request errors (connection failures, timeouts)
+  proxyReq.on('error', (error) => {
+    console.error(`  [${new Date().toISOString().slice(11,19)}] Proxy error (${targetUrl}):`, error.message);
+
+    // Return 502 Bad Gateway if target is unreachable
+    if (!res.headersSent) {
+      res.writeHead(502, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        error: 'Bad Gateway',
+        message: 'Target service is unavailable',
+        target: targetUrl
+      }));
+    }
+  });
+
+  // Pipe request body from client to target
+  req.pipe(proxyReq);
+}
+
+// ============================================================================
 // HTTP SERVER
 // ============================================================================
 
 // Create HTTP server
 const server = http.createServer((req, res) => {
+  // ============================================================================
+  // REVERSE PROXY ROUTES - Phase 1 Dashboard Integration
+  // ============================================================================
+  // Check proxy routes FIRST, before setting any headers
+
+  // Proxy to Platform API (port 3000)
+  // Routes: /api/v1/* -> http://localhost:3000/api/v1/*
+  if (req.url.startsWith('/api/v1')) {
+    proxyRequest(req, res, 'http://localhost:3000');
+    return;
+  }
+
+  // Proxy to Vite dev server (port 3001)
+  // Routes: /platform/* -> http://localhost:3001/* (strip /platform prefix)
+  if (req.url.startsWith('/platform')) {
+    const targetPath = req.url.substring('/platform'.length) || '/';
+    proxyRequest(req, res, 'http://localhost:3001', targetPath);
+    return;
+  }
+
+  // ============================================================================
+  // CORS HEADERS - For non-proxy routes
+  // ============================================================================
+
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -1068,6 +1146,49 @@ const server = http.createServer((req, res) => {
 });
 
 // ============================================================================
+// WEBSOCKET UPGRADE SUPPORT - For Vite HMR
+// ============================================================================
+
+server.on('upgrade', (req, socket, head) => {
+  // Handle WebSocket upgrades for Vite HMR
+  if (req.url.startsWith('/platform')) {
+    const target = new URL('http://localhost:3001');
+
+    // Create proxy connection to Vite dev server
+    const proxySocket = http.request({
+      hostname: target.hostname,
+      port: target.port,
+      path: req.url.substring('/platform'.length) || '/',
+      method: req.method,
+      headers: req.headers
+    });
+
+    proxySocket.on('upgrade', (proxyRes, proxySocketUpgrade, proxyHead) => {
+      // Forward upgrade response to client
+      socket.write(`HTTP/${proxyRes.httpVersion} ${proxyRes.statusCode} ${proxyRes.statusMessage}\r\n`);
+      Object.keys(proxyRes.headers).forEach(key => {
+        socket.write(`${key}: ${proxyRes.headers[key]}\r\n`);
+      });
+      socket.write('\r\n');
+
+      // Pipe data between client and target
+      proxySocketUpgrade.pipe(socket);
+      socket.pipe(proxySocketUpgrade);
+    });
+
+    proxySocket.on('error', (error) => {
+      console.error(`  [${new Date().toISOString().slice(11,19)}] WebSocket proxy error:`, error.message);
+      socket.destroy();
+    });
+
+    proxySocket.end(head);
+  } else {
+    // Not a proxy WebSocket, close it
+    socket.destroy();
+  }
+});
+
+// ============================================================================
 // SERVER STARTUP
 // ============================================================================
 
@@ -1084,6 +1205,10 @@ server.listen(PORT, async () => {
   console.log(`  API Activity:  http://localhost:${PORT}/api/activity`);
   console.log(`  API Autofix:   http://localhost:${PORT}/api/autofix`);
   console.log(`  API Refresh:   http://localhost:${PORT}/api/refresh`);
+  console.log('');
+  console.log('  Proxy Routes (Phase 1 Integration):');
+  console.log(`    /api/v1/*    -> http://localhost:3000 (Platform API)`);
+  console.log(`    /platform/*  -> http://localhost:3001 (Vite Dev Server)`);
   console.log('');
   console.log('  Registry: ' + (fs.existsSync(REGISTRY_FILE) ? 'Connected' : 'Not initialized'));
   console.log('  FinOps:   ' + (fs.existsSync(FINOPS_DIR) ? 'Connected' : 'No cost data'));

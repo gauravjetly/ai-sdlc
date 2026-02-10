@@ -13,6 +13,22 @@ export const catalystColors = {
   paper: '#FFFFFF',        // White
 };
 
+// Dark theme colors matching dashboard
+export const catalystDarkColors = {
+  primary: '#00A3E0',      // Deltek Cyan (same for consistency)
+  secondary: '#58a6ff',    // Lighter blue for dark mode
+  accent: '#FF6B35',       // Deltek Orange Accent
+  success: '#3fb950',      // GitHub-style green
+  info: '#58a6ff',         // Light blue
+  warning: '#d29922',      // Amber
+  error: '#f85149',        // Red
+  background: '#0d1117',   // Dark background
+  paper: '#161b22',        // Dark paper
+  border: '#30363d',       // Dark border
+  textPrimary: '#e6edf3',  // Light text
+  textSecondary: '#8b949e', // Gray text
+};
+
 export const theme = createTheme({
   palette: {
     mode: 'light',
