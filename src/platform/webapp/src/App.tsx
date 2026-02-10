@@ -4,7 +4,7 @@ import { theme } from './styles/theme';
 import './styles/global.css';
 
 // Set page title
-document.title = 'Deltek Catalyst - Control Center';
+document.title = 'AI-SDLC - Multi-Project Control Center';
 
 // Pages
 import Dashboard from './pages/Dashboard';
