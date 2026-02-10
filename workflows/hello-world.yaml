@@ -1,0 +1,23 @@
+workflow:
+  name: deploy-hello-world
+  target_cloud: aws
+  region: us-east-1
+
+  resources:
+    - type: virtual_network
+      name: hello-vpc
+      cidr: "10.0.0.0/16"
+
+    - type: kubernetes_cluster
+      name: hello-eks
+      version: "1.28"
+      instance_type: small_compute
+      node_count: 2
+      network: hello-vpc
+
+    - type: container_deployment
+      name: hello-app
+      cluster: hello-eks
+      image: "nginx:latest"
+      replicas: 2
+      port: 80

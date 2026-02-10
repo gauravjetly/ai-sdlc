@@ -7,8 +7,9 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
+  provider      = "prisma-client-js"
+  output        = "../node_modules/.prisma/client"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 // =============================================
@@ -684,4 +685,80 @@ enum LayerDeploymentStatus {
   deployed
   failed
   rolled_back
+}
+
+// =============================================
+// MULTI-PROJECT SCHEDULING SYSTEM (v2)
+// =============================================
+
+model ScheduledProject {
+  id                    String   @id @default(uuid())
+  name                  String   @db.VarChar(200)
+  description           String?  @db.Text
+  deliveryDate          DateTime @map("delivery_date") @db.Timestamptz
+  scheduledStartDate    DateTime? @map("scheduled_start_date") @db.Timestamptz
+  status                ProjectStatusEnum @default(draft)
+  priority              ProjectPriorityEnum @default(NORMAL)
+  tags                  String[] @default([])
+  estimatedEffortHours  Float?   @map("estimated_effort_hours")
+  actualEffortHours     Float    @default(0) @map("actual_effort_hours")
+  createdBy             String   @db.VarChar(100) @map("created_by")
+  createdAt             DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt             DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  completedAt           DateTime? @map("completed_at") @db.Timestamptz
+
+  // Relations
+  phases                ProjectPhaseRecord[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([deliveryDate])
+  @@index([createdBy])
+  @@map("scheduled_projects")
+}
+
+model ProjectPhaseRecord {
+  id                String   @id @default(uuid())
+  projectId         String   @map("project_id")
+  phase             String   @db.VarChar(20)
+  status            PhaseStatusEnum @default(pending)
+  assignedAgentId   String?  @map("assigned_agent_id") @db.VarChar(100)
+  startedAt         DateTime? @map("started_at") @db.Timestamptz
+  completedAt       DateTime? @map("completed_at") @db.Timestamptz
+  outputArtifacts   Json     @default("[]") @map("output_artifacts") @db.JsonB
+  notes             String?  @db.Text
+  durationMinutes   Int?     @map("duration_minutes")
+
+  project           ScheduledProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, phase])
+  @@index([status])
+  @@index([assignedAgentId])
+  @@index([projectId])
+  @@map("project_phases")
+}
+
+enum ProjectStatusEnum {
+  draft
+  scheduled
+  in_progress
+  completed
+  cancelled
+  blocked
+}
+
+enum ProjectPriorityEnum {
+  LOW
+  NORMAL
+  HIGH
+  CRITICAL
+}
+
+enum PhaseStatusEnum {
+  pending
+  in_progress
+  completed
+  failed
+  skipped
+  blocked
 }

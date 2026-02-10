@@ -1,0 +1,204 @@
+# AWS Configuration
+# This file defines default settings for AWS resources
+
+aws:
+  # Default region if not specified
+  default_region: us-east-1
+
+  # AWS CLI profile to use (if not using access keys)
+  default_profile: default
+
+  # SDK retry configuration
+  retry_attempts: 3
+  timeout: 300000  # 5 minutes
+
+  # VPC Configuration Defaults
+  vpc:
+    enable_dns_hostnames: true
+    enable_dns_support: true
+    enable_flow_logs: false
+    cidr_block: 10.0.0.0/16
+
+  # EKS Configuration Defaults
+  eks:
+    cluster_version: "1.28"
+
+    # Node group instance types by size
+    node_group_instance_types:
+      small: ["t3.medium"]
+      medium: ["t3.large", "m5.large"]
+      large: ["t3.xlarge", "m5.xlarge"]
+      xlarge: ["m5.2xlarge", "m5.4xlarge"]
+
+    # Addons to install
+    addons:
+      - name: vpc-cni
+        version: latest
+      - name: coredns
+        version: latest
+      - name: kube-proxy
+        version: latest
+
+    # Logging configuration
+    logging:
+      enabled: true
+      types:
+        - api
+        - audit
+        - authenticator
+        - controllerManager
+        - scheduler
+
+  # RDS Configuration Defaults
+  rds:
+    # Engine versions
+    engine_versions:
+      postgresql: "15.4"
+      mysql: "8.0.35"
+      oracle: "19.0.0.0"
+
+    # Instance classes
+    instance_classes:
+      small: db.t3.micro
+      medium: db.t3.medium
+      large: db.r5.large
+      xlarge: db.r5.xlarge
+
+    # Backup configuration
+    backup_retention_days: 7
+    backup_window: "03:00-04:00"
+    maintenance_window: "sun:04:00-sun:05:00"
+
+    # Default storage
+    storage_type: gp3
+    allocated_storage: 20  # GB
+    max_allocated_storage: 100  # GB (auto-scaling)
+
+    # Security
+    storage_encrypted: true
+    deletion_protection: false  # Set to true for production
+    skip_final_snapshot: true   # Set to false for production
+
+  # S3 Configuration Defaults
+  s3:
+    # Bucket naming
+    bucket_prefix: "ai-platform"
+
+    # Security defaults
+    versioning_enabled: false
+    encryption_enabled: true
+    encryption_algorithm: AES256
+    public_access_blocked: true
+
+    # Lifecycle policies
+    lifecycle_policies:
+      - name: archive-old-data
+        enabled: false
+        transition_to_ia_days: 30
+        transition_to_glacier_days: 90
+        expiration_days: 365
+
+  # EC2 Configuration Defaults
+  ec2:
+    # AMI selection (Amazon Linux 2023)
+    ami_name_pattern: "al2023-ami-*"
+
+    # Instance types
+    instance_types:
+      small: t3.micro
+      medium: t3.medium
+      large: t3.large
+      xlarge: t3.xlarge
+
+    # Storage
+    root_volume_size: 30  # GB
+    root_volume_type: gp3
+
+    # Monitoring
+    detailed_monitoring: false
+
+  # Cost optimization
+  cost_optimization:
+    # Tag all resources for cost tracking
+    enable_cost_allocation_tags: true
+
+    # Resource tags
+    required_tags:
+      - ManagedBy
+      - Environment
+      - Project
+      - CostCenter
+
+    # Budget alerts
+    budget_alert_threshold_usd: 100
+
+  # Security configuration
+  security:
+    # Enable AWS Config for compliance
+    enable_config: false
+
+    # Enable CloudTrail for auditing
+    enable_cloudtrail: false
+
+    # Enable GuardDuty for threat detection
+    enable_guardduty: false
+
+    # Security groups
+    default_security_group_rules:
+      ingress:
+        - description: "Allow HTTPS"
+          port: 443
+          protocol: tcp
+          cidr: 0.0.0.0/0
+      egress:
+        - description: "Allow all outbound"
+          port: 0
+          protocol: -1
+          cidr: 0.0.0.0/0
+
+  # Tagging strategy
+  tags:
+    managed_by: "ai-platform"
+    platform_version: "1.0.0"
+    automation: "true"
+
+# Region-specific configurations
+regions:
+  us-east-1:
+    availability_zones: ["us-east-1a", "us-east-1b", "us-east-1c"]
+    supports_eks: true
+    supports_rds: true
+
+  us-west-2:
+    availability_zones: ["us-west-2a", "us-west-2b", "us-west-2c"]
+    supports_eks: true
+    supports_rds: true
+
+  eu-west-1:
+    availability_zones: ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+    supports_eks: true
+    supports_rds: true
+
+# IAM Roles and Policies
+iam:
+  # EKS cluster role
+  eks_cluster_role:
+    name: ai-platform-eks-cluster-role
+    policies:
+      - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+
+  # EKS node role
+  eks_node_role:
+    name: ai-platform-eks-node-role
+    policies:
+      - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+      - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+      - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+
+# Limits and quotas
+limits:
+  max_vpcs_per_region: 5
+  max_subnets_per_vpc: 20
+  max_eks_clusters_per_region: 10
+  max_rds_instances_per_region: 40
+  max_s3_buckets: 100

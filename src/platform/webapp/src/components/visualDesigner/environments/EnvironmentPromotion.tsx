@@ -30,14 +30,16 @@ import {
   DialogActions,
   TextField,
   CircularProgress,
+  alpha,
+} from '@mui/material';
+import {
   Timeline,
   TimelineItem,
   TimelineSeparator,
   TimelineConnector,
   TimelineContent,
   TimelineDot,
-  alpha,
-} from '@mui/material';
+} from '@mui/lab';
 import {
   ArrowForward as ArrowIcon,
   CheckCircle as SuccessIcon,

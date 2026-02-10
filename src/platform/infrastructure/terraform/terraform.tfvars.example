@@ -1,0 +1,69 @@
+# =====================================================
+# CATALYST INFRASTRUCTURE DESIGNER - TERRAFORM VARIABLES
+# Copy this file to terraform.tfvars and update with your values
+# =====================================================
+
+# AWS Configuration
+aws_region     = "us-east-1"
+aws_account_id = "123456789012"  # Replace with your Catalyst AWS account ID
+
+# Project Configuration
+project_name = "catalyst"
+environment  = "dev"
+
+# Networking
+vpc_cidr             = "10.0.0.0/16"
+public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnet_cidrs = ["10.0.10.0/24", "10.0.11.0/24"]
+
+# Database Configuration
+db_instance_class           = "db.t3.micro"
+db_allocated_storage        = 20
+db_engine_version           = "15.4"
+db_name                     = "catalyst_platform"
+db_username                 = "catalyst_admin"
+db_password                 = "CHANGE_ME_STRONG_PASSWORD"  # Use AWS Secrets Manager in production
+db_backup_retention_period  = 7
+db_multi_az                 = false  # Set to true for production
+
+# Redis Configuration
+redis_node_type        = "cache.t3.micro"
+redis_num_cache_nodes  = 1
+redis_engine_version   = "7.0"
+
+# ECS API Configuration
+api_cpu            = 512    # 0.5 vCPU
+api_memory         = 1024   # 1 GB
+api_desired_count  = 2
+api_container_port = 3000
+
+# ECS UI Configuration
+ui_cpu            = 256   # 0.25 vCPU
+ui_memory         = 512   # 512 MB
+ui_desired_count  = 2
+ui_container_port = 80
+
+# Auto Scaling
+api_autoscaling_min   = 1
+api_autoscaling_max   = 10
+ui_autoscaling_min    = 1
+ui_autoscaling_max    = 10
+cpu_target_value      = 70
+memory_target_value   = 80
+
+# Application Configuration
+jwt_secret = "CHANGE_ME_RANDOM_STRING"  # Use AWS Secrets Manager in production
+
+# Domain Configuration (Optional - leave empty to use default ALB URLs)
+domain_name      = ""  # e.g., "catalyst.example.com"
+route53_zone_id  = ""  # Your Route53 hosted zone ID
+
+# Monitoring
+alert_email = "devops@example.com"  # Email for CloudWatch alerts
+
+# Additional Tags
+additional_tags = {
+  Team       = "DevOps"
+  CostCenter = "Engineering"
+  Compliance = "Internal"
+}

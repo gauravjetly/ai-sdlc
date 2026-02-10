@@ -3,10 +3,10 @@
  * Types for layer management UI components
  */
 
-import { LayerType, LayerStatus, Environment } from '../contexts/DesignWizardContext';
-
-// Re-export for convenience
-export { LayerType, LayerStatus, Environment };
+// Define types locally to avoid circular dependency issues
+export type LayerType = 'network' | 'platform' | 'devops' | 'fullstack';
+export type LayerStatus = 'pending' | 'complete' | 'deployed' | 'failed';
+export type Environment = 'dev' | 'staging' | 'prod';
 
 /**
  * Deployment status for a layer

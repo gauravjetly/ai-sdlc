@@ -1,0 +1,91 @@
+# OCI Deployment Example
+# This workflow deploys a full-stack application to Oracle Cloud Infrastructure
+#
+# To deploy:
+#   1. Set environment variable: export OCI_COMPARTMENT_ID="your-compartment-ocid"
+#   2. Run: npm run build && node dist/cli/platform-cli.js deploy examples/workflow-oci-demo.yaml
+#
+# Cost estimate: ~$200/month
+
+workflow:
+  name: fullstack-app-oci
+  target_cloud: oci
+  region: us-ashburn-1
+
+  # OCI-specific configuration
+  oci:
+    compartment_id: ${OCI_COMPARTMENT_ID}  # From environment variable
+    profile: DEFAULT  # ~/.oci/config profile
+
+  resources:
+    # 1. Virtual Cloud Network (VCN)
+    - type: virtual_network
+      name: app-network
+      cidr: 10.0.0.0/16
+      enable_flow_logs: true
+      dns_enabled: true
+      tags:
+        Environment: production
+        Project: demo-app
+        CostCenter: engineering
+
+    # 2. Oracle Kubernetes Engine (OKE) Cluster
+    - type: kubernetes_cluster
+      name: app-cluster
+      version: v1.28.2
+      network: app-network
+      node_count: 3
+      instance_type: medium_compute  # VM.Standard2.4 (4 OCPUs, 60GB RAM)
+      enable_autoscaling: true
+      min_nodes: 2
+      max_nodes: 10
+      enable_logging: true
+      enable_monitoring: true
+
+    # 3. Autonomous Database (Oracle)
+    - type: managed_database
+      name: app-database
+      engine: oracle
+      version: 19c
+      instance_class: medium_db  # 2 OCPUs
+      storage_size_gb: 100
+      network: app-network
+      high_availability: true
+      backup_retention_days: 30
+      encryption_enabled: true
+
+    # 4. Object Storage Bucket
+    - type: object_storage
+      name: app-assets-bucket
+      versioning_enabled: true
+      encryption_enabled: true
+      public_access_blocked: true
+
+    # 5. Application Deployment
+    - type: container_deployment
+      name: web-app
+      cluster: app-cluster
+      image: nginx:latest  # Replace with your image
+      replicas: 5
+      port: 8080
+      environment_variables:
+        DATABASE_HOST: "{{app-database.endpoint}}"
+        STORAGE_BUCKET: "{{app-assets-bucket.name}}"
+        ENVIRONMENT: "production"
+      resource_limits:
+        cpu: "500m"
+        memory: "512Mi"
+
+    # 6. API Service Deployment
+    - type: container_deployment
+      name: api-service
+      cluster: app-cluster
+      image: mycompany/api:v1.0.0
+      replicas: 3
+      port: 3000
+      environment_variables:
+        DATABASE_URL: "{{app-database.endpoint}}"
+        CACHE_ENABLED: "true"
+      resource_limits:
+        cpu: "1"
+        memory: "1Gi"

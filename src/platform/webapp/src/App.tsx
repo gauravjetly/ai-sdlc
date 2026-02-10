@@ -16,6 +16,7 @@ import SecurityCenter from './pages/SecurityCenter';
 import Environments from './pages/Environments';
 import InfrastructureDesigner from './pages/InfrastructureDesigner';
 import VisualDesigner from './pages/VisualDesigner';
+import Scheduling from './pages/Scheduling';
 
 // Components
 import Header from './components/Header';
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/deploy" element={<DeploymentWizard />} />
                 <Route path="/designer" element={<InfrastructureDesigner />} />
                 <Route path="/visual-designer" element={<VisualDesigner />} />
+                <Route path="/scheduling" element={<Scheduling />} />
                 <Route path="/resources" element={<CloudResources />} />
                 <Route path="/agents" element={<AgentControl />} />
                 <Route path="/costs" element={<CostOptimization />} />

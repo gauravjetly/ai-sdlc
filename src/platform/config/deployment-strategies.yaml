@@ -1,0 +1,182 @@
+# Deployment Strategy Configurations
+# Default configurations for each deployment strategy
+
+# Rolling Deployment Strategy
+rolling:
+  max_unavailable: 20%  # Maximum percentage of pods that can be unavailable during update
+  max_surge: 20%        # Maximum percentage of pods that can be created above desired count
+  progress_deadline_seconds: 600  # Maximum time for deployment to make progress
+  min_ready_seconds: 10  # Minimum time pod must be ready before considered available
+
+  # Health check defaults
+  health_check:
+    interval_seconds: 5
+    timeout_seconds: 3
+    failure_threshold: 3
+    success_threshold: 1
+
+# Blue-Green Deployment Strategy
+blue_green:
+  monitoring_period_seconds: 300  # 5 minutes - Time to monitor green before finalizing
+  auto_rollback_on_error: true    # Automatically rollback if errors detected
+  cleanup_delay_seconds: 3600     # 1 hour - Time before cleaning up old environment
+
+  # Smoke tests to run before traffic switch
+  smoke_tests:
+    - name: "health_check"
+      endpoint: "/health"
+      method: "GET"
+      expected_status: 200
+      timeout_ms: 5000
+
+    - name: "readiness_check"
+      endpoint: "/ready"
+      method: "GET"
+      expected_status: 200
+      timeout_ms: 5000
+
+    - name: "api_version"
+      endpoint: "/api/version"
+      method: "GET"
+      expected_status: 200
+      timeout_ms: 5000
+
+# Canary Deployment Strategy
+canary:
+  # Progressive rollout stages
+  stages:
+    - traffic_percent: 5
+      duration_seconds: 600   # 10 minutes at 5% traffic
+
+    - traffic_percent: 25
+      duration_seconds: 600   # 10 minutes at 25% traffic
+
+    - traffic_percent: 50
+      duration_seconds: 600   # 10 minutes at 50% traffic
+
+    - traffic_percent: 100
+      duration_seconds: 0     # Full rollout
+
+  # Metric thresholds for auto-promotion/rollback
+  metrics:
+    error_rate_threshold: 0.01        # 1% error rate
+    latency_p99_threshold_ms: 500     # 500ms P99 latency
+    success_rate_threshold: 0.999     # 99.9% success rate
+    request_duration_seconds: 60      # Time window for metrics collection
+
+  auto_promotion: true   # Auto-advance to next stage if metrics OK
+  auto_rollback: true    # Auto-rollback if metrics exceed threshold
+
+# Environment-specific overrides
+environments:
+  dev:
+    rolling:
+      max_unavailable: 50%
+      max_surge: 50%
+      progress_deadline_seconds: 300
+
+    blue_green:
+      monitoring_period_seconds: 60
+      cleanup_delay_seconds: 300
+
+    canary:
+      stages:
+        - traffic_percent: 50
+          duration_seconds: 60
+        - traffic_percent: 100
+          duration_seconds: 0
+      metrics:
+        error_rate_threshold: 0.05  # More lenient in dev
+
+  test:
+    rolling:
+      max_unavailable: 30%
+      max_surge: 30%
+
+    canary:
+      stages:
+        - traffic_percent: 25
+          duration_seconds: 300
+        - traffic_percent: 100
+          duration_seconds: 0
+
+  prod:
+    rolling:
+      max_unavailable: 10%   # More conservative in production
+      max_surge: 20%
+      progress_deadline_seconds: 1200
+
+    blue_green:
+      monitoring_period_seconds: 600  # 10 minutes
+      cleanup_delay_seconds: 7200     # 2 hours
+
+    canary:
+      stages:
+        - traffic_percent: 1
+          duration_seconds: 600    # Start with 1% in prod
+        - traffic_percent: 5
+          duration_seconds: 900
+        - traffic_percent: 25
+          duration_seconds: 900
+        - traffic_percent: 50
+          duration_seconds: 900
+        - traffic_percent: 100
+          duration_seconds: 0
+      metrics:
+        error_rate_threshold: 0.005   # 0.5% - Strict in prod
+        latency_p99_threshold_ms: 300
+        success_rate_threshold: 0.9995  # 99.95%
+
+# Resource requirements
+resource_defaults:
+  small:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+  medium:
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+
+  large:
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "2"
+      memory: "2Gi"
+
+# Health check templates
+health_check_templates:
+  http:
+    protocol: "http"
+    path: "/health"
+    port: 8080
+    interval_seconds: 10
+    timeout_seconds: 5
+    failure_threshold: 3
+    success_threshold: 1
+    initial_delay_seconds: 15
+
+  tcp:
+    protocol: "tcp"
+    port: 8080
+    interval_seconds: 10
+    timeout_seconds: 5
+    failure_threshold: 3
+    success_threshold: 1
+
+  grpc:
+    protocol: "grpc"
+    port: 9090
+    interval_seconds: 10
+    timeout_seconds: 5
+    failure_threshold: 3
+    success_threshold: 1

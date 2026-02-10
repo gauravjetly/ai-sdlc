@@ -1,0 +1,174 @@
+# Incident Response Workflow
+#
+# Automated incident detection, analysis, and resolution
+
+workflow:
+  id: incident-response
+  name: Automated Incident Response
+  description: Detect, analyze, and resolve production incidents
+
+  steps:
+    # Step 1: Incident Detection and Classification
+    - id: classify-incident
+      name: Classify Incident
+      agentId: sre-agent
+      action: classify_incident
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        analyze_metrics: true
+        analyze_logs: true
+      continueOnFailure: false
+      timeout: 120000  # 2 minutes
+
+    # Step 2: Notify On-Call Team
+    - id: notify-oncall
+      name: Notify On-Call Team
+      agentId: sre-agent
+      action: notify_oncall
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        severity: "{{ context.severity }}"
+        include_context: true
+      continueOnFailure: true
+      timeout: 30000
+
+    # Step 3: Run Diagnostics
+    - id: run-diagnostics
+      name: Run System Diagnostics
+      agentId: sre-agent
+      action: run_diagnostics
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        affected_services: "{{ context.affected_services }}"
+        check_dependencies: true
+        check_resources: true
+      continueOnFailure: false
+      timeout: 300000  # 5 minutes
+
+    # Step 4: Security Analysis
+    - id: security-analysis
+      name: Security Analysis
+      agentId: security-agent
+      action: analyze_incident
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        check_for_breach: true
+        analyze_access_logs: true
+      continueOnFailure: true
+      timeout: 180000
+
+    # Step 5: Determine Root Cause
+    - id: root-cause-analysis
+      name: Root Cause Analysis
+      agentId: sre-agent
+      action: analyze_root_cause
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        diagnostics: "{{ context.diagnostics }}"
+        use_ml_analysis: true
+      continueOnFailure: false
+      timeout: 300000
+
+    # Step 6: Auto-Remediation (if possible)
+    - id: auto-remediation
+      name: Attempt Auto-Remediation
+      agentId: sre-agent
+      action: auto_remediate
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        root_cause: "{{ context.root_cause }}"
+        safe_mode: true
+      continueOnFailure: true
+      retryPolicy:
+        maxAttempts: 2
+        backoffMs: 10000
+      timeout: 600000
+
+    # Step 7: Rollback if Needed
+    - id: rollback-if-needed
+      name: Rollback if Needed
+      agentId: sre-agent
+      action: conditional_rollback
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        check_if_deployment_related: true
+        auto_approve: true
+      continueOnFailure: true
+      timeout: 600000
+
+    # Step 8: Scale Resources if Needed
+    - id: scale-resources
+      name: Scale Resources
+      agentId: sre-agent
+      action: scale_resources
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        auto_scale: true
+        max_increase_percent: 200
+      continueOnFailure: true
+      timeout: 300000
+
+    # Step 9: Verify Resolution
+    - id: verify-resolution
+      name: Verify Incident Resolution
+      agentId: sre-agent
+      action: verify_resolution
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        monitor_duration: 300000  # 5 minutes
+        alert_if_recurring: true
+      continueOnFailure: false
+      timeout: 420000
+
+    # Step 10: Run Smoke Tests
+    - id: post-incident-tests
+      name: Post-Incident Smoke Tests
+      agentId: qa-agent
+      action: run_smoke_tests
+      parameters:
+        environment: prod
+        affected_services: "{{ context.affected_services }}"
+      continueOnFailure: true
+      timeout: 300000
+
+    # Step 11: Generate Incident Report
+    - id: generate-incident-report
+      name: Generate Incident Report
+      agentId: sre-agent
+      action: generate_incident_report
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        include_timeline: true
+        include_root_cause: true
+        include_resolution: true
+        include_recommendations: true
+      continueOnFailure: false
+      timeout: 180000
+
+    # Step 12: Notify Stakeholders
+    - id: notify-resolution
+      name: Notify Stakeholders of Resolution
+      agentId: customer-support-agent
+      action: send_notifications
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        type: incident_resolved
+        include_report: true
+        recipients:
+          - affected-customers
+          - management
+          - engineering-team
+      continueOnFailure: true
+      timeout: 60000
+
+    # Step 13: Update Documentation
+    - id: update-documentation
+      name: Update Documentation
+      agentId: ba-agent
+      action: update_documentation
+      parameters:
+        incident_id: "{{ context.incident_id }}"
+        update_runbooks: true
+        update_kb: true
+      continueOnFailure: true
+      timeout: 120000

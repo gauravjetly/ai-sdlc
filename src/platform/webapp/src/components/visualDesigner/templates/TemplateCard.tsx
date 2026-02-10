@@ -28,7 +28,7 @@ import {
   Memory as ComputeIcon,
   Storage as StorageIcon,
   Security as SecurityIcon,
-  Monitoring as MonitoringIcon,
+  Assessment as MonitoringIcon,
   Layers as FullstackIcon,
   Extension as CustomIcon,
 } from '@mui/icons-material';

@@ -1,0 +1,283 @@
+# AI Agent Personas Configuration
+#
+# Configuration for all 8 AI agent personas with MCP integration
+
+agents:
+  # Developer Agent - Software Engineering
+  developer:
+    id: developer-agent-1
+    name: Developer Agent
+    description: Software engineering and deployment automation
+    type: developer
+    enabled: true
+    mcpServerCommand: node dist/mcp/server/mcp-server.js
+    enableScheduling: true
+    enableEventTriggers: true
+    config:
+      defaultEnvironment: dev
+      autoDeployOnSuccess: false
+      testCoverageThreshold: 80
+    schedules:
+      - name: dependency-updates
+        cron: '0 9 * * *' # Daily at 9 AM
+        description: Check and report dependency updates
+      - name: code-quality-analysis
+        cron: '0 * * * *' # Hourly
+        description: Analyze code quality metrics
+      - name: test-coverage-check
+        cron: '0 10 * * *' # Daily at 10 AM
+        description: Verify test coverage meets thresholds
+    eventTriggers:
+      - deployment.failed
+      - test.failed
+      - deployment.complete
+
+  # SRE Agent - Site Reliability Engineering
+  sre:
+    id: sre-agent-1
+    name: SRE Agent
+    description: Site reliability and performance monitoring
+    type: sre
+    enabled: true
+    mcpServerCommand: node dist/mcp/server/mcp-server.js
+    enableScheduling: true
+    enableEventTriggers: true
+    config:
+      healthCheckInterval: 5 # minutes
+      autoScalingEnabled: true
+      performanceThresholds:
+        cpu: 80
+        memory: 85
+        latency: 500
+    schedules:
+      - name: health-checks
+        cron: '*/5 * * * *' # Every 5 minutes
+        description: System health checks
+      - name: performance-analysis
+        cron: '0 * * * *' # Hourly
+        description: Performance metrics analysis
+      - name: metrics-collection
+        cron: '*/15 * * * *' # Every 15 minutes
+        description: Collect system metrics
+      - name: capacity-planning
+        cron: '0 8 * * *' # Daily at 8 AM
+        description: Capacity planning analysis
+    eventTriggers:
+      - alert.fired
+      - resource.exhausted
+      - health.check_failed
+      - deployment.complete
+
+  # Security Agent - Security Operations
+  security:
+    id: security-agent-1
+    name: Security Agent
+    description: Security scanning and compliance validation
+    type: security
+    enabled: true
+    mcpServerCommand: node dist/mcp/server/mcp-server.js
+    enableScheduling: true
+    enableEventTriggers: true
+    config:
+      complianceStandards:
+        - CIS
+        - SOC2
+        - GDPR
+      scanSchedule: '0 2 * * *'
+      autoRemediateFindings: false
+      severityThreshold: medium
+    schedules:
+      - name: vulnerability-scan
+        cron: '0 2 * * *' # Daily at 2 AM
+        description: Comprehensive vulnerability scanning
+      - name: compliance-check
+        cron: '0 3 * * 0' # Weekly on Sunday at 3 AM
+        description: Compliance validation
+      - name: secret-rotation-audit
+        cron: '0 4 1 * *' # Monthly on 1st at 4 AM
+        description: Secret rotation audit
+      - name: security-posture
+        cron: '0 5 * * *' # Daily at 5 AM
+        description: Security posture assessment
+    eventTriggers:
+      - security.alert
+      - security.vulnerability_detected
+      - deployment.complete
+      - compliance.violation
+
+  # QA Agent - Quality Assurance
+  qa:
+    id: qa-agent-1
+    name: QA Agent
+    description: Quality assurance and test automation
+    type: qa
+    enabled: true
+    mcpServerCommand: node dist/mcp/server/mcp-server.js
+    enableScheduling: true
+    enableEventTriggers: true
+    config:
+      coverageThreshold: 80
+      autoRunTests: true
+      testEnvironment: uat
+      regressionSchedule: '0 2 * * *'
+    schedules:
+      - name: smoke-tests
+        cron: '0 * * * *' # Hourly
+        description: Smoke test execution
+      - name: regression-tests
+        cron: '0 2 * * *' # Daily at 2 AM
+        description: Full regression suite
+      - name: coverage-report
+        cron: '0 9 * * *' # Daily at 9 AM
+        description: Test coverage reporting
+      - name: test-quality-analysis
+        cron: '0 8 * * 1' # Weekly on Monday at 8 AM
+        description: Test quality analysis
+    eventTriggers:
+      - deployment.complete
+      - code.committed
+      - release.scheduled
+      - test.failed
+
+  # Release Manager Agent
+  releaseManager:
+    id: release-manager-agent-1
+    name: Release Manager Agent
+    description: Release orchestration and deployment management
+    type: release-manager
+    enabled: true
+    mcpServerCommand: node dist/mcp/server/mcp-server.js
+    enableScheduling: true
+    enableEventTriggers: true
+    config:
+      approvalRequired: true
+      autoPromote: false
+      rollbackThreshold: 0.05
+    schedules:
+      - name: release-planning
+        cron: '0 10 * * *' # Daily at 10 AM
+        description: Release planning review
+      - name: deployment-reports
+        cron: '0 17 * * *' # Daily at 5 PM
+        description: Deployment status reporting
+      - name: release-retrospective
+        cron: '0 15 * * 5' # Weekly on Friday at 3 PM
+        description: Release retrospective
+    eventTriggers:
+      - deployment.complete
+      - deployment.failed
+      - approval.granted
+      - test.failed
+
+  # Architect Agent
+  architect:
+    id: architect-agent-1
+    name: Architect Agent
+    description: Architecture review and design validation
+    type: architect
+    enabled: true
+    mcpServerCommand: node dist/mcp/server/mcp-server.js
+    enableScheduling: true
+    enableEventTriggers: true
+    config:
+      architectureStandards:
+        - clean-architecture
+        - solid
+        - ddd
+      complexityThreshold: 10
+      weeklyReviewDay: 1 # Monday
+    schedules:
+      - name: architecture-review
+        cron: '0 10 * * 1' # Weekly on Monday at 10 AM
+        description: Comprehensive architecture review
+      - name: technical-debt
+        cron: '0 9 1 * *' # Monthly on 1st at 9 AM
+        description: Technical debt assessment
+      - name: dependency-analysis
+        cron: '0 11 * * *' # Daily at 11 AM
+        description: Dependency analysis
+    eventTriggers:
+      - service.created
+      - code.committed
+      - deployment.complete
+
+  # FinOps Agent
+  finops:
+    id: finops-agent-1
+    name: FinOps Agent
+    description: Cost optimization and financial operations
+    type: finops
+    enabled: true
+    mcpServerCommand: node dist/mcp/server/mcp-server.js
+    enableScheduling: true
+    enableEventTriggers: true
+    config:
+      budgetThreshold: 10000 # $10,000
+      costAlertThreshold: 0.8 # 80%
+      optimizationEnabled: true
+    schedules:
+      - name: cost-analysis
+        cron: '0 8 * * *' # Daily at 8 AM
+        description: Daily cost analysis
+      - name: optimization-recommendations
+        cron: '0 9 * * 1' # Weekly on Monday at 9 AM
+        description: Cost optimization recommendations
+      - name: budget-review
+        cron: '0 10 1 * *' # Monthly on 1st at 10 AM
+        description: Monthly budget review
+      - name: cost-tracking
+        cron: '0 * * * *' # Hourly
+        description: Real-time cost tracking
+    eventTriggers:
+      - cost.threshold_exceeded
+      - deployment.complete
+      - resource.scaled
+
+  # Conductor Agent - Orchestrator
+  conductor:
+    id: conductor-agent-1
+    name: Conductor Agent
+    description: Multi-agent workflow orchestration
+    type: conductor
+    enabled: true
+    mcpServerCommand: node dist/mcp/server/mcp-server.js
+    enableScheduling: true
+    enableEventTriggers: true
+    config:
+      maxConcurrentWorkflows: 10
+      workflowTimeout: 3600000 # 1 hour in ms
+      agentHealthCheckInterval: 5 # minutes
+    schedules:
+      - name: workflow-monitoring
+        cron: '*/5 * * * *' # Every 5 minutes
+        description: Active workflow monitoring
+      - name: agent-health-checks
+        cron: '*/5 * * * *' # Every 5 minutes
+        description: Agent health verification
+      - name: workflow-analytics
+        cron: '0 8 * * *' # Daily at 8 AM
+        description: Workflow analytics generation
+      - name: capacity-check
+        cron: '0 * * * *' # Hourly
+        description: Orchestrator capacity check
+    eventTriggers:
+      - workflow.started
+      - workflow.completed
+      - workflow.failed
+      - agent.unhealthy
+
+# Global configuration
+global:
+  mcp:
+    serverCommand: node dist/mcp/server/mcp-server.js
+    transport: stdio
+    timeout: 30000 # 30 seconds
+
+  logging:
+    level: info
+    format: json
+
+  orchestration:
+    eventHistorySize: 1000
+    executionHistorySize: 1000
+    schedulerEnabled: true

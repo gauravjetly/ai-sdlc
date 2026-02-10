@@ -1,0 +1,172 @@
+# Agent Scheduling Configuration
+#
+# Define cron-based scheduled jobs for automated agent execution
+
+schedules:
+  # Developer Agent - Daily dependency updates
+  - name: daily-dependency-updates
+    agentId: developer-agent
+    cron: "0 9 * * *"  # 9 AM daily
+    enabled: true
+    parameters:
+      action: update_dependencies
+      auto_approve: false
+      notification: true
+
+  # SRE Agent - Daily health checks
+  - name: daily-health-checks
+    agentId: sre-agent
+    cron: "0 8 * * *"  # 8 AM daily
+    enabled: true
+    parameters:
+      action: health_check
+      comprehensive: true
+      include_metrics: true
+      alert_on_failure: true
+
+  # Security Agent - Daily vulnerability scans
+  - name: daily-vulnerability-scans
+    agentId: security-agent
+    cron: "0 2 * * *"  # 2 AM daily
+    enabled: true
+    parameters:
+      action: vulnerability_scan
+      targets: all
+      scan_type: all
+      auto_remediate: false
+
+  # FinOps Agent - Daily cost reports
+  - name: daily-cost-reports
+    agentId: finops-agent
+    cron: "0 7 * * *"  # 7 AM daily
+    enabled: true
+    parameters:
+      action: generate_cost_report
+      period: last_24h
+      include_forecast: true
+      send_to:
+        - finops-team
+        - management
+
+  # QA Agent - Hourly smoke tests (production)
+  - name: hourly-smoke-tests
+    agentId: qa-agent
+    cron: "0 * * * *"  # Every hour
+    enabled: true
+    parameters:
+      action: run_smoke_tests
+      environment: prod
+      alert_on_failure: true
+      include_api_tests: true
+      include_ui_tests: true
+
+  # Release Manager - Weekly release planning
+  - name: weekly-release-planning
+    agentId: release-manager
+    cron: "0 9 * * 1"  # Monday 9 AM
+    enabled: true
+    parameters:
+      action: plan_releases
+      period: next_week
+      generate_report: true
+      notify_stakeholders: true
+
+  # Architect - Monthly architecture review
+  - name: monthly-architecture-review
+    agentId: architect-agent
+    cron: "0 10 1 * *"  # 1st of month, 10 AM
+    enabled: true
+    parameters:
+      action: architecture_review
+      scope: full
+      analyze_metrics: true
+      generate_recommendations: true
+
+  # Security Agent - Weekly compliance audits
+  - name: weekly-compliance-audit
+    agentId: security-agent
+    cron: "0 6 * * 0"  # Sunday 6 AM
+    enabled: true
+    parameters:
+      action: compliance_audit
+      frameworks:
+        - SOC2
+        - HIPAA
+        - GDPR
+      generate_report: true
+
+  # SRE Agent - Daily backup verification
+  - name: daily-backup-verification
+    agentId: sre-agent
+    cron: "0 3 * * *"  # 3 AM daily
+    enabled: true
+    parameters:
+      action: verify_backups
+      test_restore: false
+      alert_on_failure: true
+
+  # Developer Agent - Nightly build and test
+  - name: nightly-build-test
+    agentId: developer-agent
+    cron: "0 1 * * *"  # 1 AM daily
+    enabled: true
+    parameters:
+      action: build_and_test
+      branch: develop
+      run_integration_tests: true
+      run_performance_tests: true
+      publish_results: true
+
+  # FinOps Agent - Weekly cost optimization recommendations
+  - name: weekly-cost-optimization
+    agentId: finops-agent
+    cron: "0 10 * * 5"  # Friday 10 AM
+    enabled: true
+    parameters:
+      action: analyze_costs
+      generate_recommendations: true
+      estimate_savings: true
+      notify_teams: true
+
+  # QA Agent - Daily regression tests (UAT)
+  - name: daily-uat-regression
+    agentId: qa-agent
+    cron: "0 22 * * *"  # 10 PM daily
+    enabled: true
+    parameters:
+      action: run_tests
+      environment: uat
+      test_suite: regression
+      parallel: true
+
+  # Security Agent - Real-time threat detection (every 15 minutes)
+  - name: frequent-threat-detection
+    agentId: security-agent
+    cron: "*/15 * * * *"  # Every 15 minutes
+    enabled: false  # Disabled by default due to frequency
+    parameters:
+      action: threat_detection
+      scope: active_sessions
+      alert_threshold: medium
+
+  # BA Agent - Weekly requirements analysis
+  - name: weekly-requirements-analysis
+    agentId: ba-agent
+    cron: "0 14 * * 3"  # Wednesday 2 PM
+    enabled: true
+    parameters:
+      action: analyze_requirements
+      check_completion: true
+      update_roadmap: true
+      generate_insights: true
+
+  # Customer Support Agent - Daily ticket analysis
+  - name: daily-ticket-analysis
+    agentId: customer-support-agent
+    cron: "0 18 * * *"  # 6 PM daily
+    enabled: true
+    parameters:
+      action: analyze_tickets
+      period: last_24h
+      identify_trends: true
+      suggest_kb_articles: true

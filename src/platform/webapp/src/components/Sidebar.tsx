@@ -4,6 +4,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import ScheduleIcon from '@mui/icons-material/Schedule';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -16,6 +17,7 @@ const menuItems = [
   { path: '/', label: 'Dashboard', icon: <DashboardIcon /> },
   { path: '/visual-designer', label: 'Visual Designer', icon: <DesignServicesIcon />, isNew: true },
   { path: '/designer', label: 'Infrastructure Designer', icon: <ArchitectureIcon /> },
+  { path: '/scheduling', label: 'Project Scheduling', icon: <ScheduleIcon />, isNew: true },
   { path: '/deploy', label: 'Deploy Application', icon: <RocketLaunchIcon /> },
   { path: '/resources', label: 'Cloud Resources', icon: <CloudQueueIcon /> },
   { path: '/agents', label: 'AI Agents', icon: <SmartToyIcon /> },

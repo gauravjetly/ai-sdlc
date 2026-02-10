@@ -1,0 +1,319 @@
+{
+  "dashboard": {
+    "title": "AI-SDLC Platform - System Overview",
+    "description": "Comprehensive system health and resource monitoring",
+    "tags": ["system", "health", "resources", "ai-sdlc"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "10s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "System Health Status",
+        "type": "stat",
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 24,
+          "h": 3
+        },
+        "targets": [
+          {
+            "expr": "up",
+            "refId": "A",
+            "legendFormat": "Platform Status"
+          }
+        ],
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "textMode": "value_and_name"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {
+                "type": "value",
+                "options": {
+                  "0": { "text": "DOWN", "color": "red" },
+                  "1": { "text": "HEALTHY", "color": "green" }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "CPU Usage",
+        "type": "gauge",
+        "gridPos": {
+          "x": 0,
+          "y": 3,
+          "w": 8,
+          "h": 6
+        },
+        "targets": [
+          {
+            "expr": "cpu_usage_percent",
+            "refId": "A",
+            "legendFormat": "CPU"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "value": 0, "color": "green" },
+                { "value": 70, "color": "yellow" },
+                { "value": 90, "color": "red" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Memory Usage",
+        "type": "gauge",
+        "gridPos": {
+          "x": 8,
+          "y": 3,
+          "w": 8,
+          "h": 6
+        },
+        "targets": [
+          {
+            "expr": "(memory_usage_bytes / memory_limit_bytes) * 100",
+            "refId": "A",
+            "legendFormat": "Memory"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "value": 0, "color": "green" },
+                { "value": 80, "color": "yellow" },
+                { "value": 95, "color": "red" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Pods Running",
+        "type": "stat",
+        "gridPos": {
+          "x": 16,
+          "y": 3,
+          "w": 8,
+          "h": 6
+        },
+        "targets": [
+          {
+            "expr": "pods_running",
+            "refId": "A",
+            "legendFormat": "Running Pods"
+          }
+        ],
+        "options": {
+          "colorMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "HTTP Request Rate",
+        "type": "graph",
+        "gridPos": {
+          "x": 0,
+          "y": 9,
+          "w": 12,
+          "h": 8
+        },
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "refId": "A",
+            "legendFormat": "Request Rate"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "reqps",
+            "label": "Requests/sec"
+          },
+          {
+            "format": "short"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "HTTP Request Duration (P95)",
+        "type": "graph",
+        "gridPos": {
+          "x": 12,
+          "y": 9,
+          "w": 12,
+          "h": 8
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "refId": "A",
+            "legendFormat": "P95 Latency"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "s",
+            "label": "Duration"
+          },
+          {
+            "format": "short"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Database Connections",
+        "type": "graph",
+        "gridPos": {
+          "x": 0,
+          "y": 17,
+          "w": 12,
+          "h": 8
+        },
+        "targets": [
+          {
+            "expr": "database_connections_active",
+            "refId": "A",
+            "legendFormat": "Active"
+          },
+          {
+            "expr": "database_connections_idle",
+            "refId": "B",
+            "legendFormat": "Idle"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "Connections"
+          },
+          {
+            "format": "short"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Redis Operations Rate",
+        "type": "graph",
+        "gridPos": {
+          "x": 12,
+          "y": 17,
+          "w": 12,
+          "h": 8
+        },
+        "targets": [
+          {
+            "expr": "rate(redis_commands_total[5m])",
+            "refId": "A",
+            "legendFormat": "Commands/sec"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "ops",
+            "label": "Operations/sec"
+          },
+          {
+            "format": "short"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Error Rate by Status Code",
+        "type": "graph",
+        "gridPos": {
+          "x": 0,
+          "y": 25,
+          "w": 24,
+          "h": 8
+        },
+        "targets": [
+          {
+            "expr": "sum by (status_code) (rate(http_requests_total{status_code=~\"4..|5..\"}[5m]))",
+            "refId": "A",
+            "legendFormat": "{{status_code}}"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "reqps",
+            "label": "Errors/sec"
+          },
+          {
+            "format": "short"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Component Health Status",
+        "type": "table",
+        "gridPos": {
+          "x": 0,
+          "y": 33,
+          "w": 24,
+          "h": 8
+        },
+        "targets": [
+          {
+            "expr": "component_health_status",
+            "refId": "A",
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {},
+              "indexByName": {},
+              "renameByName": {
+                "component": "Component",
+                "status": "Status",
+                "message": "Message",
+                "duration_ms": "Check Duration (ms)"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

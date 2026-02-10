@@ -1,0 +1,19 @@
+{
+  "application": "demo-app",
+  "version": "1.0.0",
+  "environment": "production",
+  "cloud": "aws",
+  "region": "us-east-1",
+  "strategy": "canary",
+  "replicas": 3,
+  "resources": {
+    "cpu": "1000m",
+    "memory": "2Gi"
+  },
+  "healthCheck": {
+    "path": "/health",
+    "port": 8080,
+    "initialDelaySeconds": 10,
+    "periodSeconds": 10
+  }
+}

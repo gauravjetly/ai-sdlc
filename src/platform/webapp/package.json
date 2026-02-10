@@ -18,12 +18,20 @@
     "react-router-dom": "^6.21.0",
     "@mui/material": "^5.15.0",
     "@mui/icons-material": "^5.15.0",
+    "@mui/lab": "^5.0.0-alpha.156",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@xyflow/react": "^12.0.0",
     "axios": "^1.6.2",
     "recharts": "^2.10.3",
-    "react-beautiful-dnd": "^13.1.1"
+    "react-beautiful-dnd": "^13.1.1",
+    "react-hook-form": "^7.51.0",
+    "@hookform/resolvers": "^3.3.4",
+    "zod": "^3.22.4",
+    "reactflow": "^11.11.0",
+    "@tanstack/react-query": "^5.17.0",
+    "use-debounce": "^10.0.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.45",
@@ -33,6 +41,7 @@
     "vite": "^5.0.8",
     "vitest": "^1.0.0",
     "@testing-library/react": "^14.0.0",
-    "@testing-library/jest-dom": "^6.0.0"
+    "@testing-library/jest-dom": "^6.0.0",
+    "@types/uuid": "^9.0.0"
   }
 }

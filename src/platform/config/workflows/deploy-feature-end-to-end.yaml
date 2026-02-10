@@ -1,0 +1,224 @@
+# Full Feature Deployment Workflow
+#
+# Complete deployment pipeline from dev through production
+
+workflow:
+  id: deploy-feature-end-to-end
+  name: Deploy New Feature (Full Pipeline)
+  description: Complete deployment from dev through production with testing and approvals
+
+  steps:
+    # Step 1: Deploy to Development
+    - id: deploy-to-dev
+      name: Deploy to Development Environment
+      agentId: developer-agent
+      action: deploy
+      parameters:
+        environment: dev
+        strategy: rolling
+        health_check: true
+      continueOnFailure: false
+      retryPolicy:
+        maxAttempts: 3
+        backoffMs: 5000
+        backoffMultiplier: 2
+      timeout: 600000  # 10 minutes
+
+    # Step 2: Run Tests in Development
+    - id: run-tests-dev
+      name: Run Tests in Development
+      agentId: qa-agent
+      action: run_tests
+      parameters:
+        environment: dev
+        test_suite: regression
+        deployment_id: "{{ context.deployment_id }}"
+      continueOnFailure: false
+      retryPolicy:
+        maxAttempts: 2
+        backoffMs: 10000
+      timeout: 1800000  # 30 minutes
+
+    # Step 3: Security Scan in Development
+    - id: security-scan-dev
+      name: Security Scan (Development)
+      agentId: security-agent
+      action: scan
+      parameters:
+        target: "{{ context.deployment_id }}"
+        scan_type: all
+        fail_on_critical: true
+      continueOnFailure: false
+      timeout: 900000  # 15 minutes
+
+    # Step 4: Architecture Validation
+    - id: architecture-validation
+      name: Architecture Validation
+      agentId: architect-agent
+      action: validate_architecture
+      parameters:
+        deployment_id: "{{ context.deployment_id }}"
+        check_patterns: true
+        check_dependencies: true
+      continueOnFailure: true  # Warnings only
+
+    # Step 5: Deploy to UAT
+    - id: deploy-to-uat
+      name: Deploy to UAT Environment
+      agentId: developer-agent
+      action: deploy
+      parameters:
+        environment: uat
+        strategy: blue-green
+        health_check: true
+        deployment_id: "{{ context.deployment_id }}"
+      continueOnFailure: false
+      retryPolicy:
+        maxAttempts: 3
+        backoffMs: 5000
+        backoffMultiplier: 2
+      timeout: 600000
+
+    # Step 6: Run Acceptance Tests in UAT
+    - id: run-tests-uat
+      name: Run Acceptance Tests (UAT)
+      agentId: qa-agent
+      action: run_tests
+      parameters:
+        environment: uat
+        test_suite: acceptance
+        deployment_id: "{{ context.deployment_id }}"
+      continueOnFailure: false
+      timeout: 2400000  # 40 minutes
+
+    # Step 7: Performance Testing
+    - id: performance-testing
+      name: Performance Testing
+      agentId: qa-agent
+      action: performance_test
+      parameters:
+        environment: uat
+        duration: 300
+        concurrent_users: 100
+        deployment_id: "{{ context.deployment_id }}"
+      continueOnFailure: true
+      timeout: 600000
+
+    # Step 8: Security Scan (UAT)
+    - id: security-scan-uat
+      name: Security Scan (UAT)
+      agentId: security-agent
+      action: scan
+      parameters:
+        target: "{{ context.deployment_id }}"
+        scan_type: all
+        environment: uat
+      continueOnFailure: false
+      timeout: 900000
+
+    # Step 9: Generate Cost Impact Report
+    - id: cost-impact-analysis
+      name: Cost Impact Analysis
+      agentId: finops-agent
+      action: analyze_cost_impact
+      parameters:
+        deployment_id: "{{ context.deployment_id }}"
+        compare_with_current: true
+      continueOnFailure: true
+      timeout: 300000
+
+    # Step 10: Request Production Approval
+    - id: await-approval
+      name: Request Production Deployment Approval
+      agentId: release-manager
+      action: request_approval
+      parameters:
+        deployment_id: "{{ context.deployment_id }}"
+        approvers:
+          - product-owner
+          - tech-lead
+          - security-lead
+        include_test_results: true
+        include_cost_analysis: true
+        timeout_hours: 48
+      continueOnFailure: false
+      timeout: 172800000  # 48 hours
+
+    # Step 11: Pre-production Health Check
+    - id: pre-prod-health-check
+      name: Pre-Production Health Check
+      agentId: sre-agent
+      action: health_check
+      parameters:
+        environment: prod
+        check_capacity: true
+        check_dependencies: true
+      continueOnFailure: false
+      timeout: 300000
+
+    # Step 12: Deploy to Production
+    - id: deploy-to-prod
+      name: Deploy to Production
+      agentId: sre-agent
+      action: deploy
+      parameters:
+        environment: prod
+        strategy: blue-green
+        health_check_duration: 1800000  # 30 minutes
+        auto_rollback: true
+        deployment_id: "{{ context.deployment_id }}"
+      continueOnFailure: false
+      retryPolicy:
+        maxAttempts: 2
+        backoffMs: 10000
+      timeout: 2400000  # 40 minutes
+
+    # Step 13: Monitor Production Deployment
+    - id: monitor-prod-deployment
+      name: Monitor Production Deployment
+      agentId: sre-agent
+      action: monitor_deployment
+      parameters:
+        deployment_id: "{{ context.deployment_id }}"
+        duration: 1800000  # 30 minutes
+        alert_on_anomaly: true
+      continueOnFailure: false
+      timeout: 2100000
+
+    # Step 14: Validate Production
+    - id: validate-prod
+      name: Validate Production Deployment
+      agentId: qa-agent
+      action: validate_production
+      parameters:
+        deployment_id: "{{ context.deployment_id }}"
+        run_smoke_tests: true
+      continueOnFailure: false
+      timeout: 600000
+
+    # Step 15: Generate Release Notes
+    - id: generate-release-notes
+      name: Generate Release Notes
+      agentId: release-manager
+      action: generate_release_notes
+      parameters:
+        deployment_id: "{{ context.deployment_id }}"
+        include_changes: true
+        include_tests: true
+        publish: true
+      continueOnFailure: true
+      timeout: 300000
+
+    # Step 16: Notify Stakeholders
+    - id: notify-stakeholders
+      name: Notify Stakeholders
+      agentId: customer-support-agent
+      action: send_notifications
+      parameters:
+        deployment_id: "{{ context.deployment_id }}"
+        recipients:
+          - all-hands
+          - customers
+        include_release_notes: true
+      continueOnFailure: true
+      timeout: 60000
