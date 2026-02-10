@@ -1,0 +1,398 @@
+name: Deploy to Catalyst Dev Environment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deployment even if no changes'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  AWS_REGION: us-east-1
+  ECR_API_REPOSITORY: catalyst-infrastructure-designer-api
+  ECR_UI_REPOSITORY: catalyst-infrastructure-designer-ui
+  ECS_CLUSTER: catalyst-dev-cluster
+  ECS_API_SERVICE: catalyst-api-service
+  ECS_UI_SERVICE: catalyst-ui-service
+  ENVIRONMENT: dev
+
+jobs:
+  # ========================================
+  # BUILD AND TEST
+  # ========================================
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: catalyst
+          POSTGRES_PASSWORD: catalyst_test
+          POSTGRES_DB: catalyst_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: .
+
+      - name: Generate Prisma Client
+        run: npm run db:generate
+        working-directory: .
+
+      - name: Run database migrations
+        env:
+          DATABASE_URL: postgresql://catalyst:catalyst_test@localhost:5432/catalyst_test
+        run: npm run db:migrate:deploy
+        working-directory: .
+
+      - name: Run linting
+        run: npm run lint
+        working-directory: .
+
+      - name: Run type checking
+        run: npm run type-check
+        working-directory: .
+
+      - name: Run unit tests
+        env:
+          DATABASE_URL: postgresql://catalyst:catalyst_test@localhost:5432/catalyst_test
+          REDIS_URL: redis://localhost:6379
+          NODE_ENV: test
+        run: npm run test:unit
+        working-directory: .
+
+      - name: Run integration tests
+        env:
+          DATABASE_URL: postgresql://catalyst:catalyst_test@localhost:5432/catalyst_test
+          REDIS_URL: redis://localhost:6379
+          NODE_ENV: test
+        run: npm run test:integration
+        working-directory: .
+
+      - name: Build API
+        run: npm run build
+        working-directory: .
+
+      - name: Install webapp dependencies
+        run: npm ci
+        working-directory: ./webapp
+
+      - name: Build webapp
+        run: npm run build
+        working-directory: ./webapp
+        env:
+          VITE_API_URL: https://api-dev.catalyst.example.com
+
+      - name: Upload API build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-build
+          path: |
+            dist/
+            node_modules/
+            package*.json
+            prisma/
+            keys/
+          retention-days: 1
+
+      - name: Upload webapp build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapp-build
+          path: webapp/dist/
+          retention-days: 1
+
+  # ========================================
+  # SECURITY SCANNING
+  # ========================================
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # ========================================
+  # BUILD AND PUSH DOCKER IMAGES
+  # ========================================
+  build-images:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    needs: [build-and-test, security-scan]
+
+    outputs:
+      api-image: ${{ steps.build-api.outputs.image }}
+      ui-image: ${{ steps.build-ui.outputs.image }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Download API build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: api-build
+          path: .
+
+      - name: Download webapp build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: webapp-build
+          path: webapp/dist
+
+      - name: Build and push API image
+        id: build-api
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_API_REPOSITORY:$IMAGE_TAG \
+                       -t $ECR_REGISTRY/$ECR_API_REPOSITORY:latest \
+                       -f Dockerfile .
+          docker push $ECR_REGISTRY/$ECR_API_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_API_REPOSITORY:latest
+          echo "image=$ECR_REGISTRY/$ECR_API_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Build and push UI image
+        id: build-ui
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_UI_REPOSITORY:$IMAGE_TAG \
+                       -t $ECR_REGISTRY/$ECR_UI_REPOSITORY:latest \
+                       -f webapp/Dockerfile ./webapp
+          docker push $ECR_REGISTRY/$ECR_UI_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_UI_REPOSITORY:latest
+          echo "image=$ECR_REGISTRY/$ECR_UI_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Scan API image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.build-api.outputs.image }}
+          format: 'sarif'
+          output: 'trivy-api-image.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Scan UI image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.build-ui.outputs.image }}
+          format: 'sarif'
+          output: 'trivy-ui-image.sarif'
+          severity: 'CRITICAL,HIGH'
+
+  # ========================================
+  # DEPLOY TO DEV ENVIRONMENT
+  # ========================================
+  deploy-dev:
+    name: Deploy to Catalyst Dev
+    runs-on: ubuntu-latest
+    needs: build-images
+    environment:
+      name: dev
+      url: https://dev.catalyst.example.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Run database migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          npm ci
+          npm run db:generate
+          npm run db:migrate:deploy
+
+      - name: Update ECS API service
+        run: |
+          TASK_DEFINITION=$(aws ecs describe-task-definition \
+            --task-definition catalyst-api-task \
+            --query 'taskDefinition' \
+            --output json)
+
+          NEW_TASK_DEF=$(echo $TASK_DEFINITION | jq --arg IMAGE "${{ needs.build-images.outputs.api-image }}" \
+            '.containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)')
+
+          NEW_TASK_INFO=$(aws ecs register-task-definition \
+            --cli-input-json "$NEW_TASK_DEF" \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+
+          aws ecs update-service \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --service ${{ env.ECS_API_SERVICE }} \
+            --task-definition $NEW_TASK_INFO \
+            --force-new-deployment
+
+      - name: Update ECS UI service
+        run: |
+          TASK_DEFINITION=$(aws ecs describe-task-definition \
+            --task-definition catalyst-ui-task \
+            --query 'taskDefinition' \
+            --output json)
+
+          NEW_TASK_DEF=$(echo $TASK_DEFINITION | jq --arg IMAGE "${{ needs.build-images.outputs.ui-image }}" \
+            '.containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)')
+
+          NEW_TASK_INFO=$(aws ecs register-task-definition \
+            --cli-input-json "$NEW_TASK_DEF" \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+
+          aws ecs update-service \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --service ${{ env.ECS_UI_SERVICE }} \
+            --task-definition $NEW_TASK_INFO \
+            --force-new-deployment
+
+      - name: Wait for API service stability
+        run: |
+          aws ecs wait services-stable \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_API_SERVICE }}
+
+      - name: Wait for UI service stability
+        run: |
+          aws ecs wait services-stable \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_UI_SERVICE }}
+
+  # ========================================
+  # POST-DEPLOYMENT VERIFICATION
+  # ========================================
+  verify-deployment:
+    name: Verify Deployment
+    runs-on: ubuntu-latest
+    needs: deploy-dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Wait for services to be healthy
+        run: sleep 30
+
+      - name: Check API health
+        run: |
+          RESPONSE=$(curl -f -s -o /dev/null -w "%{http_code}" ${{ secrets.API_ENDPOINT }}/health || echo "000")
+          if [ "$RESPONSE" != "200" ]; then
+            echo "API health check failed with status: $RESPONSE"
+            exit 1
+          fi
+          echo "API health check passed"
+
+      - name: Check UI availability
+        run: |
+          RESPONSE=$(curl -f -s -o /dev/null -w "%{http_code}" ${{ secrets.UI_ENDPOINT }} || echo "000")
+          if [ "$RESPONSE" != "200" ]; then
+            echo "UI health check failed with status: $RESPONSE"
+            exit 1
+          fi
+          echo "UI health check passed"
+
+      - name: Run smoke tests
+        run: |
+          npm ci
+          npm run test:e2e
+        env:
+          API_URL: ${{ secrets.API_ENDPOINT }}
+          UI_URL: ${{ secrets.UI_ENDPOINT }}
+
+  # ========================================
+  # DEPLOYMENT NOTIFICATION
+  # ========================================
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [deploy-dev, verify-deployment]
+    if: always()
+
+    steps:
+      - name: Deployment Success
+        if: needs.verify-deployment.result == 'success'
+        run: |
+          echo "Deployment to Catalyst Dev environment succeeded"
+          echo "API: ${{ secrets.API_ENDPOINT }}"
+          echo "UI: ${{ secrets.UI_ENDPOINT }}"
+          echo "Commit: ${{ github.sha }}"
+
+      - name: Deployment Failure
+        if: needs.verify-deployment.result != 'success'
+        run: |
+          echo "Deployment to Catalyst Dev environment failed"
+          exit 1
