@@ -1,0 +1,49 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/gauravjetly/aisdlc-2.1.0/src/integration/dist/hooks/user-prompt-submit.js"
+          }
+        ],
+        "timeout": 5000
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/gauravjetly/aisdlc-2.1.0/src/integration/dist/hooks/stop.js"
+          }
+        ],
+        "timeout": 3000
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": {
+          "tool_name": "Write"
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/gauravjetly/aisdlc-2.1.0/src/integration/dist/hooks/post-write.js"
+          }
+        ],
+        "timeout": 5000
+      }
+    ]
+  },
+  "mcpServers": {
+    "aisdlc-platform": {
+      "command": "node",
+      "args": ["/Users/gauravjetly/aisdlc-2.1.0/src/integration/mcp-server/dist/index.js"],
+      "env": {
+        "AISDLC_ROOT": "/Users/gauravjetly/aisdlc-2.1.0"
+      }
+    }
+  }
+}

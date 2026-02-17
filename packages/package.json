@@ -1,0 +1,21 @@
+{
+  "name": "@aisdlc/root",
+  "version": "4.0.0",
+  "private": true,
+  "description": "AI-SDLC Local Production Platform - Monorepo Root",
+  "workspaces": [
+    "@aisdlc/core",
+    "@aisdlc/storage",
+    "@aisdlc/health",
+    "@aisdlc/cli"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "clean": "rm -rf packages/@aisdlc/*/dist"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

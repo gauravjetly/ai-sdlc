@@ -183,12 +183,16 @@ export class AgentMemoryHooks {
     const agentCategoryMap: Record<AgentType, MemoryCategory> = {
       ba: 'architecture-decisions',
       jets: 'architecture-decisions',
+      ux: 'ux-patterns',
       engineer: 'code-patterns',
       security: 'security-findings',
       qa: 'test-strategies',
       atlas: 'deployment-patterns',
       customer: 'deltek-knowledge',
-      tracker: 'architecture-decisions',
+      tracker: 'process-patterns',
+      conductor: 'process-patterns',
+      'ask-tom': 'cross-agent-learning',
+      finops: 'process-patterns',
     };
 
     return agentCategoryMap[result.agent] || 'code-patterns';

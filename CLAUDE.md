@@ -11,12 +11,22 @@ This project uses the **Agentic AI-SDLC Framework** with specialized subagents f
 | `/sdlc-start [description]` | Start full SDLC workflow for new feature/fix |
 | `/sdlc-status` | Check status of all SDLC work |
 | `/sdlc-review [path]` | Run comprehensive code review |
+| `/sdlc-requirements [description]` | Run requirements gathering phase only |
+| `/sdlc-architecture [description]` | Run architecture design phase only |
+| `/sdlc-ux [description]` | Run UX design phase only |
+| `/sdlc-security [path]` | Run security review phase only |
 
 ### Examples
 
 ```bash
-# Start new feature
+# Start full SDLC workflow
 /sdlc-start Build a user authentication system with OAuth 2.0 and MFA
+
+# Run individual phases
+/sdlc-requirements Gather requirements for user dashboard
+/sdlc-architecture Design microservices architecture for payments
+/sdlc-ux Design user experience for checkout flow
+/sdlc-security Review authentication implementation
 
 # Check progress
 /sdlc-status
@@ -34,6 +44,11 @@ This project uses the **Agentic AI-SDLC Framework** with specialized subagents f
 | Requirements | `docs/sdlc/requirements/REQ-*.md` |
 | Architecture | `docs/sdlc/architecture/ARCH-*.md` |
 | ADRs | `docs/sdlc/architecture/ADR-*.md` |
+| UX Research | `docs/sdlc/ux/UX-RESEARCH-*.md` |
+| Design System | `docs/sdlc/ux/DESIGN-SYSTEM-*.md` |
+| Wireframes | `docs/sdlc/ux/WIREFRAMES-*.md` |
+| Security | `docs/sdlc/security/SECURITY-REVIEW-*.md` |
+| Testing | `docs/sdlc/testing/TEST-REPORT-*.md` |
 | Tracking | `docs/sdlc/tracking/SDLC-*.md` |
 
 ---

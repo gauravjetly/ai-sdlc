@@ -1,0 +1,13 @@
+{
+  "name": "aisdlc-monorepo",
+  "version": "4.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/@aisdlc/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "clean": "rm -rf packages/@aisdlc/*/dist packages/@aisdlc/*/node_modules"
+  }
+}

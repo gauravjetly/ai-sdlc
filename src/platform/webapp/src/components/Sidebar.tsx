@@ -10,14 +10,18 @@ import SmartToyIcon from '@mui/icons-material/SmartToy';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SecurityIcon from '@mui/icons-material/Security';
 import SettingsIcon from '@mui/icons-material/Settings';
+import HubIcon from '@mui/icons-material/Hub';
+import InsightsIcon from '@mui/icons-material/Insights';
 
 const DRAWER_WIDTH = 260;
 
 const menuItems = [
   { path: '/', label: 'Dashboard', icon: <DashboardIcon /> },
-  { path: '/visual-designer', label: 'Visual Designer', icon: <DesignServicesIcon />, isNew: true },
+  { path: '/enhanced', label: 'Enhanced Dashboard', icon: <InsightsIcon />, isNew: true },
+  { path: '/integration', label: 'Integration', icon: <HubIcon /> },
+  { path: '/visual-designer', label: 'Visual Designer', icon: <DesignServicesIcon /> },
   { path: '/designer', label: 'Infrastructure Designer', icon: <ArchitectureIcon /> },
-  { path: '/scheduling', label: 'Project Scheduling', icon: <ScheduleIcon />, isNew: true },
+  { path: '/scheduling', label: 'Project Scheduling', icon: <ScheduleIcon /> },
   { path: '/deploy', label: 'Deploy Application', icon: <RocketLaunchIcon /> },
   { path: '/resources', label: 'Cloud Resources', icon: <CloudQueueIcon /> },
   { path: '/agents', label: 'AI Agents', icon: <SmartToyIcon /> },
@@ -64,12 +68,12 @@ export default function Sidebar() {
           D
         </Box>
         <Box sx={{ mb: 1 }}>
-          <span style={{ fontWeight: 700, fontSize: '1.2rem' }}>DELTEK</span>
+          <span style={{ fontWeight: 700, fontSize: '1.2rem' }}>AI-SDLC</span>
           <br />
-          <span style={{ fontWeight: 600, fontSize: '1rem', opacity: 0.9 }}>CATALYST</span>
+          <span style={{ fontWeight: 600, fontSize: '1rem', opacity: 0.9 }}>PLATFORM</span>
         </Box>
         <Box sx={{ fontSize: '0.75rem', opacity: 0.7 }}>
-          Control Center v1.0
+          Control Center v2.0
         </Box>
       </Box>
 

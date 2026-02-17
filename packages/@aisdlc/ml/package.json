@@ -1,0 +1,22 @@
+{
+  "name": "@aisdlc/ml",
+  "version": "4.0.0",
+  "description": "Local ML engine for predictive quality analysis",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config jest.config.js"
+  },
+  "dependencies": {
+    "@aisdlc/core": "^4.0.0",
+    "@aisdlc/storage": "^4.0.0",
+    "ml-matrix": "^6.11.1",
+    "natural": "^6.10.0",
+    "compromise": "^14.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}

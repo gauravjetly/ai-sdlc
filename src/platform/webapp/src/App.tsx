@@ -19,6 +19,18 @@ import InfrastructureDesigner from './pages/InfrastructureDesigner';
 import VisualDesigner from './pages/VisualDesigner';
 import Scheduling from './pages/Scheduling';
 import Analytics from './pages/Analytics';
+import IntegrationDashboard from './pages/IntegrationDashboard';
+import EnhancedDashboard from './pages/EnhancedDashboard';
+
+// Phase 3: Integration sub-pages
+import {
+  ApprovalQueue,
+  GovernanceMetrics,
+  AuditTrailViewer,
+  RealtimeActivityFeed,
+  PerformanceCharts,
+  ConfigurationEditor,
+} from './pages/integration';
 
 // Components
 import Header from './components/Header';
@@ -101,11 +113,19 @@ function App() {
             <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: 'background.default' }}>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/enhanced" element={<EnhancedDashboard />} />
                 <Route path="/deploy" element={<DeploymentWizard />} />
                 <Route path="/designer" element={<InfrastructureDesigner />} />
                 <Route path="/visual-designer" element={<VisualDesigner />} />
                 <Route path="/scheduling" element={<Scheduling />} />
                 <Route path="/analytics" element={<Analytics />} />
+                <Route path="/integration" element={<IntegrationDashboard />} />
+                <Route path="/integration/approvals" element={<ApprovalQueue />} />
+                <Route path="/integration/governance" element={<GovernanceMetrics />} />
+                <Route path="/integration/audit" element={<AuditTrailViewer />} />
+                <Route path="/integration/activity" element={<RealtimeActivityFeed />} />
+                <Route path="/integration/performance" element={<PerformanceCharts />} />
+                <Route path="/integration/config" element={<ConfigurationEditor />} />
                 <Route path="/resources" element={<CloudResources />} />
                 <Route path="/agents" element={<AgentControl />} />
                 <Route path="/costs" element={<CostOptimization />} />

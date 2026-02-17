@@ -27,6 +27,9 @@ import templateRoutes from './routes/templates.js';
 import designRoutes from './routes/designs.js';
 import workflowRoutes from './routes/workflows.js';
 
+// Import Phase 5: Enhanced Dashboard routes
+import dashboardRoutes from './routes/dashboard.js';
+
 const logger = createLogger('APIServer');
 
 class ApiServer {
@@ -116,7 +119,8 @@ class ApiServer {
             templates: 7,
             designs: 7,
             workflows: 8,
-            total: 124
+            dashboard: 2,
+            total: 126
           },
           documentation: '/api-docs'
         }
@@ -138,8 +142,11 @@ class ApiServer {
     this.app.use('/api/v1/designs', designRoutes);
     this.app.use('/api/v1/workflows', workflowRoutes);
 
+    // Register API routes - Phase 5: Enhanced Dashboard
+    this.app.use('/api/dashboard', dashboardRoutes);
+
     logger.info('API routes registered', {
-      totalEndpoints: 124
+      totalEndpoints: 126 // Added 2 dashboard endpoints
     });
   }
 

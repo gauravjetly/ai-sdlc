@@ -7,12 +7,16 @@
 export type AgentType =
   | 'ba'          // Business Analyst
   | 'jets'        // Architect
+  | 'ux'          // UX/UI Designer
   | 'engineer'    // Software Engineer
   | 'security'    // Security Agent
   | 'qa'          // QA Agent
   | 'atlas'       // Deployment Agent
   | 'customer'    // Customer Agent
-  | 'tracker';    // Tracker Agent
+  | 'tracker'     // Tracker Agent
+  | 'conductor'   // Orchestrator
+  | 'ask-tom'     // Problem Solver
+  | 'finops';     // Cost Optimization
 
 export type MemoryCategory =
   | 'code-patterns'
@@ -22,7 +26,10 @@ export type MemoryCategory =
   | 'deployment-patterns'
   | 'compliance-rules'
   | 'failed-approaches'
-  | 'deltek-knowledge';
+  | 'deltek-knowledge'
+  | 'cross-agent-learning'
+  | 'ux-patterns'
+  | 'process-patterns';
 
 export type MemorySeverity = 'critical' | 'high' | 'medium' | 'low';
 
