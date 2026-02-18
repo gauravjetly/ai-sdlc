@@ -1,30 +1,56 @@
 #!/usr/bin/env python3
 """
 Exec Agent - Executive Presentation Specialist
-Self-learning agent that generates Deltek-branded PowerPoint presentations
+Self-learning agent that generates Deltek-branded PowerPoint presentations.
+
+V2 additions (Phase A):
+  - Mesh integration via EventStreamClient (polls inbox every 15s)
+  - CollectiveMemoryReader for cross-agent knowledge enrichment
+  - LearningEventEmitter to broadcast insights back to the mesh
+  - AutonomousTriggerService that watches SDLC events and auto-generates
 """
 
+import logging
 import os
 import json
 import shutil
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
+
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN
 from pptx.dml.color import RGBColor
 
+# V2 Phase A: mesh components (imported lazily inside _init_mesh to ensure
+# graceful degradation – if the module itself has import issues the agent
+# still starts).
+_mesh_available = False
+_event_client = None
+_memory_reader = None
+_learning_emitter = None
+_trigger_service = None
+
+
 class ExecAgent:
     """Executive Presentation Specialist with Self-Learning Capabilities"""
 
-    def __init__(self):
+    def __init__(self, enable_mesh: bool = True):
         self.name = "Exec Agent"
         self.id = "exec"
-        self.icon = "📊"
+        self.icon = "presentation"
         self.color = "#1742F6"  # Deltek Blue
         self.model = "Sonnet"
         self.role = "Executive Presentations"
+        self._logger = logging.getLogger("ExecAgent")
 
         # Paths
         self.home = Path.home()
@@ -35,6 +61,72 @@ class ExecAgent:
         # Initialize memory
         self._init_memory()
         self._load_deltek_brand()
+
+        # V2 Phase A: initialize mesh integration (graceful degradation if unavailable)
+        if enable_mesh:
+            self._init_mesh()
+
+    def _init_mesh(self) -> None:
+        """
+        Initialize V2 Phase A agent mesh integration.
+
+        All imports and initializations are wrapped in try/except so that any
+        missing module or configuration issue degrades gracefully – the agent
+        continues to work exactly as in V1.
+        """
+        global _mesh_available, _event_client, _memory_reader, _learning_emitter, _trigger_service
+
+        try:
+            # Add the exec-agent root to sys.path so relative imports resolve
+            agent_root = Path(__file__).parent
+            if str(agent_root) not in sys.path:
+                sys.path.insert(0, str(agent_root))
+
+            from infrastructure.mesh.event_stream_client import EventStreamClient
+            from infrastructure.mesh.collective_memory_reader import CollectiveMemoryReader
+            from infrastructure.mesh.learning_event_emitter import LearningEventEmitter
+            from application.services.autonomous_trigger_service import (
+                AutonomousTriggerService,
+                TRIGGER_RULES,
+            )
+
+            _event_client = EventStreamClient(agent_id=self.id)
+            _memory_reader = CollectiveMemoryReader()
+            _learning_emitter = LearningEventEmitter(agent_id=self.id)
+
+            # Wire AutonomousTriggerService: uses self as a minimal generator proxy
+            _trigger_service = AutonomousTriggerService(
+                event_client=_event_client,
+                generator=_AgentGeneratorProxy(self),
+                rules=TRIGGER_RULES,
+            )
+            _trigger_service.start()
+
+            _mesh_available = True
+            self._logger.info("ExecAgent: V2 mesh integration active (Phase A)")
+
+            # Log collective knowledge availability
+            summary = _memory_reader.get_knowledge_summary()
+            if summary.get("available"):
+                self._logger.info(
+                    "ExecAgent: collective memory available – %d items across %d categories",
+                    summary.get("total_items", 0),
+                    len(summary.get("by_category", {})),
+                )
+            else:
+                self._logger.info(
+                    "ExecAgent: collective memory not yet available (mesh may not be running)"
+                )
+
+        except ImportError as exc:
+            self._logger.warning(
+                "ExecAgent: mesh integration skipped – import error: %s", exc
+            )
+        except Exception as exc:
+            self._logger.warning(
+                "ExecAgent: mesh integration skipped – unexpected error: %s", exc,
+                exc_info=True,
+            )
 
     def _init_memory(self):
         """Initialize agent memory directories"""
@@ -452,7 +544,7 @@ class ExecAgent:
         return str(output_path)
 
     def _record_learning(self, project_id: str, pres_type: str, output_path: str):
-        """Record learning from this generation"""
+        """Record learning from this generation and emit to agent mesh if available."""
         learning_file = self.memory_dir / "learning" / "generation_log.json"
 
         log_entry = {
@@ -465,7 +557,7 @@ class ExecAgent:
             "brand_compliance": "deltek_official"
         }
 
-        # Append to log
+        # Append to local log
         if learning_file.exists():
             with open(learning_file, 'r') as f:
                 log = json.load(f)
@@ -476,6 +568,20 @@ class ExecAgent:
 
         with open(learning_file, 'w') as f:
             json.dump(log, f, indent=2)
+
+        # V2 Phase A: emit to agent mesh (no-op if mesh not available)
+        if _mesh_available and _learning_emitter is not None:
+            try:
+                presentation_id = f"PRES-{project_id}-{pres_type}"
+                _learning_emitter.emit_presentation_created(
+                    presentation_id=presentation_id,
+                    presentation_type=pres_type,
+                    project_id=project_id,
+                )
+            except Exception as exc:
+                self._logger.warning(
+                    "ExecAgent: failed to emit mesh learning event: %s", exc
+                )
 
     def auto_update_presentation(self, presentation_path: str):
         """Auto-update an existing presentation with latest data"""
@@ -500,8 +606,34 @@ class ExecAgent:
         return new_path
 
 
+class _AgentGeneratorProxy:
+    """
+    Minimal adapter that lets AutonomousTriggerService call generate() on ExecAgent.
+
+    This avoids a circular dependency: the trigger service expects a generator
+    with generate(project_id, presentation_type, auto_mode) – this proxy
+    translates to ExecAgent.generate_presentation().
+    """
+
+    def __init__(self, agent: "ExecAgent") -> None:
+        self._agent = agent
+
+    def generate(
+        self,
+        project_id: str,
+        presentation_type: str,
+        auto_mode: bool = True,
+    ) -> Optional[str]:
+        try:
+            return self._agent.generate_presentation(project_id, presentation_type)
+        except Exception as exc:
+            logging.getLogger("_AgentGeneratorProxy").error(
+                "Auto-generation failed for '%s'/'%s': %s", project_id, presentation_type, exc
+            )
+            return None
+
+
 if __name__ == "__main__":
-    import sys
 
     agent = ExecAgent()
 

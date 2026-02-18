@@ -38,17 +38,19 @@ const LEARNING_PROPAGATION_MAP: Record<KnowledgeCategory, AgentId[]> = {
   'cross-agent-learning': [
     'conductor', 'ba', 'jets', 'ux', 'engineer',
     'security', 'qa', 'atlas', 'customer', 'ask-tom',
+    'exec',  // V2: exec agent learns from all cross-agent knowledge
   ],
   'error-pattern': ['engineer', 'qa', 'ask-tom', 'atlas'],
   'best-practice': [
     'conductor', 'ba', 'jets', 'ux', 'engineer',
     'security', 'qa', 'atlas',
+    'exec',  // V2: exec incorporates best practices into presentations
   ],
   'anti-pattern': ['engineer', 'qa', 'security', 'ask-tom'],
-  'architecture-decision': ['jets', 'engineer', 'security', 'atlas'],
-  'security-insight': ['security', 'engineer', 'qa', 'atlas'],
-  'performance-insight': ['engineer', 'atlas', 'qa'],
-  'process-improvement': ['conductor', 'tracker', 'ba'],
+  'architecture-decision': ['jets', 'engineer', 'security', 'atlas', 'exec'],  // V2: exec enriches architecture slides
+  'security-insight': ['security', 'engineer', 'qa', 'atlas', 'exec'],  // V2: exec enriches security slides
+  'performance-insight': ['engineer', 'atlas', 'qa', 'exec'],  // V2: exec enriches metrics slides
+  'process-improvement': ['conductor', 'tracker', 'ba', 'exec'],  // V2: exec incorporates process insights
   'conflict-resolution': ['conductor', 'ask-tom'],
   'integration-pattern': ['engineer', 'atlas', 'jets'],
 };
@@ -75,6 +77,16 @@ const AGENT_LEARNING_INTERESTS: Record<AgentId, KnowledgeCategory[]> = {
   ],
   tracker: ['process-improvement'],
   finops: ['process-improvement'],
+  // V2 ADDITION: exec agent interests for slide enrichment via collective intelligence
+  exec: [
+    'cross-agent-learning',
+    'best-practice',
+    'process-improvement',
+    'architecture-decision',
+    'security-insight',
+    'performance-insight',
+    'error-pattern',
+  ],
 };
 
 export class LearningEngine {

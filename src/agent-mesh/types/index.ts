@@ -21,7 +21,8 @@ export type AgentId =
   | 'customer'
   | 'ask-tom'
   | 'tracker'
-  | 'finops';
+  | 'finops'
+  | 'exec';       // Executive Presentation Specialist (V2)
 
 export type AgentCapability =
   | 'requirements'
@@ -35,7 +36,8 @@ export type AgentCapability =
   | 'problem-solving'
   | 'tracking'
   | 'cost-analysis'
-  | 'orchestration';
+  | 'orchestration'
+  | 'presentation-generation'; // V2 ADDITION: exec agent capability
 
 export interface AgentProfile {
   id: AgentId;

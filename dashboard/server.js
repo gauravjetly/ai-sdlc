@@ -343,6 +343,187 @@ function getAllCosts() {
   }
 }
 
+// Read agent mesh status from orchestrator state and collective memory
+function getMeshStatus() {
+  const MESH_BASE = path.join(process.env.HOME, '.claude', 'agent-mesh');
+  const ORCH_STATE = path.join(MESH_BASE, 'orchestrator', 'state.json');
+  const PID_FILE = path.join(MESH_BASE, 'orchestrator', 'orchestrator.pid');
+
+  try {
+    // Read orchestrator state
+    let state = { health: 'unknown', cycles_completed: 0, learnings_synced: 0, errors: 0 };
+    if (fs.existsSync(ORCH_STATE)) {
+      state = JSON.parse(fs.readFileSync(ORCH_STATE, 'utf8'));
+    }
+
+    // Determine if daemon is running
+    let daemonRunning = false;
+    let daemonPid = null;
+    if (fs.existsSync(PID_FILE)) {
+      try {
+        daemonPid = parseInt(fs.readFileSync(PID_FILE, 'utf8').trim());
+        // Check if PID is alive by sending signal 0
+        process.kill(daemonPid, 0);
+        daemonRunning = true;
+      } catch (_) {
+        daemonRunning = false;
+      }
+    }
+
+    // Count messages per agent inbox
+    const inboxDir = path.join(MESH_BASE, 'bus', 'inboxes');
+    const agentInboxes = {};
+    let totalPending = 0;
+    const agentIds = ['conductor', 'ba', 'jets', 'ux', 'engineer', 'security', 'qa', 'atlas', 'customer', 'ask-tom', 'tracker', 'finops'];
+    if (fs.existsSync(inboxDir)) {
+      for (const agent of agentIds) {
+        const agentInbox = path.join(inboxDir, agent);
+        if (fs.existsSync(agentInbox)) {
+          const msgs = fs.readdirSync(agentInbox).filter(f => f.endsWith('.json'));
+          agentInboxes[agent] = msgs.length;
+          totalPending += msgs.length;
+        } else {
+          agentInboxes[agent] = 0;
+        }
+      }
+    }
+
+    // Count collective knowledge items per category
+    const knowledgeDir = path.join(MESH_BASE, 'collective-memory', 'knowledge');
+    const knowledgeByCat = {};
+    let totalKnowledge = 0;
+    if (fs.existsSync(knowledgeDir)) {
+      const categories = fs.readdirSync(knowledgeDir);
+      for (const cat of categories) {
+        const catPath = path.join(knowledgeDir, cat);
+        if (fs.statSync(catPath).isDirectory()) {
+          const items = fs.readdirSync(catPath).filter(f => f.endsWith('.json'));
+          if (items.length > 0) {
+            knowledgeByCat[cat] = items.length;
+            totalKnowledge += items.length;
+          }
+        }
+      }
+    }
+
+    // Count learning events
+    const learningEventsDir = path.join(MESH_BASE, 'learning', 'events');
+    let learningEventCount = 0;
+    if (fs.existsSync(learningEventsDir)) {
+      learningEventCount = fs.readdirSync(learningEventsDir).filter(f => f.endsWith('.json')).length;
+    }
+
+    // Count coordination rules
+    const rulesFile = path.join(MESH_BASE, 'orchestrator', 'coordination-rules.json');
+    let rulesCount = 0;
+    if (fs.existsSync(rulesFile)) {
+      try {
+        const rules = JSON.parse(fs.readFileSync(rulesFile, 'utf8'));
+        rulesCount = Array.isArray(rules) ? rules.length : (rules.rules ? rules.rules.length : 0);
+      } catch (_) {}
+    }
+
+    // Read recent log lines (last 10)
+    const logFile = path.join(MESH_BASE, 'orchestrator', 'orchestrator.log');
+    const recentLogs = [];
+    if (fs.existsSync(logFile)) {
+      const logData = fs.readFileSync(logFile, 'utf8');
+      const lines = logData.trim().split('\n').filter(Boolean);
+      recentLogs.push(...lines.slice(-10));
+    }
+
+    return {
+      orchestrator: {
+        running: daemonRunning,
+        pid: daemonPid,
+        health: state.health || 'unknown',
+        startedAt: state.started_at || null,
+        lastCycle: state.last_cycle || null,
+        cyclesCompleted: state.cycles_completed || 0,
+        eventsProcessed: state.events_processed || 0,
+        messagesRouted: state.messages_routed || 0,
+        learningsSynced: state.learnings_synced || 0,
+        errors: state.errors || 0
+      },
+      messaging: {
+        totalPending,
+        agentInboxes
+      },
+      collectiveIntelligence: {
+        totalKnowledge,
+        byCategory: knowledgeByCat,
+        learningEventCount,
+        coordinationRules: rulesCount
+      },
+      recentLogs,
+      timestamp: new Date().toISOString()
+    };
+  } catch (error) {
+    console.error('Error reading mesh status:', error);
+    return {
+      orchestrator: { running: false, health: 'error' },
+      messaging: { totalPending: 0, agentInboxes: {} },
+      collectiveIntelligence: { totalKnowledge: 0, byCategory: {} },
+      error: error.message,
+      timestamp: new Date().toISOString()
+    };
+  }
+}
+
+// Read recent agent mesh events from the SDLC event bridge
+function getMeshRecentEvents(limit) {
+  const MESH_BASE = path.join(process.env.HOME, '.claude', 'agent-mesh');
+  const learningEventsDir = path.join(MESH_BASE, 'learning', 'events');
+  const events = [];
+
+  try {
+    if (fs.existsSync(learningEventsDir)) {
+      const files = fs.readdirSync(learningEventsDir)
+        .filter(f => f.endsWith('.json'))
+        .map(f => {
+          try {
+            return JSON.parse(fs.readFileSync(path.join(learningEventsDir, f), 'utf8'));
+          } catch (_) { return null; }
+        })
+        .filter(Boolean)
+        .sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0))
+        .slice(0, limit);
+      events.push(...files);
+    }
+    return events;
+  } catch (error) {
+    return [];
+  }
+}
+
+// Read collective knowledge items from agent mesh
+function getMeshKnowledge() {
+  const MESH_BASE = path.join(process.env.HOME, '.claude', 'agent-mesh');
+  const knowledgeDir = path.join(MESH_BASE, 'collective-memory', 'knowledge');
+  const knowledge = [];
+
+  try {
+    if (!fs.existsSync(knowledgeDir)) return knowledge;
+    const categories = fs.readdirSync(knowledgeDir);
+    for (const cat of categories) {
+      const catPath = path.join(knowledgeDir, cat);
+      if (!fs.statSync(catPath).isDirectory()) continue;
+      const files = fs.readdirSync(catPath).filter(f => f.endsWith('.json'));
+      for (const file of files) {
+        try {
+          const item = JSON.parse(fs.readFileSync(path.join(catPath, file), 'utf8'));
+          knowledge.push(item);
+        } catch (_) {}
+      }
+    }
+    // Sort by most recently updated
+    knowledge.sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
+    return knowledge;
+  } catch (error) {
+    return [];
+  }
+}
+
 // Read cost data for a specific project
 function getCostByProjectId(projectId) {
   try {
@@ -1170,6 +1351,31 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ============================================================================
+  // AGENT MESH API - Mesh status and collective intelligence
+  // ============================================================================
+
+  if (req.url === '/api/mesh/status' && req.method === 'GET') {
+    const meshStatus = getMeshStatus();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(meshStatus));
+    return;
+  }
+
+  if (req.url === '/api/mesh/events' && req.method === 'GET') {
+    const events = getMeshRecentEvents(20);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(events));
+    return;
+  }
+
+  if (req.url === '/api/mesh/knowledge' && req.method === 'GET') {
+    const knowledge = getMeshKnowledge();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(knowledge));
+    return;
+  }
+
   // Serve the dashboard HTML
   if (req.url === '/' || req.url === '/index.html') {
     const htmlPath = path.join(__dirname, 'index.html');
@@ -1281,6 +1487,9 @@ server.listen(PORT, async () => {
   console.log(`  API Activity:  http://localhost:${PORT}/api/activity`);
   console.log(`  API Autofix:   http://localhost:${PORT}/api/autofix`);
   console.log(`  API Refresh:   http://localhost:${PORT}/api/refresh`);
+  console.log(`  Mesh Status:   http://localhost:${PORT}/api/mesh/status`);
+  console.log(`  Mesh Events:   http://localhost:${PORT}/api/mesh/events`);
+  console.log(`  Mesh Knowledge:http://localhost:${PORT}/api/mesh/knowledge`);
   console.log('');
   console.log('  Proxy Routes (Phase 1 Integration):');
   console.log(`    /api/v1/*    -> http://localhost:3000 (Platform API)`);
