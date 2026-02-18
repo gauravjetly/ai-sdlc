@@ -1094,6 +1094,82 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+
+  // ============================================================================
+  // EXEC AGENT API - Generate Executive Presentations
+  // ============================================================================
+
+  if (req.url === '/api/exec/generate' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+        const projectId = data.project_id || 'UNKNOWN';
+        const presType = data.type || 'executive-summary';
+
+        console.log(`[Exec Agent] Generating ${presType} presentation for ${projectId}`);
+
+        // Execute Python script
+        const execAgentPath = path.join(__dirname, '../src/agents/exec-agent/exec-agent.py');
+        const cmd = `cd "${path.dirname(execAgentPath)}" && source venv/bin/activate && python exec-agent.py generate "${projectId}" "${presType}"`;
+
+        exec(cmd, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`[Exec Agent] Error: ${stderr}`);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+              success: false,
+              error: 'Failed to generate presentation',
+              details: stderr
+            }));
+            return;
+          }
+
+          // Extract output path from stdout
+          const outputMatch = stdout.match(/Presentation generated: (.+)/);
+          const outputPath = outputMatch ? outputMatch[1].trim() : null;
+
+          console.log(`[Exec Agent] ✅ Generated: ${outputPath}`);
+
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: true,
+            message: 'Presentation generated successfully',
+            output_path: outputPath,
+            project_id: projectId,
+            type: presType
+          }));
+        });
+      } catch (error) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
+  if (req.url === '/api/exec/list' && req.method === 'GET') {
+    // List all generated presentations
+    const execMemoryDir = path.join(process.env.HOME, '.claude', 'exec-agent-memory', 'presentations');
+    
+    try {
+      const files = fs.readdirSync(execMemoryDir).filter(f => f.endsWith('.pptx'));
+      const presentations = files.map(f => ({
+        filename: f,
+        path: path.join(execMemoryDir, f),
+        created: fs.statSync(path.join(execMemoryDir, f)).mtime
+      }));
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, presentations }));
+    } catch (error) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: error.message }));
+    }
+    return;
+  }
+
   // Serve the dashboard HTML
   if (req.url === '/' || req.url === '/index.html') {
     const htmlPath = path.join(__dirname, 'index.html');

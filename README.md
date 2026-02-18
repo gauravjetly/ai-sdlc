@@ -1,317 +1,400 @@
-# AI SDLC Framework & Deltek Catalyst Platform
+# AI-SDLC - AI-Native Software Development Lifecycle
 
-This repository contains **two independent projects** unified in an integrated dashboard:
+**An autonomous software development platform powered by specialized AI agents**
 
-## 🎛️ NEW: Integrated Dashboard
+---
 
-Access everything from one unified interface at **http://localhost:3030**
+## 🎯 Overview
 
-**Quick Start**:
+AI-SDLC is a complete software development lifecycle framework that uses 12 specialized AI agents to autonomously handle every phase of software development - from requirements gathering to deployment and monitoring.
+
+### What It Does
+
+- ✅ **Requirements Gathering** (BA Agent)
+- ✅ **Architecture Design** (Architect/Jets Agent)
+- ✅ **UX/UI Design** (UX Agent)
+- ✅ **Code Implementation** (Software Engineer Agent)
+- ✅ **Security Review** (Security Agent)
+- ✅ **Quality Assurance** (QA Agent)
+- ✅ **Deployment** (Atlas/DevOps Agent)
+- ✅ **User Acceptance Testing** (Customer Agent)
+- ✅ **Cost Management** (FinOps Agent)
+- ✅ **Progress Tracking** (Tracker Agent)
+- ✅ **Problem Solving** (Ask Tom Agent)
+- ✅ **Executive Presentations** (Exec Agent) ⭐ NEW!
+
+---
+
+## 🚀 Quick Start
+
+### 1. Start the Dashboard
+
 ```bash
-./start-all.sh
+cd /Users/gauravjetly/aisdlc-2.1.0
+cd dashboard
+node server.js
 ```
 
-The integrated dashboard combines:
-- AI-SDLC Control Center (monitoring and project management)
-- Platform UI (deployments and infrastructure)
-- Visual Designer (cloud architecture design)
-- Real-time activity feeds and agent monitoring
+**Access**: http://localhost:3030
 
-[Quick Start Guide →](./QUICK-START-INTEGRATED-DASHBOARD.md) | [Integration Tests →](./INTEGRATION-TEST-CHECKLIST.md)
+### 2. Use Claude Code Skills
 
----
+The AI-SDLC agents are available as Claude Code skills:
 
-## 1. 🏗️ AI SDLC Framework
-**AI-Native Software Development Lifecycle** - A development framework using specialized AI agents to build software.
-
-**What it is**: Development methodology and tooling
-**Who uses it**: Development teams building software
-**Purpose**: Build software products using AI agents
-**Documentation**: See `CLAUDE.md` and `docs/sdlc/`
-
-[Learn more about AI SDLC Framework →](./docs/sdlc/)
-
----
-
-## 2. 🚀 Deltek Catalyst Platform
-**AI-Native Multi-Cloud DevOps Platform** - A production-ready platform for autonomous cloud operations.
-
-**What it is**: DevOps automation platform (independent product)
-**Who uses it**: DevOps teams, SREs, Platform Engineers
-**Purpose**: Automate deployments and cloud operations
-**Location**: `/Users/gauravjetly/catalyst/` (separate directory)
-**Access**: http://localhost:3002 (Web UI)
-**Documentation**: See Catalyst directory
-
-[Get started with Catalyst →](/Users/gauravjetly/catalyst/)
-
----
-
-## 🔍 Which One Do I Need?
-
-### Use AI SDLC Framework if you want to:
-- Build new software products using AI agents
-- Implement features with automated development workflows
-- Use AI-powered requirements, architecture, coding, testing
-- Monitor development progress in real-time
-
-**Quick Start**:
 ```bash
-# Start integrated dashboard
-./start-all.sh
+# Start full SDLC workflow
+/sdlc-start Build a user authentication system
 
-# Open dashboard
-open http://localhost:3030
+# Generate executive presentation
+/exec-agent generate SDLC-001 executive-summary c-suite
 
-# Or use AI SDLC commands in Claude
-/sdlc-start "Build authentication system"
+# Check status
+/sdlc-status
+
+# Review code
+/sdlc-review src/
+
+# Deploy
+/sdlc-deploy staging
+```
+
+---
+
+## 🏗️ Architecture
+
+### Dashboard (Control Center)
+
+**Location**: `dashboard/`
+**Port**: 3030
+**Purpose**: Central monitoring and control for all AI-SDLC activities
+
+Features:
+- Real-time agent activity monitoring
+- Project registry and tracking
+- Cost analysis (FinOps integration)
+- Phase 5 analytics with charts
+- Tool adoption tracking
+- Scheduling views
+
+### Exec Agent (NEW!)
+
+**Location**: `src/agents/exec-agent/`
+**Purpose**: Generate Deltek-branded executive presentations
+
+Features:
+- Executive summaries (C-Suite)
+- Architecture presentations
+- Status reports
+- Self-learning with Bayesian optimization
+- Quality scoring (6 dimensions)
+- Version management
+
+[Complete documentation →](src/agents/exec-agent/IMPLEMENTATION-COMPLETE.md)
+
+### Agent Mesh
+
+**Location**: `src/agent-mesh/`
+**Purpose**: Event-driven coordination between all agents
+
+Features:
+- File-based event bus
+- Cross-agent learning
+- Knowledge sharing
+- Auto-update triggers
+
+### Memory Systems
+
+**SDLC Registry**: `~/.claude/sdlc-registry/`
+- Project tracking
+- Agent activity logs
+- Event history
+
+**Exec Agent Memory**: `~/.claude/exec-agent-memory/`
+- Generated presentations
+- Learning models
+- Brand guidelines
+
+---
+
+## 📋 Project Structure
+
+```
+aisdlc-2.1.0/
+├── dashboard/                    # Control Center (port 3030)
+│   ├── server.js                # Dashboard server
+│   └── index.html               # UI
+├── src/
+│   ├── agents/
+│   │   └── exec-agent/          # Executive presentation agent
+│   │       ├── domain/          # Pure business logic
+│   │       ├── application/     # Use cases & services
+│   │       ├── infrastructure/  # External integrations
+│   │       └── presentation/    # CLI & API
+│   ├── agent-mesh/              # Event-driven coordination
+│   ├── integration/             # Integration tests
+│   └── memory-system/           # Shared memory
+├── docs/
+│   └── sdlc/                    # SDLC documentation
+│       ├── requirements/
+│       ├── architecture/
+│       ├── security/
+│       ├── testing/
+│       └── deployments/
+├── CLAUDE.md                    # AI agent instructions
+└── README.md                    # This file
+```
+
+---
+
+## 🔧 Configuration
+
+### Environment Setup
+
+1. **SDLC Registry**
+   - Location: `~/.claude/sdlc-registry/`
+   - Auto-created on first use
+   - Stores all project data and agent activity
+
+2. **Exec Agent**
+   - Virtual environment: `src/agents/exec-agent/venv/`
+   - Dependencies: `python-pptx`, `Pillow`, `anthropic`, `scipy`
+   - Configuration: Environment variables for Claude API key
+
+3. **Dashboard**
+   - Port: 3030
+   - Node.js server
+   - No external dependencies
+
+### Skills Configuration
+
+Claude Code skills are stored in: `~/.claude/skills/`
+
+Available skills:
+- `/sdlc-start` - Start full SDLC workflow
+- `/sdlc-status` - Check status
+- `/sdlc-review` - Code review
+- `/sdlc-deploy` - Deployment
+- `/exec-agent` - Generate presentations
+
+---
+
+## 📚 Documentation
+
+### Core Documentation
+- [CLAUDE.md](CLAUDE.md) - AI agent instructions and standards
+- [DEPLOYMENT-STATUS.md](DEPLOYMENT-STATUS.md) - Current deployment status
+- [HOW-IT-WORKS.md](src/agents/exec-agent/HOW-IT-WORKS.md) - Exec Agent guide
+
+### Agent Documentation
+- [Exec Agent](src/agents/exec-agent/IMPLEMENTATION-COMPLETE.md) - Complete implementation
+- [Agent Mesh](src/agent-mesh/README.md) - Event-driven coordination
+- [Memory Systems](docs/sdlc/architecture/) - Architecture decisions
+
+### Guides
+- [EXEC-AGENT-SKILL.md](EXEC-AGENT-SKILL.md) - Claude Code skill usage
+- [SDLC Architecture](docs/sdlc/architecture/) - System architecture
+
+---
+
+## 🎓 How It Works
+
+### 1. SDLC Workflow
+
+```
+User Request → Conductor → BA → Architect → Engineer →
+Security → QA → DevOps → Customer → Exec (Presentation)
+```
+
+Each agent:
+- Has specialized expertise
+- Communicates via events
+- Learns from feedback
+- Documents its work
+
+### 2. Event-Driven Coordination
+
+All agents communicate through a file-based event bus:
+
+```
+~/.claude/sdlc-registry/events/
+├── inbox/<agent>/     # Incoming events for each agent
+├── outbox/<agent>/    # Outgoing events from each agent
+└── archive/           # Processed events
+```
+
+Events trigger autonomous actions:
+- Project completion → Generate executive summary
+- Architecture change → Update diagrams
+- Security finding → Add security slide
+- Customer feedback → Update learning models
+
+### 3. Self-Learning
+
+Agents continuously improve using:
+- **Bayesian Optimization** - Thompson Sampling for optimal decisions
+- **Multi-Signal Feedback** - Ratings, quality scores, edits, reuse
+- **Cross-Agent Learning** - Share insights across the agent mesh
+- **Version Management** - Track improvements over time
+
+---
+
+## 🚀 Usage Examples
+
+### Start Full SDLC Workflow
+
+```bash
+/sdlc-start Build a REST API for user management with JWT authentication
+```
+
+The system will:
+1. BA Agent gathers requirements
+2. Architect designs the system
+3. Engineer implements the code
+4. Security reviews for vulnerabilities
+5. QA tests functionality
+6. DevOps deploys
+7. Customer validates
+8. Exec generates presentation
+
+### Generate Executive Presentation
+
+```bash
+/exec-agent generate SDLC-20250217-001 executive-summary c-suite
+```
+
+Output: Professional PowerPoint in `~/.claude/exec-agent-memory/presentations/`
+
+### Check Project Status
+
+```bash
 /sdlc-status
 ```
 
-### Use Deltek Catalyst if you want to:
-- Deploy applications to Kubernetes
-- Manage multi-cloud infrastructure (AWS, OCI, Azure, GCP)
-- Automate DevOps workflows
-- Monitor and optimize cloud costs
-- Run security scans and compliance checks
-
-**Quick Start**:
-```bash
-# Start Catalyst platform
-cd src/platform
-npm run dev
-
-# Open web UI
-open http://localhost:3002
-```
+Shows:
+- Active projects
+- Agent activity
+- Quality gates
+- Blockers
+- Costs
 
 ---
 
-## 📁 Directory Structure
+## 🎯 Key Features
 
-```
-/Users/gauravjetly/
-│
-├── aisdlc-2.1.0/              # AI SDLC Framework
-│   ├── CLAUDE.md              # Framework instructions
-│   ├── docs/sdlc/             # SDLC documentation
-│   │   ├── requirements/
-│   │   ├── architecture/
-│   │   └── tracking/
-│   ├── workflows/             # SDLC workflows
-│   ├── README.md              # This file
-│   ├── PROJECT-STRUCTURE.md   # Separation explanation
-│   └── SEPARATION-GUIDE.md    # Simple separation guide
-│
-└── catalyst/                  # Deltek Catalyst Platform (Independent)
-    ├── README.md              # Catalyst overview
-    ├── WHATS-NEXT.md          # Quick start guide
-    ├── FULLY-WORKING-MODE.md  # Features guide
-    ├── PLATFORM-COMPLETE.md   # Technical details
-    ├── webapp/                # React UI (7 pages)
-    ├── services/              # Core services (20+)
-    ├── api/                   # REST API (102 endpoints)
-    ├── prisma/                # Database (11 tables)
-    ├── tests/                 # Test suites (185+ tests)
-    ├── observability/         # Monitoring stack
-    ├── self-healing/          # Auto-remediation
-    ├── pipeline/              # CI/CD automation
-    └── [All other Catalyst files]
-```
+### Dashboard Features
+- ✅ Real-time agent monitoring
+- ✅ Project registry with SSE updates
+- ✅ Cost tracking (FinOps integration)
+- ✅ Phase 5 analytics with charts
+- ✅ Tool adoption metrics
+- ✅ Scheduling views
 
----
+### Exec Agent Features
+- ✅ Deltek-branded presentations
+- ✅ Self-learning with Bayesian optimization
+- ✅ Quality scoring (6 dimensions)
+- ✅ Version management
+- ✅ Auto-updates on project changes
+- ✅ CLI and API access
 
-## 🎯 Quick Links
-
-### Integrated Dashboard
-- **[Quick Start Guide](./QUICK-START-INTEGRATED-DASHBOARD.md)** - Get started in 5 minutes
-- **[Integration Test Checklist](./INTEGRATION-TEST-CHECKLIST.md)** - Comprehensive testing guide
-- [Dashboard](http://localhost:3030) - Main control center
-- [Platform API](http://localhost:3000) - Backend services
-- [Platform Webapp](http://localhost:3001) - UI components
-
-### For AI SDLC Framework Users
-- [Framework Documentation](./docs/sdlc/)
-- [Commands Reference](./CLAUDE.md)
-- [Architecture Decisions](./docs/sdlc/architecture/)
-- [Requirements Docs](./docs/sdlc/requirements/)
-
-### For Deltek Catalyst Users
-- [Quick Start Guide](./FULLY-WORKING-MODE.md)
-- [What's Next Guide](./WHATS-NEXT.md)
-- [Complete Platform Details](./PLATFORM-COMPLETE.md)
-- [Web UI](http://localhost:3002)
-- [API Documentation](http://localhost:3000/api-docs)
-
-### Understanding the Separation
-- [Project Structure Explained](./PROJECT-STRUCTURE.md)
-
----
-
-## 🚀 Getting Started
-
-### Integrated Dashboard (Recommended)
-
-**One-command start for everything:**
-
-```bash
-# Start all services with integrated dashboard
-./start-all.sh
-```
-
-This starts:
-- Dashboard Server (port 3030) - Main control center
-- Platform API (port 3000) - Backend services
-- Platform Webapp (port 3001) - UI components
-
-**Access Points:**
-- Main Dashboard: http://localhost:3030
-- Platform API: http://localhost:3000
-- Platform Webapp: http://localhost:3001
-
-**Complete Guide**: [QUICK-START-INTEGRATED-DASHBOARD.md](./QUICK-START-INTEGRATED-DASHBOARD.md)
-
-### For Development (AI SDLC)
-Use Claude with AI SDLC commands to build software, then monitor progress in the dashboard.
-
-### For Operations (Catalyst)
-
-1. **Navigate to Catalyst**:
-   ```bash
-   cd /Users/gauravjetly/catalyst
-   ```
-
-2. **Start the platform**:
-   ```bash
-   npm install
-   npm run dev
-   ```
-
-3. **Access Web UI**: http://localhost:3002
-
-4. **Enable Demo Mode**: Go to Environments page
-
-5. **Deploy an app**: Use the deployment wizard
-
-Full instructions: `/Users/gauravjetly/catalyst/WHATS-NEXT.md`
-
----
-
-## 📊 Key Statistics
-
-### AI SDLC Framework
-- **Agents**: 9 specialized development agents
-- **Workflows**: Full SDLC automation
-- **Output**: Software products
-
-### Deltek Catalyst Platform
-- **Code**: 25,000+ lines
-- **Services**: 20+ real services (zero mock data)
-- **Tests**: 185+ tests, 85% coverage
-- **UI**: 7 interactive web pages
-- **APIs**: 102 REST endpoints
-- **Agents**: 8 runtime operations agents
-- **Status**: Production ready ✅
-
----
-
-## 🔑 Key Differences
-
-| Aspect | AI SDLC Framework | Deltek Catalyst |
-|--------|-------------------|-----------------|
-| **Type** | Development Tool | DevOps Product |
-| **Purpose** | Build software | Operate infrastructure |
-| **Users** | Developers | DevOps/SRE teams |
-| **When** | Development time | Runtime |
-| **Agents** | Build agents | Operations agents |
-| **Access** | Claude commands | Web UI + API |
-| **Output** | Software | Deployments |
-
----
-
-## 📞 Support
-
-### AI SDLC Questions
-See framework documentation in `docs/sdlc/`
-
-### Catalyst Questions
-See user guides:
-- Quick start: `FULLY-WORKING-MODE.md`
-- Next steps: `WHATS-NEXT.md`
-- Complete details: `PLATFORM-COMPLETE.md`
-
----
-
-## ✅ Status
-
-| Project | Status | Version |
-|---------|--------|---------|
-| **AI SDLC Framework** | ✅ Active | v2.1.0 |
-| **Deltek Catalyst** | ✅ Production Ready | v1.0.0 |
-
----
-
-## 🎉 Summary
-
-**Two Independent Projects in One Repository**:
-
-1. **AI SDLC** = The framework used to **build** software
-2. **Catalyst** = The platform **built using** that framework
-
-Think of it like:
-- AI SDLC is **Visual Studio** (the tool)
-- Catalyst is **Windows** (the product built with the tool)
-
-Both are in this repo, but they serve completely different purposes and operate independently.
+### Agent Mesh Features
+- ✅ Event-driven coordination
+- ✅ Cross-agent learning
+- ✅ Knowledge sharing
+- ✅ Auto-update triggers
+- ✅ Distributed intelligence
 
 ---
 
 ## 🧪 Testing
 
-### Run Integration Tests
+### Run Tests
 
 ```bash
-# Automated integration tests
-./test-integration.sh
+# Exec Agent tests
+cd src/agents/exec-agent
+source venv/bin/activate
+pytest tests/ -v
 
-# Manual testing checklist
-# See INTEGRATION-TEST-CHECKLIST.md
+# Result: 73/73 passing (100%)
 ```
 
-### Test Coverage
+### Integration Tests
 
-- Service startup and health checks
-- HTTP endpoint validation
-- API proxy functionality
-- Theme synchronization
-- Performance benchmarks
-- Error handling
-- Cross-origin communication
+```bash
+# Full SDLC cycle simulation
+cd src/integration
+npm test
+```
 
 ---
 
-## 📸 Screenshots
+## 📊 Status
 
-### Integrated Dashboard
-The main control center provides unified access to all features:
+### Production Ready ✅
 
-**Main Dashboard View:**
-- Overview tab: System status and metrics
-- Projects tab: All SDLC projects
-- Agents tab: AI agent monitoring
-- Activity tab: Real-time activity feed
+| Component | Status | Tests |
+|-----------|--------|-------|
+| Dashboard | 🟢 Running | Manual |
+| Exec Agent | 🟢 Complete | 73/73 ✅ |
+| Agent Mesh | 🟢 Implemented | 13/13 ✅ |
+| SDLC Registry | 🟢 Operational | N/A |
+| Skills | 🟢 Installed | Working |
 
-**Embedded Platform Views:**
-- Platform UI tab: Full platform interface
-- Visual Designer tab: Cloud architecture designer
-- Deployments tab: Deployment management
+### Recent Updates
 
-All views synchronized with:
-- Unified theme (light/dark mode)
-- Seamless navigation
-- Real-time data updates
-- No page refreshes required
+- **Feb 17, 2025**: Exec Agent (all 4 phases complete)
+- **Feb 17, 2025**: Claude Code skill created
+- **Feb 17, 2025**: Event bus directories configured
+- **Feb 17, 2025**: Dashboard enhancements (Phase 5)
 
 ---
 
-*Last Updated: 2026-02-10*
+## 🤝 Contributing
+
+### Adding New Agents
+
+1. Create agent directory in `src/agents/<agent-name>/`
+2. Implement layered architecture (domain/application/infrastructure)
+3. Add event handlers for agent mesh
+4. Create Claude Code skill in `~/.claude/skills/<agent-name>/`
+5. Document in `docs/sdlc/architecture/`
+
+### Quality Standards
+
+- ✅ Layered architecture (mandatory)
+- ✅ Zero domain dependencies
+- ✅ >80% test coverage
+- ✅ SOLID principles
+- ✅ Comprehensive documentation
+
+---
+
+## 📝 License
+
+Internal project - Deltek/AI-SDLC Platform
+
+---
+
+## 🔗 Links
+
+- **Dashboard**: http://localhost:3030
+- **Documentation**: `docs/sdlc/`
+- **Skills**: `~/.claude/skills/`
+- **Registry**: `~/.claude/sdlc-registry/`
+- **Presentations**: `~/.claude/exec-agent-memory/presentations/`
+
+---
+
+## 🎉 Quick Links
+
+- [Get Started](#-quick-start)
+- [Documentation](#-documentation)
+- [How It Works](#-how-it-works)
+- [Usage Examples](#-usage-examples)
+
+---
+
+**Last Updated**: February 17, 2025
+**Version**: 2.1.0 with Exec Agent
+**Status**: Production Ready 🚀
