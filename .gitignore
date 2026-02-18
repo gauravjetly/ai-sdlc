@@ -47,6 +47,18 @@ test-registry/
 *.bak
 *.backup
 *~
+*.phase5bak
+*.backup-before-phase5
+
+# Runtime files
+dashboard/dashboard.pid
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
 
 # Terraform
 **/.terraform/*
