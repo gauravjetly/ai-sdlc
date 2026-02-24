@@ -216,7 +216,7 @@ Real-time monitoring of:
 
 ### 2. Exec Agent (Presentation Generator)
 
-**NEW**: Generate professional Deltek-branded presentations automatically.
+**NEW**: Generate professional Vintiq-branded presentations automatically.
 
 ```bash
 /exec-agent generate SDLC-001 executive-summary c-suite
@@ -465,7 +465,7 @@ Integrates with Claude Code. CLI available. Web dashboard included.
 
 ## 📝 License
 
-Internal project - Deltek/AI-SDLC Platform
+Internal project - Vintiq/AI-SDLC Platform
 
 ---
 

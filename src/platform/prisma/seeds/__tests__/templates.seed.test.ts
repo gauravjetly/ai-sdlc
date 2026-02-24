@@ -151,7 +151,7 @@ describe('Infrastructure Templates', () => {
 
       it('should have author', () => {
         expect(metadata.author).toBeDefined();
-        expect(metadata.author).toBe('Deltek Catalyst Team');
+        expect(metadata.author).toBe('Vintiq Catalyst Team');
       });
 
       it('should have version', () => {

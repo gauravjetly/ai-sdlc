@@ -19,7 +19,7 @@ describe('RepositoryValidator', () => {
     repository: {
       allowedOrganizations: [
         'github.com/DLTKEngineering',
-        'github.com/deltek-internal',
+        'github.com/vintiq-internal',
       ],
       branchNaming: {
         pattern: '^(feature|bugfix|hotfix)/[A-Z]+-[0-9]+-[a-z0-9-]+$',
@@ -98,7 +98,7 @@ describe('RepositoryValidator', () => {
     it('should pass for alternative allowed organization', async () => {
       const policy = createMockPolicy();
       const context = createMockContext({
-        repository: 'https://github.com/deltek-internal/internal-tool',
+        repository: 'https://github.com/vintiq-internal/internal-tool',
       });
 
       const result = await validator.validate(context, policy);

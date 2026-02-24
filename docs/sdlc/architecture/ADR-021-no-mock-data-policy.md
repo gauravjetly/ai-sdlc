@@ -6,7 +6,7 @@
 
 ## Context
 
-The current Deltek Catalyst platform implementation contains significant amounts of mock data and placeholder implementations:
+The current Vintiq Catalyst platform implementation contains significant amounts of mock data and placeholder implementations:
 
 ### Current Problems
 
@@ -51,7 +51,7 @@ The user has explicitly requested:
 
 ## Decision
 
-We will adopt a **NO MOCK DATA POLICY** for the Deltek Catalyst platform. This means:
+We will adopt a **NO MOCK DATA POLICY** for the Vintiq Catalyst platform. This means:
 
 ### Absolute Rules
 

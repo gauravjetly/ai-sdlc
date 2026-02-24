@@ -1,6 +1,6 @@
 /**
  * Governance Engine Type Definitions
- * @module @deltek/governance-engine/types
+ * @module @vintiq/governance-engine/types
  */
 
 export * from './policy.types';

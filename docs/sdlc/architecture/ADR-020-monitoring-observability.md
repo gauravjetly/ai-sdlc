@@ -9,7 +9,7 @@
 
 ## Context
 
-The Deltek Catalyst platform requires comprehensive observability for:
+The Vintiq Catalyst platform requires comprehensive observability for:
 
 - **Metrics**: System performance, business KPIs, SLO tracking
 - **Logging**: Application logs, audit trails, debugging
@@ -457,7 +457,7 @@ groups:
         annotations:
           summary: "High error rate detected"
           description: "Error rate is {{ $value | humanizePercentage }} (threshold: 1%)"
-          runbook_url: "https://runbooks.catalyst.deltek.com/high-error-rate"
+          runbook_url: "https://runbooks.catalyst.vintiq.com/high-error-rate"
 
       - alert: HighLatency
         expr: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 0.5

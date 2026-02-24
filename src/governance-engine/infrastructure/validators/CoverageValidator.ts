@@ -1,6 +1,6 @@
 /**
  * Coverage Validator
- * @module @deltek/governance-engine/infrastructure/validators/CoverageValidator
+ * @module @vintiq/governance-engine/infrastructure/validators/CoverageValidator
  */
 
 import * as fs from 'fs/promises';

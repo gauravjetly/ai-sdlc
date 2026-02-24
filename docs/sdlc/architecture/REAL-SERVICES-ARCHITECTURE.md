@@ -1,4 +1,4 @@
-# Deltek Catalyst - Production-Ready Architecture with Real Services
+# Vintiq Catalyst - Production-Ready Architecture with Real Services
 
 ## Document Info
 - **ID**: ARCH-REAL-SERVICES-20260130
@@ -11,7 +11,7 @@
 
 ## Executive Summary
 
-This architecture document defines a **production-ready** Deltek Catalyst platform where **every service performs real operations**. No mock data, no placeholder implementations, no simulated services.
+This architecture document defines a **production-ready** Vintiq Catalyst platform where **every service performs real operations**. No mock data, no placeholder implementations, no simulated services.
 
 ### Core Commitment
 
@@ -38,7 +38,7 @@ This architecture document defines a **production-ready** Deltek Catalyst platfo
 
 ```
 +============================================================================================+
-|                                    DELTEK CATALYST PLATFORM                                 |
+|                                    VINTIQ CATALYST PLATFORM                                 |
 |                                  (Production-Ready Architecture)                            |
 +============================================================================================+
 |                                                                                             |
@@ -462,7 +462,7 @@ export class DeploymentService implements IDeploymentService {
           app: config.application,
           environment: config.environment,
           version: config.version,
-          'managed-by': 'deltek-catalyst'
+          'managed-by': 'vintiq-catalyst'
         }
       },
       spec: {
@@ -702,7 +702,7 @@ export class AWSCloudService implements ICloudResourceService {
         Tags: [
           { Key: 'Name', Value: config.name },
           { Key: 'Environment', Value: config.environment },
-          { Key: 'ManagedBy', Value: 'deltek-catalyst' }
+          { Key: 'ManagedBy', Value: 'vintiq-catalyst' }
         ]
       }]
     }));
@@ -801,7 +801,7 @@ export class AWSCloudService implements ICloudResourceService {
       },
       tags: {
         Environment: config.environment,
-        ManagedBy: 'deltek-catalyst'
+        ManagedBy: 'vintiq-catalyst'
       }
     }));
 
@@ -877,7 +877,7 @@ export class AWSCloudService implements ICloudResourceService {
       BackupRetentionPeriod: config.environment === 'production' ? 30 : 7,
       Tags: [
         { Key: 'Environment', Value: config.environment },
-        { Key: 'ManagedBy', Value: 'deltek-catalyst' }
+        { Key: 'ManagedBy', Value: 'vintiq-catalyst' }
       ]
     }));
 
@@ -2921,4 +2921,4 @@ describe('Full Deployment Workflow E2E', () => {
 
 ---
 
-*This architecture ensures that every service in Deltek Catalyst performs REAL operations. No mock data, no placeholders, no simulations. Production-ready from day one.*
+*This architecture ensures that every service in Vintiq Catalyst performs REAL operations. No mock data, no placeholders, no simulations. Production-ready from day one.*

@@ -1,5 +1,5 @@
 {
-  "name": "@deltek/context-injection",
+  "name": "@vintiq/context-injection",
   "version": "1.0.0",
   "description": "AI-SDLC Context Injection System - Provides context-aware prompts for AI agents",
   "main": "dist/index.js",
@@ -45,9 +45,9 @@
     "injection",
     "agents",
     "rag",
-    "deltek"
+    "vintiq"
   ],
-  "author": "Deltek Engineering",
+  "author": "Vintiq Engineering",
   "license": "MIT",
   "repository": {
     "type": "git",

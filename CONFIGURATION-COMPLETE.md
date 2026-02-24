@@ -127,7 +127,7 @@ Cost:         $1.85
 ### Example 2: Context Injection
 ```
 Main Project: AI-SDLC Framework
-Feature:      Auto-inject Deltek standards, project context,
+Feature:      Auto-inject Vintiq standards, project context,
               and historical ADRs into agent prompts
 GitHub:       https://github.com/DLTKEngineering/aisdlc
 Status:       Completed

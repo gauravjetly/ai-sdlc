@@ -9,7 +9,7 @@
 
 ## Context
 
-The Deltek Catalyst Interactive Control Center requires a modern, enterprise-grade frontend architecture that supports:
+The Vintiq Catalyst Interactive Control Center requires a modern, enterprise-grade frontend architecture that supports:
 
 - Complex multi-step workflows (deployment wizards)
 - Real-time data updates (deployment progress, agent status)
@@ -94,7 +94,7 @@ const DeploymentWizard = lazy(() => import('./features/deployments/pages/Wizard'
 
 | Option | Pros | Cons | Decision |
 |--------|------|------|----------|
-| **Material-UI 5** | Enterprise-ready, accessible, Deltek styling | Large bundle | **Selected** |
+| **Material-UI 5** | Enterprise-ready, accessible, Vintiq styling | Large bundle | **Selected** |
 | Chakra UI | Excellent DX, accessible | Less enterprise adoption | Rejected |
 | Ant Design | Feature-rich | Chinese-centric design | Rejected |
 | Radix + Tailwind | Maximum flexibility | High implementation effort | Rejected |

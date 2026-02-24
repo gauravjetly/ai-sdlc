@@ -2,7 +2,7 @@
 
 ## Summary
 
-Successfully integrated the MultiProjectDashboard component into the Deltek Catalyst Control Center webapp.
+Successfully integrated the MultiProjectDashboard component into the Vintiq Catalyst Control Center webapp.
 
 ## Changes Made
 
@@ -182,7 +182,7 @@ No environment variables required for basic functionality. API calls use relativ
 
 For production:
 ```env
-VITE_API_BASE_URL=https://api.deltek-catalyst.com
+VITE_API_BASE_URL=https://api.vintiq-catalyst.com
 ```
 
 Then update MultiProjectDashboard.tsx to use:

@@ -46,7 +46,7 @@ This document defines the complete architecture for transforming the Exec Agent 
 
 ### 2.1 Strengths to Preserve
 
-- Deltek brand color palette is accurately captured
+- Vintiq brand color palette is accurately captured
 - Template path to official POTX file is configured
 - Memory directory structure is well-organized
 - Archive system preserves historical presentations
@@ -110,7 +110,7 @@ C4Context
     System_Ext(agent_mesh, "Agent Mesh", "Inter-agent communication bus")
     System_Ext(sdlc_registry, "SDLC Registry", "Project data and tracking")
     System_Ext(claude_api, "Claude API", "LLM for content synthesis")
-    System_Ext(brand_assets, "Deltek Brand Assets", "Templates, colors, typography")
+    System_Ext(brand_assets, "Vintiq Brand Assets", "Templates, colors, typography")
     System_Ext(file_system, "File System", "Memory, archives, output")
 
     Rel(dev, exec_agent, "Triggers via CLI/API/Webhook")
@@ -139,7 +139,7 @@ C4Container
     Container(composer, "Slide Composer", "Python", "Selects and orders slides for audience")
     Container(synthesizer, "Content Synthesizer", "Python", "Generates text from project data")
     Container(diagrams, "Diagram Engine", "Python", "Creates architecture and flow diagrams")
-    Container(brand, "Brand Validator", "Python", "Ensures Deltek compliance")
+    Container(brand, "Brand Validator", "Python", "Ensures Vintiq compliance")
     Container(audience, "Audience Profiler", "Python", "Manages audience preferences")
     Container(learning, "Learning Engine", "Python", "Bayesian preference learning")
     Container(quality, "Quality Scorer", "Python", "Rates output quality")
@@ -384,7 +384,7 @@ EXEC_AGENT_PROFILE = {
     "expertise": [
         "executive-presentations",
         "data-visualization",
-        "deltek-branding",
+        "vintiq-branding",
         "audience-adaptation",
         "diagram-generation"
     ],
@@ -448,7 +448,7 @@ flowchart TD
 5. **Content Synthesis** -- Use Claude API to generate natural-language content from raw data
 6. **Diagram Generation** -- Create Mermaid diagrams from architecture and data flow specifications
 7. **Slide Composition** -- Assemble content and diagrams into slide objects
-8. **Brand Validation** -- Verify every element against Deltek brand rules
+8. **Brand Validation** -- Verify every element against Vintiq brand rules
 9. **Quality Scoring** -- Rate the presentation across 6 dimensions
 10. **Rendering** -- Convert domain objects to PPTX file via python-pptx
 11. **Versioning** -- Hash content, store version, maintain diff history
@@ -608,7 +608,7 @@ class ContentSynthesizer:
 The synthesizer uses structured prompts with these components:
 
 ```
-SYSTEM: You are an executive presentation content writer for Deltek.
+SYSTEM: You are an executive presentation content writer for Vintiq.
         Style: {audience.tone}. Detail level: {audience.detail_level}.
         Max bullets: {constraints.max_bullets}.
         Max words per bullet: {constraints.max_words_per_bullet}.
@@ -641,7 +641,7 @@ class DiagramEngine:
     1. Receive diagram specification (type + data)
     2. Generate Mermaid syntax from specification
     3. Render Mermaid to SVG via mermaid-py
-    4. Apply Deltek brand styling (colors, fonts) to SVG
+    4. Apply Vintiq brand styling (colors, fonts) to SVG
     5. Convert SVG to EMF/PNG for PPTX embedding
     6. Cache rendered diagrams with data hash
     """
@@ -667,12 +667,12 @@ class DiagramEngine:
         ...
 ```
 
-**Diagram Style with Deltek Branding:**
+**Diagram Style with Vintiq Branding:**
 
 ```python
-DELTEK_DIAGRAM_STYLE = DiagramStyle(
+VINTIQ_DIAGRAM_STYLE = DiagramStyle(
     background_color="#FFFFFF",
-    primary_color="#1742F6",      # Deltek Blue
+    primary_color="#1742F6",      # Vintiq Blue
     secondary_color="#081581",    # Navy
     accent_colors=["#00B6C3", "#6D18F1", "#C200CC"],  # Teal, Purple, Magenta
     gradient=["#08E9EB", "#FF5DF2", "#3895FF", "#7A62FF"],  # Dela gradient
@@ -686,7 +686,7 @@ DELTEK_DIAGRAM_STYLE = DiagramStyle(
 
 #### 5.3.4 BrandValidator
 
-Enforces Deltek brand compliance on every element.
+Enforces Vintiq brand compliance on every element.
 
 ```python
 class BrandValidator:
@@ -694,14 +694,14 @@ class BrandValidator:
     Validation Rules:
     1. All text uses Figtree font family
     2. Heading sizes match brand typography spec
-    3. Colors are within the approved Deltek palette
+    3. Colors are within the approved Vintiq palette
     4. Logo placement follows guidelines (if logo is present)
     5. Slide backgrounds use approved patterns/colors
-    6. Chart colors use the Deltek color sequence
+    6. Chart colors use the Vintiq color sequence
     7. No unapproved fonts or colors anywhere
 
     Auto-Correction:
-    - Replace non-Deltek colors with nearest approved color
+    - Replace non-Vintiq colors with nearest approved color
     - Replace non-Figtree fonts with Figtree equivalent
     - Fix heading sizes to match brand spec
     """
@@ -715,7 +715,7 @@ class BrandValidator:
         ...
 
     def nearest_brand_color(self, hex_color: str) -> str:
-        """Find the closest approved Deltek color using CIE Delta-E distance."""
+        """Find the closest approved Vintiq color using CIE Delta-E distance."""
         ...
 ```
 
@@ -806,7 +806,7 @@ class TemplateResolver:
     """
     Template Resolution Strategy:
 
-    1. Try to load official Deltek POTX template
+    1. Try to load official Vintiq POTX template
     2. If unavailable, use cached template from memory
     3. If no cache, use built-in programmatic template
 
@@ -890,7 +890,7 @@ class PptxRenderer:
     Responsibilities:
     - Create python-pptx Presentation from template
     - Render each Slide domain object to a pptx slide
-    - Handle text formatting with Deltek typography
+    - Handle text formatting with Vintiq typography
     - Embed diagrams (SVG/PNG) at correct positions
     - Create charts from metric data
     - Apply consistent spacing and margins
@@ -917,7 +917,7 @@ class MermaidRenderer:
 
     Pipeline:
     1. Receive Mermaid syntax string
-    2. Apply Deltek theme configuration
+    2. Apply Vintiq theme configuration
     3. Render to SVG via mermaid
     4. Post-process SVG (adjust fonts, colors)
     5. Convert to PNG (for PPTX compatibility)
@@ -948,7 +948,7 @@ class FileMemoryStore:
     |   +-- schedules.json              # Active schedules
     |   +-- thresholds.json             # Quality thresholds
     +-- brand/
-    |   +-- colors.json                 # Deltek color palette
+    |   +-- colors.json                 # Vintiq color palette
     |   +-- typography.json             # Typography rules
     |   +-- layouts.json                # Layout mappings per template version
     |   +-- template-cache/             # Cached template file
@@ -1605,7 +1605,7 @@ class ABTestManager:
     1. Slide ordering variants
     2. Content verbosity variants (concise vs detailed)
     3. Diagram style variants (simplified vs detailed)
-    4. Color scheme variants (within Deltek palette)
+    4. Color scheme variants (within Vintiq palette)
     5. Layout variants (for the same content)
 
     Process:
@@ -1777,7 +1777,7 @@ class ExecAnalytics:
 
 **Domain Unit Tests:**
 - SlideComposer selects correct slides for each audience type
-- BrandValidator detects all Deltek color/font violations
+- BrandValidator detects all Vintiq color/font violations
 - QualityScorer produces consistent scores for identical input
 - LearningEngine converges with synthetic feedback data
 - AudienceProfiler updates correctly from feedback signals
@@ -1831,7 +1831,7 @@ The following Architecture Decision Records document the key decisions made for 
 |------|------------|--------|-----------|
 | Claude API rate limits during batch generation | Medium | Medium | Response caching, template fallback, retry with backoff |
 | Mermaid CLI not installable on all platforms | Medium | Low | python-pptx native shapes fallback |
-| Deltek template format changes with new version | Low | High | Template version detection, backward-compatible parsing |
+| Vintiq template format changes with new version | Low | High | Template version detection, backward-compatible parsing |
 | Learning model overfits to small sample | High (early) | Medium | Bayesian shrinkage toward global average, minimum sample requirements |
 | Agent mesh Python client incompatible with TS bus | Low | High | Direct file I/O to JSON files (same format as TS implementation) |
 | Presentation file corruption during rendering | Low | High | Atomic write with temp file + rename; keep previous version |

@@ -1,11 +1,11 @@
 # =============================================================================
-# DELTEK ENGINEERING GOVERNANCE POLICY TEMPLATE
+# VINTIQ ENGINEERING GOVERNANCE POLICY TEMPLATE
 # =============================================================================
 #
 # This template defines the complete policy structure for the Agent Intelligence
 # & Governance System. Customize this template for your organization.
 #
-# Location: ~/.claude/governance/policies/org/deltek-engineering.yaml
+# Location: ~/.claude/governance/policies/org/vintiq-engineering.yaml
 #
 # Schema Version: 1.0.0
 # Last Updated: 2026-01-26
@@ -14,14 +14,14 @@
 # =============================================================================
 
 version: "1.0.0"
-name: "Deltek Engineering Standards"
+name: "Vintiq Engineering Standards"
 description: |
-  Mandatory governance policies for all Deltek engineering projects.
+  Mandatory governance policies for all Vintiq engineering projects.
   These policies are enforced automatically by the Agent Intelligence System.
 
 effective_date: "2026-01-01"
 last_updated: "2026-01-26"
-owner: "engineering-governance@deltek.com"
+owner: "engineering-governance@vintiq.com"
 
 # =============================================================================
 # POLICY INHERITANCE
@@ -44,8 +44,8 @@ repository:
   # Allowed GitHub organizations
   allowed_organizations:
     - "github.com/DLTKEngineering"
-    - "github.com/deltek-internal"
-    - "github.com/deltek-labs"  # For experimental projects
+    - "github.com/vintiq-internal"
+    - "github.com/vintiq-labs"  # For experimental projects
 
   # Repository naming convention
   naming:
@@ -846,7 +846,7 @@ alerts:
 
     email:
       recipients:
-        - "engineering-governance@deltek.com"
+        - "engineering-governance@vintiq.com"
 
   triggers:
     - event: "critical_violation"

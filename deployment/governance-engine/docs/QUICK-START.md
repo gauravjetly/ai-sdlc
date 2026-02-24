@@ -1,10 +1,10 @@
-# Deltek Governance Engine - Quick Start Guide
+# Vintiq Governance Engine - Quick Start Guide
 
 **Get up and running in 5 minutes!**
 
 ## What is This?
 
-The Deltek Governance Engine automatically enforces coding standards, security policies, and architectural rules across all engineering projects. Think of it as an automated code reviewer that never sleeps.
+The Vintiq Governance Engine automatically enforces coding standards, security policies, and architectural rules across all engineering projects. Think of it as an automated code reviewer that never sleeps.
 
 ## Prerequisites
 
@@ -30,11 +30,11 @@ curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/m
 
 ```bash
 # 1. Install the package
-npm install --save-dev @deltek/governance-engine
+npm install --save-dev @vintiq/governance-engine
 
 # 2. Download the policy
 mkdir -p .governance
-curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/policies/deltek-engineering.yaml > .governance/policy.yaml
+curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/policies/vintiq-engineering.yaml > .governance/policy.yaml
 
 # 3. Setup git hooks
 npx husky init
@@ -204,10 +204,10 @@ The governance engine checks for:
 ### "Governance engine not found"
 ```bash
 # Make sure it's installed
-npm list @deltek/governance-engine
+npm list @vintiq/governance-engine
 
 # If not, install it
-npm install --save-dev @deltek/governance-engine
+npm install --save-dev @vintiq/governance-engine
 ```
 
 ### "Policy file not found"
@@ -216,7 +216,7 @@ npm install --save-dev @deltek/governance-engine
 mkdir -p .governance
 
 # Download the policy
-curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/policies/deltek-engineering.yaml > .governance/policy.yaml
+curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/policies/vintiq-engineering.yaml > .governance/policy.yaml
 ```
 
 ### "Pre-commit hook not working"
@@ -278,7 +278,7 @@ See [INSTALLATION-GUIDE.md](./INSTALLATION-GUIDE.md) for full policy customizati
 - **Documentation**: See `docs/` directory
 - **Issues**: https://github.com/DLTKEngineering/governance-engine/issues
 - **Slack**: #engineering-governance
-- **Email**: engineering-governance@deltek.com
+- **Email**: engineering-governance@vintiq.com
 
 ## Pro Tips
 
@@ -304,7 +304,7 @@ See [INSTALLATION-GUIDE.md](./INSTALLATION-GUIDE.md) for full policy customizati
 
 5. **Integrate with VS Code** (coming soon):
    ```bash
-   npm install --save-dev @deltek/governance-vscode
+   npm install --save-dev @vintiq/governance-vscode
    ```
 
 ---

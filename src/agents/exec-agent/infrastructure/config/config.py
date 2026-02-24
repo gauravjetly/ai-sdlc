@@ -23,8 +23,8 @@ class DegradationLevel(Enum):
 
 @dataclass
 class DelekBrandColors:
-    """Deltek brand color palette"""
-    primary: str = "#1742F6"  # Deltek Blue
+    """Vintiq brand color palette"""
+    primary: str = "#1742F6"  # Vintiq Blue
     navy: str = "#081581"  # Dark Blue
     teal: str = "#00B6C3"
     purple: str = "#6D18F1"
@@ -51,8 +51,8 @@ class Config:
     claude_max_tokens: int = 4096
     claude_timeout_seconds: int = 30
 
-    # Deltek Template
-    deltek_template_path: Optional[str] = None
+    # Vintiq Template
+    vintiq_template_path: Optional[str] = None
 
     # Brand Guidelines
     brand_colors: DelekBrandColors = None
@@ -86,15 +86,15 @@ class Config:
         self.claude_api_key = os.getenv("ANTHROPIC_API_KEY", self.claude_api_key)
         self.claude_model = os.getenv("CLAUDE_MODEL", self.claude_model)
 
-        # Deltek template
-        template_env = os.getenv("DELTEK_TEMPLATE_PATH")
+        # Vintiq template
+        template_env = os.getenv("VINTIQ_TEMPLATE_PATH")
         if template_env:
-            self.deltek_template_path = template_env
+            self.vintiq_template_path = template_env
         else:
             # Check default location
-            default_path = Path.home() / "Downloads" / "Deltek PowerPoint Guidelines 2" / "Deltek PPT Template and Guidelines 011426.potx"
+            default_path = Path.home() / "Downloads" / "Vintiq PowerPoint Guidelines 2" / "Vintiq PPT Template and Guidelines 011426.potx"
             if default_path.exists():
-                self.deltek_template_path = str(default_path)
+                self.vintiq_template_path = str(default_path)
 
         # Memory paths
         if self.memory_base_path is None:
@@ -121,10 +121,10 @@ class Config:
         return self.claude_api_key is not None and len(self.claude_api_key) > 0
 
     def is_template_available(self) -> bool:
-        """Check if Deltek template is available"""
-        if self.deltek_template_path is None:
+        """Check if Vintiq template is available"""
+        if self.vintiq_template_path is None:
             return False
-        return Path(self.deltek_template_path).exists()
+        return Path(self.vintiq_template_path).exists()
 
     def get_brand_color(self, name: str) -> str:
         """

@@ -1,4 +1,4 @@
-# Deltek Governance Engine - Installation Guide
+# Vintiq Governance Engine - Installation Guide
 
 Complete guide for installing and configuring the Governance Engine across different environments and scenarios.
 
@@ -66,10 +66,10 @@ This script will:
 
 ```bash
 # Install as dev dependency
-npm install --save-dev @deltek/governance-engine
+npm install --save-dev @vintiq/governance-engine
 
 # Or with yarn
-yarn add -D @deltek/governance-engine
+yarn add -D @vintiq/governance-engine
 ```
 
 Then setup policy and hooks:
@@ -78,7 +78,7 @@ Then setup policy and hooks:
 mkdir -p .governance
 
 # Download policy
-curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/policies/deltek-engineering.yaml > .governance/policy.yaml
+curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/policies/vintiq-engineering.yaml > .governance/policy.yaml
 
 # Setup hooks (see Git Hooks Setup section)
 npx husky init
@@ -103,10 +103,10 @@ cd /path/to/your/project
 
 ```bash
 # Install at root
-npm install --save-dev @deltek/governance-engine -w
+npm install --save-dev @vintiq/governance-engine -w
 
 # Or for specific workspace
-npm install --save-dev @deltek/governance-engine -w packages/my-package
+npm install --save-dev @vintiq/governance-engine -w packages/my-package
 ```
 
 Create policy at root:
@@ -121,7 +121,7 @@ Git hooks apply to entire repo from root.
 
 ```bash
 # Install globally
-npm install -g @deltek/governance-engine
+npm install -g @vintiq/governance-engine
 
 # Can now run from anywhere
 governance check /path/to/project
@@ -137,7 +137,7 @@ The policy file (`.governance/policy.yaml`) defines all rules:
 
 ```yaml
 version: "1.0.0"
-name: "Deltek Engineering Standards"
+name: "Vintiq Engineering Standards"
 description: "Mandatory governance policies"
 
 # Repository rules
@@ -648,7 +648,7 @@ enforcement:
 
 ### Common Issues
 
-#### 1. "Module not found: @deltek/governance-engine"
+#### 1. "Module not found: @vintiq/governance-engine"
 
 **Fix**:
 ```bash
@@ -724,7 +724,7 @@ Use the validation script to diagnose:
 2. **Run Validator**: `./scripts/validate-config.sh`
 3. **Check Issues**: https://github.com/DLTKEngineering/governance-engine/issues
 4. **Slack Support**: #engineering-governance
-5. **Email**: engineering-governance@deltek.com
+5. **Email**: engineering-governance@vintiq.com
 
 ## Advanced Configuration
 

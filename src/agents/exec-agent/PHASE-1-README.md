@@ -100,12 +100,12 @@ Phase 1 implements the foundational layered architecture for the Exec Agent, tra
   - Audience-specific recommendations (bullet points, words per bullet, slide count, tone)
 
 - **BrandConfig**: Brand guidelines
-  - Deltek color palette
+  - Vintiq color palette
   - Typography settings
   - Template path configuration
   - Layout mappings
   - Color validation
-  - Default Deltek brand factory
+  - Default Vintiq brand factory
 
 #### Value Objects Implemented
 - **QualityScore**: Immutable quality metrics
@@ -303,7 +303,7 @@ python3 tests/unit/domain/test_audience_profile.py
 5. **CLI**: Basic commands for generation and listing
 6. **Tests**: 32 unit tests, all passing
 7. **Audience Awareness**: Different content for different audiences
-8. **Brand Configuration**: Deltek brand with full color palette
+8. **Brand Configuration**: Vintiq brand with full color palette
 9. **Slide Management**: Add, remove, reorder slides
 10. **Validation**: Entity-level validation throughout
 
@@ -417,7 +417,7 @@ python3 tests/unit/domain/test_audience_profile.py
    - Add diagram generation
 
 2. **Code to preserve from original**
-   - Deltek color palette (already preserved)
+   - Vintiq color palette (already preserved)
    - Template path configuration (already in BrandConfig)
    - Memory directory structure (already in FileMemoryStore)
 

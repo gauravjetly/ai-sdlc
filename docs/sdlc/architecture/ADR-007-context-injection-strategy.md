@@ -11,14 +11,14 @@
 
 AI agents in the SDLC framework operate with static system prompts that lack:
 
-1. **Organizational Standards**: Agents don't know Deltek-specific coding standards, security policies, or compliance requirements
+1. **Organizational Standards**: Agents don't know Vintiq-specific coding standards, security policies, or compliance requirements
 2. **Project Context**: Agents lack awareness of the current project's tech stack, existing architecture, and team conventions
 3. **Historical Knowledge**: Agents cannot reference past decisions, proven patterns, or lessons learned
 4. **Live State**: Agents don't know current codebase state, open PRs, or CI/CD status
 
-The result: Agents generate generic solutions that require significant manual adjustment to meet Deltek standards.
+The result: Agents generate generic solutions that require significant manual adjustment to meet Vintiq standards.
 
-**Goal**: Inject rich, relevant context into every agent prompt so responses are Deltek-compliant by default.
+**Goal**: Inject rich, relevant context into every agent prompt so responses are Vintiq-compliant by default.
 
 ## Decision Drivers
 
@@ -48,7 +48,7 @@ The result: Agents generate generic solutions that require significant manual ad
 **Example**:
 ```
 [BASE AGENT PROMPT]
-[DELTEK-STANDARDS.md - 5000 tokens]
+[VINTIQ-STANDARDS.md - 5000 tokens]
 [SECURITY-POLICIES.md - 3000 tokens]
 [USER REQUEST]
 ```
@@ -101,7 +101,7 @@ rules:
 │                                                                  │
 │  2. QUERY CONTEXT SOURCES (Parallel)                             │
 │     ┌───────────────────────────────────────────────────────┐   │
-│     │ Deltek Standards   │ Project Context │ Memory Search  │   │
+│     │ Vintiq Standards   │ Project Context │ Memory Search  │   │
 │     │                    │                 │                │   │
 │     │ - Security policy  │ - Tech stack    │ - Past auth    │   │
 │     │ - Auth standards   │ - ADRs          │   implementations│   │
@@ -126,7 +126,7 @@ rules:
 │                                                                  │
 │  [Base Agent Prompt]                                             │
 │  ---                                                             │
-│  [DELTEK STANDARDS - 1200 tokens]                               │
+│  [VINTIQ STANDARDS - 1200 tokens]                               │
 │  - OAuth 2.0 with MFA required for all APIs                     │
 │  - JWT tokens with 15-minute expiry                             │
 │  - Refresh token rotation mandatory                             │
@@ -201,7 +201,7 @@ rules:
 │  └── Repository/Branch Policies                                 │
 │                                                                  │
 │  P2 (HIGH - Trim Last)                                          │
-│  ├── Deltek Architecture Standards                              │
+│  ├── Vintiq Architecture Standards                              │
 │  ├── Relevant Security Findings                                 │
 │  └── Critical ADRs for Project                                  │
 │                                                                  │
@@ -230,9 +230,9 @@ interface ContextRetrievalService {
     buildContext(request: AgentRequest): Promise<EnhancedContext>;
 
     /**
-     * Get Deltek standards relevant to topic
+     * Get Vintiq standards relevant to topic
      */
-    getDeltekStandards(topics: string[]): Promise<DeltekStandard[]>;
+    getVintiqStandards(topics: string[]): Promise<VintiqStandard[]>;
 
     /**
      * Get project-specific context
@@ -257,7 +257,7 @@ interface ContextRetrievalService {
 
 interface EnhancedContext {
     // Core context sections
-    deltekStandards: ContextSection;
+    vintiqStandards: ContextSection;
     projectContext: ContextSection;
     historicalContext: ContextSection;
     activePolicies: ContextSection;
@@ -322,8 +322,8 @@ class TokenBudgetManager {
         // Trim each section to fit allocation
         const trimmed: EnhancedContext = {
             ...context,
-            deltekStandards: this.trimSection(
-                context.deltekStandards,
+            vintiqStandards: this.trimSection(
+                context.vintiqStandards,
                 allocations.p2_high
             ),
             projectContext: this.trimSection(
@@ -381,7 +381,7 @@ class TokenBudgetManager {
 ```markdown
 ## CONTEXT INJECTION TEMPLATE
 
----BEGIN DELTEK ENGINEERING CONTEXT---
+---BEGIN VINTIQ ENGINEERING CONTEXT---
 
 ### MANDATORY STANDARDS (Priority 1)
 
@@ -395,7 +395,7 @@ class TokenBudgetManager {
 - {{this.standard}}: {{this.requirement}}
 {{/each}}
 
-### DELTEK STANDARDS (Priority 2)
+### VINTIQ STANDARDS (Priority 2)
 
 **Architecture**:
 {{#if architecture}}
@@ -450,9 +450,9 @@ class TokenBudgetManager {
   Better alternative: {{this.alternative}}
 {{/each}}
 
----END DELTEK ENGINEERING CONTEXT---
+---END VINTIQ ENGINEERING CONTEXT---
 
-**IMPORTANT**: Your output will be validated against the policies above. Follow Deltek standards to avoid rejection.
+**IMPORTANT**: Your output will be validated against the policies above. Follow Vintiq standards to avoid rejection.
 
 ---
 
@@ -467,8 +467,8 @@ class TokenBudgetManager {
 // context-cache.ts
 
 interface ContextCache {
-    // Deltek standards rarely change - cache aggressively
-    deltekStandards: {
+    // Vintiq standards rarely change - cache aggressively
+    vintiqStandards: {
         ttl: "24h",
         refreshOn: "policy_update_event"
     },
@@ -527,7 +527,7 @@ class ContextCacheService {
 
 1. **Relevance**: Agents receive highly relevant context for each request
 2. **Efficiency**: Token usage optimized through prioritization and trimming
-3. **Consistency**: All agents receive Deltek standards automatically
+3. **Consistency**: All agents receive Vintiq standards automatically
 4. **Learning**: Context quality improves as memory grows
 5. **Transparency**: Can explain what context influenced decisions
 

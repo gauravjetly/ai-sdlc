@@ -188,7 +188,7 @@ export class AgentMemoryHooks {
       security: 'security-findings',
       qa: 'test-strategies',
       atlas: 'deployment-patterns',
-      customer: 'deltek-knowledge',
+      customer: 'vintiq-knowledge',
       tracker: 'process-patterns',
       conductor: 'process-patterns',
       'ask-tom': 'cross-agent-learning',

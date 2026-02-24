@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Governance Engine CLI
- * @module @deltek/governance-engine/cli
+ * @module @vintiq/governance-engine/cli
  */
 
 import { Command } from 'commander';
@@ -14,7 +14,7 @@ const program = new Command();
 
 program
   .name('governance')
-  .description('Deltek Governance Policy Engine - Enforce engineering standards automatically')
+  .description('Vintiq Governance Policy Engine - Enforce engineering standards automatically')
   .version('1.0.0');
 
 // Add commands

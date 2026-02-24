@@ -33,7 +33,7 @@
 | **Server** | Custom Node.js HTTP server (`dashboard/server.js`) |
 | **Port** | 3030 |
 | **State Management** | React `useState` / `useRef` in a single `App()` function |
-| **Styling** | CSS custom properties (Deltek Harmony Design System) |
+| **Styling** | CSS custom properties (Vintiq Harmony Design System) |
 | **Real-time** | SSE (Server-Sent Events) at `/api/events` |
 | **Navigation** | Sidebar with `activeView` state, renders components conditionally |
 
@@ -73,7 +73,7 @@ Dashboard Section:
 | **Technology** | Vite + React 18 + TypeScript + Material-UI 5 |
 | **Build** | Modern ESM build with HMR |
 | **Server** | Vite dev server (port 3001), proxies `/api` to port 3000 |
-| **Styling** | Material-UI ThemeProvider (Deltek Catalyst theme) |
+| **Styling** | Material-UI ThemeProvider (Vintiq Catalyst theme) |
 | **Routing** | React Router v6 |
 
 **Routes**:
@@ -698,7 +698,7 @@ The iframe-embedded views have their own data fetching lifecycle. The parent das
 | Aspect | Main Dashboard (Harmony) | Platform Webapp (Catalyst) |
 |--------|--------------------------|---------------------------|
 | **Font** | Figtree (Google Fonts) | System fonts (-apple-system) |
-| **Primary** | `#1742F6` (Deltek Blue) | `#00A3E0` (Deltek Cyan) |
+| **Primary** | `#1742F6` (Vintiq Blue) | `#00A3E0` (Vintiq Cyan) |
 | **Navy** | `#081581` | `#002B49` |
 | **Background** | `#F1F5FA` | `#F8F9FA` |
 | **Cards** | `#FFFFFF` | `#FFFFFF` |
@@ -709,7 +709,7 @@ The iframe-embedded views have their own data fetching lifecycle. The parent das
 
 Rather than force both applications to use identical CSS (which would require massive Material-UI theme overrides), the approach is:
 
-1. **Accept minor visual differences** -- both are Deltek-branded, both look professional. The iframe boundary naturally separates the visual contexts.
+1. **Accept minor visual differences** -- both are Vintiq-branded, both look professional. The iframe boundary naturally separates the visual contexts.
 2. **Synchronize the mode** -- dark/light theme should be consistent across parent and iframe.
 3. **Match spacing** -- the iframe content area padding should match the parent's content area.
 4. **Future unification** -- if desired, create a shared CSS custom properties file that both applications import, aligning colors and typography.

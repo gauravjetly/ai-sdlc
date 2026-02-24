@@ -1,6 +1,6 @@
 /**
  * Secret Validator
- * @module @deltek/governance-engine/infrastructure/validators/SecretValidator
+ * @module @vintiq/governance-engine/infrastructure/validators/SecretValidator
  */
 
 import * as fs from 'fs/promises';

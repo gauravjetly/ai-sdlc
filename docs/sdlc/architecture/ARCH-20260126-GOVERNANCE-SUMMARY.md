@@ -9,11 +9,11 @@
 
 ## Executive Summary
 
-This architecture transforms the AI-SDLC agents from autonomous but ungoverned executors into **policy-aware, memory-augmented, context-intelligent agents** that enforce Deltek governance by default.
+This architecture transforms the AI-SDLC agents from autonomous but ungoverned executors into **policy-aware, memory-augmented, context-intelligent agents** that enforce Vintiq governance by default.
 
 ### Vision Statement
 
-> "All code must follow Deltek governance by default, not by human vigilance"
+> "All code must follow Vintiq governance by default, not by human vigilance"
 
 ### Key Outcomes
 
@@ -120,7 +120,7 @@ This architecture transforms the AI-SDLC agents from autonomous but ungoverned e
 **Deliverables**:
 - ChromaDB deployment with persistence
 - Embedding service (OpenAI + local fallback)
-- Memory collections (security, patterns, ADRs, anti-patterns, compliance, Deltek)
+- Memory collections (security, patterns, ADRs, anti-patterns, compliance, Vintiq)
 - Memory Service API
 - Migration script for existing JSON memories
 - Dashboard integration for memory search
@@ -153,7 +153,7 @@ This architecture transforms the AI-SDLC agents from autonomous but ungoverned e
 ~/.claude/governance/
 ├── policies/
 │   ├── org/
-│   │   └── deltek-engineering.yaml
+│   │   └── vintiq-engineering.yaml
 │   ├── base/
 │   │   ├── security-baseline.yaml
 │   │   └── quality-baseline.yaml
@@ -167,7 +167,7 @@ This architecture transforms the AI-SDLC agents from autonomous but ungoverned e
 
 **Deliverables**:
 - Context retrieval service
-- Deltek standards loader
+- Vintiq standards loader
 - Project context retrieval
 - Memory-based context search
 - Token budget management
@@ -178,7 +178,7 @@ This architecture transforms the AI-SDLC agents from autonomous but ungoverned e
 ```
 ~/.claude/governance/
 ├── context/
-│   ├── deltek-standards/
+│   ├── vintiq-standards/
 │   │   ├── architecture.yaml
 │   │   ├── security.yaml
 │   │   └── compliance.yaml
@@ -243,14 +243,14 @@ Before declaring the system ready for production:
 - [ ] Memory storage working after agent execution
 
 ### Policy Engine
-- [ ] Deltek engineering policy defined in YAML
+- [ ] Vintiq engineering policy defined in YAML
 - [ ] Pre-generation checks blocking unauthorized repos
 - [ ] During-generation checks catching hardcoded secrets
 - [ ] Post-generation checks validating coverage
 - [ ] Auto-fix working for common violations
 
 ### Context Injection
-- [ ] Deltek standards loading correctly
+- [ ] Vintiq standards loading correctly
 - [ ] Project context retrieved for each project
 - [ ] Token budget respected (within 10%)
 - [ ] Context relevance >0.85
@@ -272,7 +272,7 @@ Before declaring the system ready for production:
 
 1. **Engineering Review**: Review this architecture with the engineering team
 2. **Prototype**: Build minimal Memory System prototype to validate ChromaDB choice
-3. **Policy Refinement**: Work with security team to refine Deltek policy YAML
+3. **Policy Refinement**: Work with security team to refine Vintiq policy YAML
 4. **Sprint Planning**: Break Phase 1 into sprint-sized work items
 5. **Documentation**: Create developer guide for contributing to governance
 
@@ -282,7 +282,7 @@ Before declaring the system ready for production:
 
 Before proceeding, please clarify:
 
-1. **Policy Ownership**: Who will maintain the Deltek engineering policies YAML?
+1. **Policy Ownership**: Who will maintain the Vintiq engineering policies YAML?
 2. **Rollout Strategy**: Gradual (percentage) or immediate enforcement?
 3. **Override Process**: What approval is needed for policy exceptions?
 4. **Budget**: Any constraints on OpenAI embedding costs ($0.0004/1K tokens)?

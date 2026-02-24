@@ -143,7 +143,7 @@ memory get PATTERN-20240315-abc123
 - **deployment-patterns**: Deployment and infrastructure patterns
 - **compliance-rules**: Regulatory compliance implementations
 - **failed-approaches**: Anti-patterns to avoid
-- **deltek-knowledge**: Deltek product-specific knowledge
+- **vintiq-knowledge**: Vintiq product-specific knowledge
 
 ## Agents
 

@@ -434,4 +434,4 @@ GROUP BY agent_id;
 
 ## License
 
-Private - Deltek Catalyst Platform
+Private - Vintiq Catalyst Platform

@@ -9,7 +9,7 @@
 
 ## Context
 
-The Deltek Catalyst platform requires persistent data storage for:
+The Vintiq Catalyst platform requires persistent data storage for:
 
 - **Relational Data**: Users, tenants, deployments, cloud resources
 - **Time-Series Data**: Metrics, costs, audit logs

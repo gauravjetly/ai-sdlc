@@ -5,7 +5,7 @@
 This repository contains **two independent projects**:
 
 1. **AI SDLC Framework** - The development methodology and framework
-2. **Deltek Catalyst** - A DevOps platform product built using AI SDLC
+2. **Vintiq Catalyst** - A DevOps platform product built using AI SDLC
 
 ---
 
@@ -46,7 +46,7 @@ These agents **build software**:
 
 ---
 
-## 🚀 Deltek Catalyst Platform
+## 🚀 Vintiq Catalyst Platform
 
 **Purpose**: AI-Native Multi-Cloud DevOps Platform for autonomous cloud operations.
 
@@ -61,8 +61,8 @@ src/platform/
 ├── webapp/                      # React web UI (7 pages)
 │   ├── src/
 │   │   ├── pages/              # Dashboard, Deploy, Resources, etc.
-│   │   ├── components/         # UI components (Deltek branding)
-│   │   └── styles/             # Deltek color scheme
+│   │   ├── components/         # UI components (Vintiq branding)
+│   │   └── styles/             # Vintiq color scheme
 ├── services/                    # Core services (20+ services)
 │   ├── deployment/             # Kubernetes deployment service
 │   ├── cloud/                  # AWS/OCI/Azure/GCP integration
@@ -103,7 +103,7 @@ These agents **operate the platform** at runtime:
 - **Agents**: Build and deliver software products
 - **Output**: Software products (like Catalyst)
 
-### Deltek Catalyst (DevOps Product)
+### Vintiq Catalyst (DevOps Product)
 - **What**: Multi-cloud DevOps automation platform
 - **When**: Used during operations and deployment
 - **Who Uses**: DevOps teams, SREs, Platform Engineers
@@ -127,7 +127,7 @@ These agents **operate the platform** at runtime:
 │              Produces                        │
 │                    ↓                         │
 │  ┌────────────────────────────────────┐    │
-│  │     Deltek Catalyst Platform       │    │
+│  │     Vintiq Catalyst Platform       │    │
 │  │     (Independent Product)          │    │
 │  └────────────────────────────────────┘    │
 └─────────────────────────────────────────────┘
@@ -135,7 +135,7 @@ These agents **operate the platform** at runtime:
                     ↓ Platform runs independently
 
 ┌─────────────────────────────────────────────┐
-│      Deltek Catalyst Platform               │
+│      Vintiq Catalyst Platform               │
 │      (Runtime / Operations)                 │
 │                                              │
 │  Users deploy apps via Web UI               │
@@ -186,7 +186,7 @@ These agents **operate the platform** at runtime:
 - Use: AI SDLC commands (`/sdlc-start`, `/sdlc-status`, etc.)
 - Purpose: Build new software products
 
-### If You Want to Use Deltek Catalyst:
+### If You Want to Use Vintiq Catalyst:
 - Read: `FULLY-WORKING-MODE.md`, `WHATS-NEXT.md`
 - Access: http://localhost:3002
 - Purpose: Automate DevOps and cloud operations
@@ -202,7 +202,7 @@ These agents **operate the platform** at runtime:
 /sdlc-status
 ```
 
-### To Use Deltek Catalyst:
+### To Use Vintiq Catalyst:
 ```bash
 # Navigate to Catalyst directory
 cd /Users/gauravjetly/catalyst
@@ -218,7 +218,7 @@ open http://localhost:3002
 
 ## 📊 Summary
 
-| Aspect | AI SDLC Framework | Deltek Catalyst |
+| Aspect | AI SDLC Framework | Vintiq Catalyst |
 |--------|-------------------|-----------------|
 | **Type** | Development Framework | DevOps Platform |
 | **Purpose** | Build software | Operate infrastructure |

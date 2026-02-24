@@ -1,7 +1,7 @@
 /**
  * Organizational Context Loader
  *
- * Loads Deltek-wide organizational standards, policies, and conventions.
+ * Loads Vintiq-wide organizational standards, policies, and conventions.
  */
 
 import * as fs from 'fs/promises';
@@ -12,7 +12,7 @@ import { TokenCounter } from '../utils/token-counter';
 export class OrgContextLoader {
   private basePath: string;
 
-  constructor(orgName: string = 'deltek') {
+  constructor(orgName: string = 'vintiq') {
     const homeDir = process.env.HOME || process.env.USERPROFILE || '~';
     this.basePath = path.join(homeDir, '.claude', 'org-context', orgName);
   }
@@ -115,7 +115,7 @@ export class OrgContextLoader {
   }
 
   private getDefaultCodingStandards(): string {
-    return `# Deltek Coding Standards
+    return `# Vintiq Coding Standards
 
 ## General Principles
 - Follow SOLID principles
@@ -140,7 +140,7 @@ export class OrgContextLoader {
   }
 
   private getDefaultSecurityPolicies(): string {
-    return `# Deltek Security Policies
+    return `# Vintiq Security Policies
 
 ## Input Validation
 - Validate ALL inputs at system boundaries
@@ -182,7 +182,7 @@ export class OrgContextLoader {
   }
 
   private getDefaultArchitecturePatterns(): string {
-    return `# Deltek Architecture Patterns
+    return `# Vintiq Architecture Patterns
 
 ## Preferred Architecture
 **Layered Architecture** (mandatory for backend services)
@@ -207,7 +207,7 @@ export class OrgContextLoader {
   }
 
   private getDefaultDeploymentProcedures(): string {
-    return `# Deltek Deployment Procedures
+    return `# Vintiq Deployment Procedures
 
 ## CI/CD Pipeline
 1. Lint and type check
@@ -228,7 +228,7 @@ export class OrgContextLoader {
   }
 
   private getDefaultTestingRequirements(): string {
-    return `# Deltek Testing Requirements
+    return `# Vintiq Testing Requirements
 
 ## Coverage Targets
 - Domain layer: >90%

@@ -10,7 +10,7 @@
 
 ## Context
 
-The Deltek Catalyst Visual Designer needs to support 20+ AWS service node components. We need to decide on the component architecture that:
+The Vintiq Catalyst Visual Designer needs to support 20+ AWS service node components. We need to decide on the component architecture that:
 
 1. Enables code reuse across node types
 2. Maintains type safety

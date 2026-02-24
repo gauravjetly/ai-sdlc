@@ -1,7 +1,7 @@
 {
-  "name": "@deltek/governance-engine",
+  "name": "@vintiq/governance-engine",
   "version": "1.0.0",
-  "description": "Deltek Engineering Governance Policy Engine - Enforce coding standards automatically",
+  "description": "Vintiq Engineering Governance Policy Engine - Enforce coding standards automatically",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -61,7 +61,7 @@
     "ci-cd",
     "code-quality"
   ],
-  "author": "Deltek Engineering",
+  "author": "Vintiq Engineering",
   "license": "MIT",
   "repository": {
     "type": "git",

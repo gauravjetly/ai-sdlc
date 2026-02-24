@@ -1,6 +1,6 @@
 /**
  * Validators Index
- * @module @deltek/governance-engine/infrastructure/validators
+ * @module @vintiq/governance-engine/infrastructure/validators
  */
 
 export { RepositoryValidator } from './RepositoryValidator';

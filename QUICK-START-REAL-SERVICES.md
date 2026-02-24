@@ -1,6 +1,6 @@
 # Quick Start: Real Services
 
-**Get Deltek Catalyst running with real services in 5 minutes!**
+**Get Vintiq Catalyst running with real services in 5 minutes!**
 
 ---
 

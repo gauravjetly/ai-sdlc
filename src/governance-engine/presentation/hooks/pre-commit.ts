@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Pre-commit Hook
- * @module @deltek/governance-engine/hooks/pre-commit
+ * @module @vintiq/governance-engine/hooks/pre-commit
  *
  * Install this hook:
  *   cp src/governance-engine/presentation/hooks/pre-commit.ts .husky/pre-commit

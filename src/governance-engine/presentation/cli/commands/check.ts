@@ -1,6 +1,6 @@
 /**
  * Check Command (Pre-commit)
- * @module @deltek/governance-engine/cli/commands/check
+ * @module @vintiq/governance-engine/cli/commands/check
  */
 
 import { Command } from 'commander';

@@ -102,7 +102,7 @@ export interface ContextSource {
 export interface EnhancedContext extends Context {
   sections: {
     mandatory: ContextSection;
-    deltekStandards: ContextSection;
+    vintiqStandards: ContextSection;
     projectContext: ContextSection;
     historicalContext: ContextSection;
   };

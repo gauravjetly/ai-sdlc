@@ -267,7 +267,7 @@ export class MemoryStore {
       'deployment-patterns',
       'compliance-rules',
       'failed-approaches',
-      'deltek-knowledge',
+      'vintiq-knowledge',
     ];
 
     for (const category of categories) {
@@ -436,7 +436,7 @@ ${memory.content}
       'deployment-patterns': 'DEPLOY',
       'compliance-rules': 'COMP',
       'failed-approaches': 'ANTI',
-      'deltek-knowledge': 'DELTEK',
+      'vintiq-knowledge': 'VINTIQ',
     };
 
     return prefixes[category];

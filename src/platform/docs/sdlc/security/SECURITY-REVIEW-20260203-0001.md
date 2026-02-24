@@ -11,7 +11,7 @@
 ## 1. Executive Summary
 
 ### 1.1 Review Scope
-This security review covers the pre-built infrastructure templates and database seeding functionality for the Deltek Catalyst Infrastructure Designer.
+This security review covers the pre-built infrastructure templates and database seeding functionality for the Vintiq Catalyst Infrastructure Designer.
 
 **Files Reviewed**:
 - `prisma/seeds/templates/types.ts`

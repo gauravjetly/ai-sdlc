@@ -1,4 +1,4 @@
-# 🎯 AI SDLC vs Deltek Catalyst - Clear Separation Guide
+# 🎯 AI SDLC vs Vintiq Catalyst - Clear Separation Guide
 
 ## Quick Answer
 
@@ -10,7 +10,7 @@
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  ┌────────────────────┐      ┌─────────────────────────┐  │
-│  │   AI SDLC          │      │  Deltek Catalyst        │  │
+│  │   AI SDLC          │      │  Vintiq Catalyst        │  │
 │  │   Framework        │      │  Platform               │  │
 │  │                    │      │                         │  │
 │  │   Development      │      │  DevOps Product         │  │
@@ -59,7 +59,7 @@ Software development teams who want to build products faster using AI agents.
 ```
 
 ### Output:
-**Software products** (like Deltek Catalyst)
+**Software products** (like Vintiq Catalyst)
 
 ### Location:
 - Root directory files
@@ -69,7 +69,7 @@ Software development teams who want to build products faster using AI agents.
 
 ---
 
-## 🚀 Deltek Catalyst Platform
+## 🚀 Vintiq Catalyst Platform
 
 ### What Is It?
 A complete DevOps platform that **operates and deploys** applications to the cloud.
@@ -120,7 +120,7 @@ open http://localhost:3002
 
 ## 🔑 Key Differences At A Glance
 
-| Question | AI SDLC Framework | Deltek Catalyst |
+| Question | AI SDLC Framework | Vintiq Catalyst |
 |----------|-------------------|-----------------|
 | **What is it?** | Development framework | DevOps platform |
 | **Purpose?** | Build software | Deploy & operate apps |
@@ -154,7 +154,7 @@ Step 1: AI SDLC Framework was used to BUILD Catalyst
                   Produced
                       ↓
         ┌─────────────────────────────────┐
-        │     Deltek Catalyst             │
+        │     Vintiq Catalyst             │
         │     (Complete Platform)         │
         └─────────────────────────────────┘
 
@@ -196,7 +196,7 @@ It's like:
 
 ---
 
-### Choose Deltek Catalyst if:
+### Choose Vintiq Catalyst if:
 - [x] You want to **deploy applications**
 - [x] You're a **DevOps engineer or SRE**
 - [x] You need to **manage Kubernetes clusters**
@@ -255,7 +255,7 @@ Do you want to build new software from scratch?
 │
 └─ NO → Do you want to deploy/manage applications?
          │
-         ├─ YES → Use Deltek Catalyst
+         ├─ YES → Use Vintiq Catalyst
          │         Read: WHATS-NEXT.md
          │         Start: http://localhost:3002
          │
@@ -301,7 +301,7 @@ You want to add OAuth authentication to an app.
 ```
 
 ### Example 2: Deploying an Application
-**Use**: Deltek Catalyst
+**Use**: Vintiq Catalyst
 ```
 You have an app and need to deploy it to production.
 → Open Catalyst Web UI (http://localhost:3002)

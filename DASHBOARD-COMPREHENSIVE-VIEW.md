@@ -134,7 +134,7 @@ This context is stored in `projectContext` and displayed automatically.
 
 ### Claude-Admin (6 Projects)
 1. SDLC-20260115-1145 - SSL Certificate Setup with Terraform
-2. SDLC-20260115-1750 - SSO/OAuth Integration with Deltek AD
+2. SDLC-20260115-1750 - SSO/OAuth Integration with Vintiq AD
 3. SDLC-202601210356 - Build user login
 4. SDLC-202601210357 - Test feature verification
 5. SDLC-202601210424 - Build API gateway

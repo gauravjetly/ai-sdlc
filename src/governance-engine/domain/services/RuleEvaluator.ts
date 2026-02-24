@@ -1,6 +1,6 @@
 /**
  * Rule Evaluator Service
- * @module @deltek/governance-engine/domain/services/RuleEvaluator
+ * @module @vintiq/governance-engine/domain/services/RuleEvaluator
  */
 
 import { Policy, EnforcementLevel } from '../../types/policy.types';

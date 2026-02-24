@@ -1,11 +1,11 @@
-# Deltek Integration Template
+# Vintiq Integration Template
 
 ## Overview
-Integration patterns and accelerators for connecting with Deltek products (Costpoint, Vantagepoint, GovWin IQ, etc.)
+Integration patterns and accelerators for connecting with Vintiq products (Costpoint, Vantagepoint, GovWin IQ, etc.)
 
 ## Quick Start
 ```bash
-/sdlc-start Build integration with Deltek [product] using template: templates/deltek-integration
+/sdlc-start Build integration with Vintiq [product] using template: templates/vintiq-integration
 ```
 
 ## Supported Products
@@ -26,7 +26,7 @@ Integration patterns and accelerators for connecting with Deltek products (Costp
 
 ```markdown
 ## FR-INT-001: Authentication
-The integration shall securely authenticate with Deltek APIs.
+The integration shall securely authenticate with Vintiq APIs.
 
 **Acceptance Criteria:**
 - OAuth 2.0 or API key authentication supported
@@ -139,7 +139,7 @@ const mapProject = (cp: CostpointProject): InternalProject => ({
 ### REST API Setup
 ```typescript
 const vpClient = axios.create({
-  baseURL: 'https://api.deltek.com/vantagepoint/v1',
+  baseURL: 'https://api.vintiq.com/vantagepoint/v1',
   headers: {
     'Authorization': `Bearer ${ACCESS_TOKEN}`,
     'Content-Type': 'application/json',
@@ -264,7 +264,7 @@ const syncOpportunities = async () => {
 @Cron('0 */4 * * *') // Every 4 hours
 async syncEntities() {
   const lastSync = await getLastSyncTime('entity');
-  const changes = await deltek.getChanges('entity', lastSync);
+  const changes = await vintiq.getChanges('entity', lastSync);
 
   for (const change of changes) {
     try {
@@ -282,8 +282,8 @@ async syncEntities() {
 ### Event-Driven Pattern
 ```typescript
 // Real-time via webhooks
-@Post('webhooks/deltek')
-async handleWebhook(@Body() event: DeltekEvent) {
+@Post('webhooks/vintiq')
+async handleWebhook(@Body() event: VintiqEvent) {
   switch (event.type) {
     case 'project.created':
       await this.projectService.create(event.data);
@@ -444,11 +444,11 @@ describe('CostpointClient', () => {
 
 ```bash
 # Costpoint project sync
-/sdlc-start Build Costpoint project sync to our system, following templates/deltek-integration
+/sdlc-start Build Costpoint project sync to our system, following templates/vintiq-integration
 
 # GovWin to Salesforce
-/sdlc-start Build GovWin opportunity sync to Salesforce CRM, following templates/deltek-integration
+/sdlc-start Build GovWin opportunity sync to Salesforce CRM, following templates/vintiq-integration
 
 # Vantagepoint time export
-/sdlc-start Build time export from Vantagepoint to payroll, following templates/deltek-integration
+/sdlc-start Build time export from Vantagepoint to payroll, following templates/vintiq-integration
 ```

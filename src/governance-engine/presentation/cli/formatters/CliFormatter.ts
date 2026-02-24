@@ -1,6 +1,6 @@
 /**
  * CLI Formatter
- * @module @deltek/governance-engine/cli/formatters/CliFormatter
+ * @module @vintiq/governance-engine/cli/formatters/CliFormatter
  */
 
 import { GovernanceResult, GovernanceSummary } from '../../../types/enforcement.types';

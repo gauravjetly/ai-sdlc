@@ -9,7 +9,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║     Deltek Harmony - Production Deployment Script         ║${NC}"
+echo -e "${BLUE}║     Vintiq Harmony - Production Deployment Script         ║${NC}"
 echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
 echo ""
 
@@ -106,19 +106,19 @@ case $choice in
         # Wait for deployments
         echo -e "${BLUE}Waiting for deployments to be ready...${NC}"
         kubectl wait --for=condition=available --timeout=300s \
-            deployment/harmony-api deployment/harmony-webapp -n deltek-harmony
+            deployment/harmony-api deployment/harmony-webapp -n vintiq-harmony
         
         echo ""
         echo -e "${GREEN}✅ Kubernetes deployment complete!${NC}"
         echo ""
         echo "To check status:"
-        echo "  kubectl get pods -n deltek-harmony"
-        echo "  kubectl get svc -n deltek-harmony"
-        echo "  kubectl get ingress -n deltek-harmony"
+        echo "  kubectl get pods -n vintiq-harmony"
+        echo "  kubectl get svc -n vintiq-harmony"
+        echo "  kubectl get ingress -n vintiq-harmony"
         echo ""
         echo "To view logs:"
-        echo "  kubectl logs -f deployment/harmony-api -n deltek-harmony"
-        echo "  kubectl logs -f deployment/harmony-webapp -n deltek-harmony"
+        echo "  kubectl logs -f deployment/harmony-api -n vintiq-harmony"
+        echo "  kubectl logs -f deployment/harmony-webapp -n vintiq-harmony"
         ;;
         
     3)
@@ -154,4 +154,4 @@ case $choice in
 esac
 
 echo ""
-echo -e "${GREEN}🚀 Deltek Harmony deployment script complete!${NC}"
+echo -e "${GREEN}🚀 Vintiq Harmony deployment script complete!${NC}"

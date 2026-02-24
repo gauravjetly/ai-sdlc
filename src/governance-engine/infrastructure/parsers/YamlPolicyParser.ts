@@ -1,6 +1,6 @@
 /**
  * YAML Policy Parser
- * @module @deltek/governance-engine/infrastructure/parsers/YamlPolicyParser
+ * @module @vintiq/governance-engine/infrastructure/parsers/YamlPolicyParser
  */
 
 import * as fs from 'fs/promises';

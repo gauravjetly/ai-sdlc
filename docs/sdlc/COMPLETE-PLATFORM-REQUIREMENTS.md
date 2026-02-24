@@ -237,10 +237,10 @@ Examples:
 
 **Domain Names**:
 ```
-DEV:  api.dev.portal.deltek.com
-UAT:  api.uat.portal.deltek.com
-PROD: api.portal.deltek.com
-DR:   api.dr.portal.deltek.com
+DEV:  api.dev.portal.vintiq.com
+UAT:  api.uat.portal.vintiq.com
+PROD: api.portal.vintiq.com
+DR:   api.dr.portal.vintiq.com
 ```
 
 **Automated**:

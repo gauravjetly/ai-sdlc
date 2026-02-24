@@ -1,6 +1,6 @@
 # ARCH-20260130-ENTERPRISE-CONTROL-CENTER
 
-## Deltek Catalyst Enterprise Control Center Architecture
+## Vintiq Catalyst Enterprise Control Center Architecture
 
 **Version**: 1.0.0
 **Date**: 2026-01-30
@@ -11,7 +11,7 @@
 
 ## Executive Summary
 
-This document defines the comprehensive enterprise architecture for the Deltek Catalyst Interactive Control Center, transforming the current proof-of-concept implementation into a production-grade, enterprise-ready platform capable of supporting 10,000+ concurrent users across multiple regions with 99.99% uptime SLA.
+This document defines the comprehensive enterprise architecture for the Vintiq Catalyst Interactive Control Center, transforming the current proof-of-concept implementation into a production-grade, enterprise-ready platform capable of supporting 10,000+ concurrent users across multiple regions with 99.99% uptime SLA.
 
 ### Key Architectural Decisions
 

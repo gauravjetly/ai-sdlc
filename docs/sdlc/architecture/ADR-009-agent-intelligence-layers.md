@@ -50,7 +50,7 @@ We will implement a **5-Layer Intelligence Architecture** where each layer adds 
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │  LAYER 4: CONTEXT-AWARE                                                     │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │ - Injects Deltek engineering standards                              │   │
+│  │ - Injects Vintiq engineering standards                              │   │
 │  │ - Loads project-specific context (tech stack, ADRs)                 │   │
 │  │ - Retrieves team conventions                                        │   │
 │  │ - Adds compliance requirements                                      │   │
@@ -279,8 +279,8 @@ Request: "Create a database query function"
 **Capabilities**:
 ```typescript
 interface ContextAwareLayer {
-    // Get Deltek engineering standards
-    getDeltekStandards(topics: string[]): Promise<DeltekStandard[]>;
+    // Get Vintiq engineering standards
+    getVintiqStandards(topics: string[]): Promise<VintiqStandard[]>;
 
     // Get project-specific context
     getProjectContext(projectId: string): Promise<ProjectContext>;
@@ -302,7 +302,7 @@ Project: billing-service
 ┌─────────────────────────────────────────────────────────────────┐
 │                    CONTEXT GATHERING                             │
 │                                                                  │
-│  1. DELTEK STANDARDS                                             │
+│  1. VINTIQ STANDARDS                                             │
 │     - Security: PCI-DSS compliance required for payments        │
 │     - Architecture: Layered pattern mandatory                   │
 │     - Encryption: AES-256 for card data                         │
@@ -328,7 +328,7 @@ Project: billing-service
 
 **Context Injection**:
 ```markdown
-### DELTEK ENGINEERING STANDARDS
+### VINTIQ ENGINEERING STANDARDS
 
 **Security Requirements (PCI-DSS)**:
 - Never store full card numbers

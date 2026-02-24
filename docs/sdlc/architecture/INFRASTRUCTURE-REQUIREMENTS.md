@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document details the infrastructure required to run the Deltek Catalyst platform with **REAL** services. No mock data means real infrastructure.
+This document details the infrastructure required to run the Vintiq Catalyst platform with **REAL** services. No mock data means real infrastructure.
 
 ---
 
@@ -659,7 +659,7 @@ module "catalyst_platform" {
 
 ## Summary
 
-To run Deltek Catalyst with real services, you need:
+To run Vintiq Catalyst with real services, you need:
 
 | Component | Minimum | Production |
 |-----------|---------|------------|

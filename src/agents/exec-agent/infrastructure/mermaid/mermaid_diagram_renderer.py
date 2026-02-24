@@ -39,7 +39,7 @@ class MermaidDiagramRenderer(DiagramRendererPort):
     3. Cache all rendered diagrams
 
     Features:
-    - Deltek brand color application
+    - Vintiq brand color application
     - SVG and PNG output
     - Diagram caching by content hash
     - Fallback to text representation
@@ -81,7 +81,7 @@ class MermaidDiagramRenderer(DiagramRendererPort):
             if cached:
                 return cached
 
-        # Apply Deltek branding to mermaid source
+        # Apply Vintiq branding to mermaid source
         branded_source = self._apply_branding(mermaid_source, style_config)
 
         # Try to render with Mermaid CLI
@@ -181,7 +181,7 @@ class MermaidDiagramRenderer(DiagramRendererPort):
             return False
 
     def _apply_branding(self, mermaid_source: str, style_config: dict) -> str:
-        """Apply Deltek brand colors to Mermaid diagram"""
+        """Apply Vintiq brand colors to Mermaid diagram"""
         # Get diagram style from config
         diagram_style = self.config.get_diagram_style()
 
@@ -249,7 +249,7 @@ class MermaidDiagramRenderer(DiagramRendererPort):
         elif "gantt" in mermaid_source:
             diagram_type = "Timeline"
 
-        # Create simple SVG with Deltek branding
+        # Create simple SVG with Vintiq branding
         svg = f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
   <rect width="800" height="600" fill="#FFFFFF"/>

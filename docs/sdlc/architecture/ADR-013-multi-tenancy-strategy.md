@@ -9,7 +9,7 @@
 
 ## Context
 
-The Deltek Catalyst platform needs to support multiple enterprise customers (tenants) with:
+The Vintiq Catalyst platform needs to support multiple enterprise customers (tenants) with:
 
 - Complete data isolation between tenants
 - Independent scaling per tenant
@@ -64,7 +64,7 @@ Database Cluster
 **Chosen**: Subdomain + JWT claim + Database schema
 
 ```
-Request: https://acme.catalyst.deltek.com/api/v1/deployments
+Request: https://acme.catalyst.vintiq.com/api/v1/deployments
          ^^^^
          Subdomain identifies tenant
 

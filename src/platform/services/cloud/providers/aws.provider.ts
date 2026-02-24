@@ -63,7 +63,7 @@ export class AWSProvider implements ICloudProvider {
               Tags: [
                 { Key: 'Name', Value: config.name },
                 { Key: 'Environment', Value: config.environment },
-                { Key: 'ManagedBy', Value: 'deltek-catalyst' },
+                { Key: 'ManagedBy', Value: 'vintiq-catalyst' },
                 ...Object.entries(config.tags || {}).map(([k, v]) => ({ Key: k, Value: v })),
               ],
             },
@@ -203,7 +203,7 @@ export class AWSProvider implements ICloudProvider {
           },
           tags: {
             Environment: config.environment,
-            ManagedBy: 'deltek-catalyst',
+            ManagedBy: 'vintiq-catalyst',
             ...config.tags,
           },
         })
@@ -260,7 +260,7 @@ export class AWSProvider implements ICloudProvider {
           BackupRetentionPeriod: config.backupRetentionDays || 7,
           Tags: [
             { Key: 'Environment', Value: config.environment },
-            { Key: 'ManagedBy', Value: 'deltek-catalyst' },
+            { Key: 'ManagedBy', Value: 'vintiq-catalyst' },
             ...Object.entries(config.tags || {}).map(([k, v]) => ({ Key: k, Value: v })),
           ],
         })

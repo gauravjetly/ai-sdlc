@@ -1,6 +1,6 @@
 /**
  * Policy-related type definitions
- * @module @deltek/governance-engine/types/policy
+ * @module @vintiq/governance-engine/types/policy
  */
 
 /**

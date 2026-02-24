@@ -532,7 +532,7 @@ export default function SDLCControlCenter() {
         fontSize: '12px',
         color: '#64748b'
       }}>
-        <div>AI-SDLC Framework v2.0 • Deltek Cloud Engineering</div>
+        <div>AI-SDLC Framework v2.0 • Vintiq Cloud Engineering</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Zap size={14} style={{ color: '#22c55e' }} />
           <span>Speed • Clarity • Control</span>

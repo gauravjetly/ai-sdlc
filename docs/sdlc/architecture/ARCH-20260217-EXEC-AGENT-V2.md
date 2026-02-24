@@ -584,14 +584,14 @@ The HTML output is a self-contained folder with:
     slide_02.html
     ...
   assets/
-    deltek.css            # Deltek-branded stylesheet (Figtree font, brand colors)
+    vintiq.css            # Vintiq-branded stylesheet (Figtree font, brand colors)
     charts.js             # Chart.js instances for metric slides
     diagrams/             # Mermaid-rendered SVGs
   data/
     metrics.json          # Chart data for interactive rendering
 ```
 
-Technology: Jinja2 templates with Deltek CSS branding. Charts rendered via Chart.js. Mermaid SVGs embedded directly.
+Technology: Jinja2 templates with Vintiq CSS branding. Charts rendered via Chart.js. Mermaid SVGs embedded directly.
 
 ---
 
@@ -925,7 +925,7 @@ This traces a single end-to-end flow from event to output:
       c. Compose slides (Bayesian effectiveness scores guide selection)
       d. Synthesize content via Claude API (enriched with absorbed knowledge)
       e. Generate Mermaid diagrams from architecture specs
-      f. Validate brand compliance (Deltek colors, Figtree font)
+      f. Validate brand compliance (Vintiq colors, Figtree font)
       g. Score quality (6-dimensional, target >= 0.70)
 
 10. MULTI-MODAL EXPORT
@@ -968,7 +968,7 @@ This traces a single end-to-end flow from event to output:
 |   +-- thresholds.json                 # Quality thresholds
 |   +-- [V2] autonomous-rules.json     # Customizable trigger rules
 +-- brand/
-|   +-- deltek.json                     # Deltek brand config
+|   +-- vintiq.json                     # Vintiq brand config
 |   +-- layouts.json                    # Layout mappings
 +-- audiences/
 |   +-- c-suite.json                    # Learned preference profiles
@@ -1259,9 +1259,9 @@ V2 phases assume the V1 foundation is complete and all 73 tests are passing.
 - [ ] Define OutputRendererPort protocol
 - [ ] Implement ExportService (routes to renderers, handles fallback)
 - [ ] Implement PdfRenderer (libreoffice headless with fallback)
-- [ ] Implement HtmlRenderer (Jinja2 + Chart.js + Deltek CSS)
+- [ ] Implement HtmlRenderer (Jinja2 + Chart.js + Vintiq CSS)
 - [ ] Implement BriefingScriptWriter (Claude API for speaker notes)
-- [ ] Create Deltek HTML template with Figtree font, brand colors
+- [ ] Create Vintiq HTML template with Figtree font, brand colors
 - [ ] Implement CollaborativeAuthoringCoordinator
 - [ ] Define collaborative event protocol (start, contribute, assemble)
 - [ ] Implement contribution timeout handling (graceful degradation)

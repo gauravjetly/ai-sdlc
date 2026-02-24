@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Pre-push Hook
- * @module @deltek/governance-engine/hooks/pre-push
+ * @module @vintiq/governance-engine/hooks/pre-push
  *
  * More thorough check before pushing to remote
  */

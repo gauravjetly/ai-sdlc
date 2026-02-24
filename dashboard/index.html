@@ -6,15 +6,15 @@
   <title>AI-SDLC Control Center</title>
   <style>
     /* ================================================================
-       DELTEK HARMONY DESIGN SYSTEM - Light Theme
+       VINTIQ HARMONY DESIGN SYSTEM - Light Theme
        Professional enterprise styling with Value-Based Outcomes
        ================================================================ */
 
-    /* Google Fonts - Figtree (Official Deltek Typography) */
+    /* Google Fonts - Figtree (Official Vintiq Typography) */
     @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap');
 
     :root {
-      /* Deltek Color Palette - Official Brand Colors (from theme1.xml) */
+      /* Vintiq Color Palette - Official Brand Colors (from theme1.xml) */
       --bg-primary: #F1F5FA;
       --bg-secondary: #ffffff;
       --bg-tertiary: #eef2f7;
@@ -25,12 +25,12 @@
       --text-secondary: #4A4A4A;
       --text-muted: #8a9bac;
 
-      /* Deltek Official Brand Colors (from PPT Theme) */
-      --deltek-blue: #1742F6;       /* Primary Blue - Accent 1 */
-      --deltek-marine: #1742F6;
-      --deltek-navy: #081581;       /* Dark Navy - Dark 2 */
-      --deltek-dark: #3C454E;       /* Dark Gray - Accent 2 */
-      --deltek-light: #e8ecf8;
+      /* Vintiq Official Brand Colors (from PPT Theme) */
+      --vintiq-blue: #1742F6;       /* Primary Blue - Accent 1 */
+      --vintiq-marine: #1742F6;
+      --vintiq-navy: #081581;       /* Dark Navy - Dark 2 */
+      --vintiq-dark: #3C454E;       /* Dark Gray - Accent 2 */
+      --vintiq-light: #e8ecf8;
 
       /* Dela AI Lifecycle Gradient Colors (from official gradient) */
       --dela-cyan: #08E9EB;         /* Gradient start */
@@ -39,8 +39,8 @@
       --dela-magenta: #C200CC;      /* Accent 4 */
 
       /* Additional Brand Colors */
-      --deltek-teal: #00B6C3;       /* Accent 3 */
-      --deltek-gradient: linear-gradient(90deg, #08E9EB 0%, #FF5DF2 34%, #3895FF 72%, #7A62FF 94%);
+      --vintiq-teal: #00B6C3;       /* Accent 3 */
+      --vintiq-gradient: linear-gradient(90deg, #08E9EB 0%, #FF5DF2 34%, #3895FF 72%, #7A62FF 94%);
 
       --accent-green: #00875a;
       --accent-green-light: #e6f4ef;
@@ -55,7 +55,7 @@
       --border-color: #dde3eb;
       --border-light: #eef2f7;
 
-      /* Official Deltek Typography - Figtree */
+      /* Official Vintiq Typography - Figtree */
       --font-sans: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'SF Mono', Consolas, monospace;
 
@@ -88,7 +88,7 @@
       --text-secondary: #8b949e;
       --text-muted: #6e7681;
 
-      --deltek-light: #1c2333;
+      --vintiq-light: #1c2333;
       --border-color: #30363d;
       --border-light: #21262d;
 
@@ -167,7 +167,7 @@
     .badge-success { background: var(--accent-green-light); color: var(--accent-green); }
     .badge-warning { background: var(--accent-yellow-light); color: #b36b00; }
     .badge-danger { background: var(--accent-red-light); color: var(--accent-red); }
-    .badge-info { background: var(--deltek-light); color: var(--deltek-blue); }
+    .badge-info { background: var(--vintiq-light); color: var(--vintiq-blue); }
     .badge-purple { background: var(--accent-purple-light); color: var(--accent-purple); }
 
     .progress-bar {
@@ -200,11 +200,11 @@
     .sidebar-header {
       padding: var(--space-lg);
       border-bottom: 1px solid rgba(255,255,255,0.1);
-      background: var(--deltek-navy);
+      background: var(--vintiq-navy);
       position: relative;
     }
 
-    /* Gradient accent bar using official Deltek gradient */
+    /* Gradient accent bar using official Vintiq gradient */
     .sidebar-header::after {
       content: '';
       position: absolute;
@@ -261,8 +261,8 @@
     }
 
     .nav-item.active {
-      background: var(--deltek-light);
-      color: var(--deltek-blue);
+      background: var(--vintiq-light);
+      color: var(--vintiq-blue);
       font-weight: 600;
     }
 
@@ -287,7 +287,7 @@
       opacity: 0.9;
     }
     .nav-item.active .nav-item-icon img {
-      /* Convert white icons to Deltek blue (#1742F6) */
+      /* Convert white icons to Vintiq blue (#1742F6) */
       filter: brightness(0) saturate(100%) invert(18%) sepia(95%) saturate(4500%) hue-rotate(230deg) brightness(95%);
       opacity: 1;
     }
@@ -369,11 +369,11 @@
     .btn-secondary:hover { background: var(--bg-hover); }
 
     .btn-primary {
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
       color: white;
     }
 
-    .btn-primary:hover { background: var(--deltek-dark); }
+    .btn-primary:hover { background: var(--vintiq-dark); }
 
     .content-area {
       padding: var(--space-xl);
@@ -429,7 +429,7 @@
     }
 
     .health-score.excellent { background: var(--accent-green-light); color: var(--accent-green); border: 3px solid var(--accent-green); }
-    .health-score.good { background: var(--deltek-light); color: var(--deltek-blue); border: 3px solid var(--deltek-blue); }
+    .health-score.good { background: var(--vintiq-light); color: var(--vintiq-blue); border: 3px solid var(--vintiq-blue); }
     .health-score.warning { background: var(--accent-yellow-light); color: #b36b00; border: 3px solid var(--accent-yellow); }
     .health-score.critical { background: var(--accent-red-light); color: var(--accent-red); border: 3px solid var(--accent-red); }
 
@@ -448,7 +448,7 @@
 
     .value-card-header {
       padding: var(--space-md) var(--space-lg);
-      background: linear-gradient(135deg, var(--deltek-blue) 0%, var(--deltek-dark) 100%);
+      background: linear-gradient(135deg, var(--vintiq-blue) 0%, var(--vintiq-dark) 100%);
       color: white;
     }
 
@@ -522,7 +522,7 @@
     }
 
     .project-card:hover {
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
       box-shadow: var(--shadow-md);
     }
 
@@ -544,7 +544,7 @@
       gap: var(--space-xs);
     }
 
-    .project-cost { font-size: 18px; font-weight: 600; color: var(--deltek-blue); }
+    .project-cost { font-size: 18px; font-weight: 600; color: var(--vintiq-blue); }
 
     /* === AGENT PIPELINE === */
     .agent-pipeline {
@@ -577,7 +577,7 @@
     }
 
     .pipeline-icon.completed { background: var(--accent-green-light); border-color: var(--accent-green); }
-    .pipeline-icon.active { background: var(--deltek-light); border-color: var(--deltek-blue); animation: pulse 1.5s infinite; }
+    .pipeline-icon.active { background: var(--vintiq-light); border-color: var(--vintiq-blue); animation: pulse 1.5s infinite; }
     .pipeline-icon.pending { opacity: 0.5; }
     .pipeline-icon.blocked { background: var(--accent-red-light); border-color: var(--accent-red); }
 
@@ -632,7 +632,7 @@
       text-align: center;
     }
 
-    .goal-metric-value { font-size: 20px; font-weight: 700; color: var(--deltek-blue); }
+    .goal-metric-value { font-size: 20px; font-weight: 700; color: var(--vintiq-blue); }
     .goal-metric-value.success { color: var(--accent-green); }
     .goal-metric-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
 
@@ -649,7 +649,7 @@
       box-shadow: var(--shadow-sm);
     }
 
-    .agent-card:hover { border-color: var(--deltek-blue); box-shadow: var(--shadow-md); }
+    .agent-card:hover { border-color: var(--vintiq-blue); box-shadow: var(--shadow-md); }
 
     .agent-avatar {
       width: 48px;
@@ -668,7 +668,7 @@
 
     .agent-stats { text-align: right; }
     .agent-invocations { font-size: 20px; font-weight: 700; color: var(--text-primary); }
-    .agent-cost { font-size: 13px; color: var(--deltek-blue); font-weight: 500; }
+    .agent-cost { font-size: 13px; color: var(--vintiq-blue); font-weight: 500; }
 
     /* === ACTIVITY === */
     .activity-item {
@@ -755,7 +755,7 @@
     .mb-xl { margin-bottom: var(--space-xl); }
     .mb-lg { margin-bottom: var(--space-lg); }
     .text-green { color: var(--accent-green); }
-    .text-blue { color: var(--deltek-blue); }
+    .text-blue { color: var(--vintiq-blue); }
     .text-red { color: var(--accent-red); }
     .text-muted { color: var(--text-muted); }
 
@@ -855,7 +855,7 @@
 
     .form-input:focus, .form-textarea:focus, .form-select:focus {
       outline: none;
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
       box-shadow: 0 0 0 3px rgba(23, 66, 246, 0.1);
     }
 
@@ -879,7 +879,7 @@
     }
 
     .btn-run-sdlc {
-      background: linear-gradient(135deg, var(--deltek-blue) 0%, var(--dela-purple) 100%);
+      background: linear-gradient(135deg, var(--vintiq-blue) 0%, var(--dela-purple) 100%);
       color: white;
       border: none;
       padding: 10px 20px;
@@ -938,7 +938,7 @@
     .workflow-phase-number {
       width: 18px;
       height: 18px;
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
       color: white;
       border-radius: 50%;
       display: flex;
@@ -981,7 +981,7 @@
       width: 48px;
       height: 48px;
       border: 3px solid var(--border-color);
-      border-top-color: var(--deltek-blue);
+      border-top-color: var(--vintiq-blue);
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin-bottom: var(--space-md);
@@ -1000,7 +1000,7 @@
     .running-phase {
       font-size: 16px;
       font-weight: 600;
-      color: var(--deltek-blue);
+      color: var(--vintiq-blue);
     }
 
     /* === ENHANCED MODAL TABS === */
@@ -1034,9 +1034,9 @@
     }
 
     .modal-tab.active {
-      color: var(--deltek-blue);
+      color: var(--vintiq-blue);
       background: var(--bg-card);
-      border-bottom-color: var(--deltek-blue);
+      border-bottom-color: var(--vintiq-blue);
     }
 
     /* === PROJECT SELECTOR === */
@@ -1065,7 +1065,7 @@
 
     .project-item.selected {
       background: rgba(23, 66, 246, 0.08);
-      border-left: 3px solid var(--deltek-blue);
+      border-left: 3px solid var(--vintiq-blue);
     }
 
     .project-item-header {
@@ -1078,7 +1078,7 @@
     .project-item-id {
       font-size: 12px;
       font-weight: 600;
-      color: var(--deltek-blue);
+      color: var(--vintiq-blue);
       font-family: var(--font-mono);
     }
 
@@ -1131,13 +1131,13 @@
     }
 
     .agent-card:hover {
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
       background: var(--bg-tertiary);
       transform: translateY(-2px);
     }
 
     .agent-card.selected {
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
       background: rgba(23, 66, 246, 0.08);
       box-shadow: 0 0 0 2px rgba(23, 66, 246, 0.2);
     }
@@ -1192,11 +1192,11 @@
     }
 
     .workflow-card:hover {
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
     }
 
     .workflow-card.selected {
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
       background: rgba(23, 66, 246, 0.05);
       box-shadow: 0 0 0 2px rgba(23, 66, 246, 0.15);
     }
@@ -1217,7 +1217,7 @@
     .workflow-card-badge {
       font-size: 10px;
       padding: 2px 8px;
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
       color: white;
       border-radius: 10px;
     }
@@ -1268,7 +1268,7 @@
 
     .theme-toggle:hover {
       background: var(--bg-tertiary);
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
     }
 
     .theme-toggle svg {
@@ -1301,8 +1301,8 @@
 
     .btn-export:hover {
       background: var(--bg-tertiary);
-      border-color: var(--deltek-blue);
-      color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
+      color: var(--vintiq-blue);
     }
 
     /* === BUDGET INDICATOR === */
@@ -1434,7 +1434,7 @@
     }
 
     .search-box:focus-within {
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
       box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
     }
 
@@ -1488,7 +1488,7 @@
     }
 
     .filter-select:focus {
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
     }
 
     .filter-button {
@@ -1506,13 +1506,13 @@
     }
 
     .filter-button:hover {
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
       color: var(--text-primary);
     }
 
     .filter-button.active {
-      background: var(--deltek-blue);
-      border-color: var(--deltek-blue);
+      background: var(--vintiq-blue);
+      border-color: var(--vintiq-blue);
       color: white;
     }
 
@@ -1525,7 +1525,7 @@
       padding: 0 5px;
       font-size: 11px;
       font-weight: 600;
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
       color: white;
       border-radius: 9px;
     }
@@ -1632,7 +1632,7 @@
     }
 
     .pipeline-stage-icon.active {
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
       box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
     }
 
@@ -1681,7 +1681,7 @@
 
     .stage-active {
       font-size: 10px;
-      color: var(--deltek-blue);
+      color: var(--vintiq-blue);
       font-weight: 600;
     }
 
@@ -1730,7 +1730,7 @@
 
     .agent-perf-bar {
       height: 100%;
-      background: linear-gradient(90deg, var(--deltek-blue), var(--dela-cyan));
+      background: linear-gradient(90deg, var(--vintiq-blue), var(--dela-cyan));
       border-radius: 4px;
       transition: width 0.5s ease;
     }
@@ -1794,7 +1794,7 @@
     }
 
     .velocity-bar.started {
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
     }
 
     .velocity-label {
@@ -1818,7 +1818,7 @@
     .velocity-started {
       font-size: 11px;
       font-weight: 600;
-      color: var(--deltek-blue);
+      color: var(--vintiq-blue);
     }
 
     .velocity-legend {
@@ -1848,7 +1848,7 @@
     }
 
     .legend-dot.started {
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
     }
 
     /* Bottleneck Detection */
@@ -2160,7 +2160,7 @@
     }
 
     .phase-item.active::before {
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
       animation: pulse 1.5s infinite;
     }
 
@@ -2256,7 +2256,7 @@
     }
 
     .command-item.selected .command-item-icon {
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
       color: white;
     }
 
@@ -2295,7 +2295,7 @@
 
     .sparkline-bar {
       width: 4px;
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
       border-radius: 2px;
       transition: height 0.3s ease;
     }
@@ -2337,7 +2337,7 @@
 
     .drop-indicator {
       height: 4px;
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
       border-radius: 2px;
       margin: 8px 0;
       opacity: 0;
@@ -2385,9 +2385,9 @@
     }
 
     .gantt-day.today {
-      background: var(--deltek-light);
+      background: var(--vintiq-light);
       font-weight: 600;
-      color: var(--deltek-blue);
+      color: var(--vintiq-blue);
     }
 
     .gantt-row {
@@ -2434,7 +2434,7 @@
     }
 
     .gantt-bar.active {
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
     }
 
     .gantt-bar.blocked {
@@ -2565,7 +2565,7 @@
 
     /* 9. AI Insights Panel */
     .insights-panel {
-      background: linear-gradient(135deg, var(--deltek-navy), var(--dela-purple));
+      background: linear-gradient(135deg, var(--vintiq-navy), var(--dela-purple));
       border-radius: 12px;
       padding: 20px;
       color: white;
@@ -2644,7 +2644,7 @@
     }
 
     .compare-card.selected {
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
     }
 
     .compare-header {
@@ -2689,7 +2689,7 @@
 
     /* 11. Predictive Analytics */
     .prediction-card {
-      background: linear-gradient(135deg, var(--bg-card), var(--deltek-light));
+      background: linear-gradient(135deg, var(--bg-card), var(--vintiq-light));
       border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 20px;
@@ -2705,7 +2705,7 @@
     .prediction-icon {
       width: 40px;
       height: 40px;
-      background: var(--deltek-blue);
+      background: var(--vintiq-blue);
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -2774,7 +2774,7 @@
     }
 
     .integration-card:hover {
-      border-color: var(--deltek-blue);
+      border-color: var(--vintiq-blue);
       box-shadow: 0 4px 12px rgba(0, 102, 204, 0.1);
     }
 
@@ -2955,7 +2955,7 @@
           icon: 'assets/brand/icons/ai-chip.svg',
           title: 'Build Something New',
           subtitle: 'Create a feature, fix a bug, or build an app',
-          color: 'var(--deltek-blue)',
+          color: 'var(--vintiq-blue)',
           examples: ['Add user login', 'Fix checkout bug', 'Build REST API']
         },
         {
@@ -3037,7 +3037,7 @@
                       <div className="running-message" style={{ color: 'var(--accent-green)', fontWeight: 600, fontSize: '18px' }}>Ready!</div>
                       <div style={{ marginTop: '20px', padding: '20px', background: 'var(--bg-tertiary)', borderRadius: '12px', textAlign: 'left', width: '100%' }}>
                         <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '12px' }}>Copy and paste this into your Claude Code terminal:</div>
-                        <code style={{ display: 'block', padding: '16px', background: 'var(--deltek-navy)', color: '#fff', borderRadius: '8px', fontSize: '14px', fontFamily: 'var(--font-mono)', wordBreak: 'break-all' }}>
+                        <code style={{ display: 'block', padding: '16px', background: 'var(--vintiq-navy)', color: '#fff', borderRadius: '8px', fontSize: '14px', fontFamily: 'var(--font-mono)', wordBreak: 'break-all' }}>
                           {status.split('Run:')[1]?.trim() || '/sdlc-start'}
                         </code>
                       </div>
@@ -3103,12 +3103,12 @@
                 {/* STEP 2a: Build Something */}
                 {step === 'build' && (
                   <div>
-                    <button onClick={() => setStep('choose')} style={{ background: 'none', border: 'none', color: 'var(--deltek-blue)', cursor: 'pointer', fontSize: '13px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <button onClick={() => setStep('choose')} style={{ background: 'none', border: 'none', color: 'var(--vintiq-blue)', cursor: 'pointer', fontSize: '13px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                       ← Back
                     </button>
 
                     <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-                      <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--deltek-blue)15', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                      <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--vintiq-blue)15', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
                         <AgentIcon src="assets/brand/icons/ai-chip.svg" size={28} />
                       </div>
                       <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)' }}>What do you want to build?</div>
@@ -3139,7 +3139,7 @@
                 {/* STEP 2b: Ask an Agent */}
                 {step === 'agent' && (
                   <div>
-                    <button onClick={() => { setStep('choose'); setSelectedAgent(null); }} style={{ background: 'none', border: 'none', color: 'var(--deltek-blue)', cursor: 'pointer', fontSize: '13px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <button onClick={() => { setStep('choose'); setSelectedAgent(null); }} style={{ background: 'none', border: 'none', color: 'var(--vintiq-blue)', cursor: 'pointer', fontSize: '13px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                       ← Back
                     </button>
 
@@ -3164,7 +3164,7 @@
                                 background: 'var(--bg-secondary)',
                                 textAlign: 'center'
                               }}
-                              onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--deltek-blue)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                              onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--vintiq-blue)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
                               onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.transform = 'none'; }}
                             >
                               <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px' }}>
@@ -3211,7 +3211,7 @@
                 {/* STEP 2c: Continue Project */}
                 {step === 'project' && (
                   <div>
-                    <button onClick={() => setStep('choose')} style={{ background: 'none', border: 'none', color: 'var(--deltek-blue)', cursor: 'pointer', fontSize: '13px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <button onClick={() => setStep('choose')} style={{ background: 'none', border: 'none', color: 'var(--vintiq-blue)', cursor: 'pointer', fontSize: '13px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                       ← Back
                     </button>
 
@@ -3585,7 +3585,7 @@
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
                   <span style={{
                     padding: '4px 12px',
-                    background: 'var(--deltek-blue)',
+                    background: 'var(--vintiq-blue)',
                     color: 'white',
                     borderRadius: '6px',
                     fontSize: '11px',
@@ -3611,7 +3611,7 @@
             </div>
 
             {/* Comprehensive View - All Sections Visible */}
-            <div style={{ padding: '16px 24px', background: 'linear-gradient(135deg, #003d7a 0%, #002952 100%)', color: 'white', borderBottom: '3px solid var(--deltek-blue)' }}>
+            <div style={{ padding: '16px 24px', background: 'linear-gradient(135deg, #003d7a 0%, #002952 100%)', color: 'white', borderBottom: '3px solid var(--vintiq-blue)' }}>
               <div style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px' }}>
                 📊 COMPREHENSIVE PROJECT DETAILS - All Information Below
               </div>
@@ -3641,7 +3641,7 @@
                       {details.mainProject && details.mainProject.isFeatureAddition ? (
                         <div style={{ marginBottom: '32px' }}>
                           {/* Main Project */}
-                          <div style={{ padding: '20px 24px', background: 'linear-gradient(135deg, #003d7a 0%, #002952 100%)', borderRadius: '12px 12px 0 0', color: 'white', borderBottom: '3px solid var(--deltek-blue)' }}>
+                          <div style={{ padding: '20px 24px', background: 'linear-gradient(135deg, #003d7a 0%, #002952 100%)', borderRadius: '12px 12px 0 0', color: 'white', borderBottom: '3px solid var(--vintiq-blue)' }}>
                             <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: 600 }}>
                               🏢 Main Project
                             </div>
@@ -3686,7 +3686,7 @@
                           {/* Connector */}
                           <div style={{ display: 'flex', justifyContent: 'center', background: 'linear-gradient(to bottom, var(--bg-secondary), var(--bg-card))', padding: '12px 0', position: 'relative' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                              <div style={{ color: 'var(--deltek-blue)', fontSize: '28px', fontWeight: 'bold', lineHeight: 1 }}>↓</div>
+                              <div style={{ color: 'var(--vintiq-blue)', fontSize: '28px', fontWeight: 'bold', lineHeight: 1 }}>↓</div>
                               <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>
                                 AI-SDLC Adds
                               </div>
@@ -3694,7 +3694,7 @@
                           </div>
 
                           {/* Feature Being Added */}
-                          <div style={{ padding: '24px', background: 'linear-gradient(135deg, var(--deltek-blue) 0%, #0052a3 100%)', borderRadius: '0 0 12px 12px', color: 'white', boxShadow: '0 4px 12px rgba(0, 102, 204, 0.3)' }}>
+                          <div style={{ padding: '24px', background: 'linear-gradient(135deg, var(--vintiq-blue) 0%, #0052a3 100%)', borderRadius: '0 0 12px 12px', color: 'white', boxShadow: '0 4px 12px rgba(0, 102, 204, 0.3)' }}>
                             <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: 600 }}>
                               ✨ Feature Being Added
                             </div>
@@ -3726,7 +3726,7 @@
                         </div>
                       ) : (
                         /* Standalone Project */
-                        <div style={{ marginBottom: '32px', padding: '24px', background: 'linear-gradient(135deg, var(--deltek-blue) 0%, #0052a3 100%)', borderRadius: '12px', color: 'white', boxShadow: '0 4px 12px rgba(0, 102, 204, 0.3)' }}>
+                        <div style={{ marginBottom: '32px', padding: '24px', background: 'linear-gradient(135deg, var(--vintiq-blue) 0%, #0052a3 100%)', borderRadius: '12px', color: 'white', boxShadow: '0 4px 12px rgba(0, 102, 204, 0.3)' }}>
                           <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>
                             🚀 Standalone AI-SDLC Project
                           </div>
@@ -3770,7 +3770,7 @@
                               <div key={i} style={{
                                 padding: '16px',
                                 background: 'var(--bg-card)',
-                                border: '2px solid ' + (phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--deltek-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--border-color)'),
+                                border: '2px solid ' + (phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--vintiq-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--border-color)'),
                                 borderRadius: '8px',
                                 transition: 'all 0.2s',
                                 cursor: 'default'
@@ -3790,7 +3790,7 @@
                                     borderRadius: '12px',
                                     fontSize: '11px',
                                     fontWeight: 600,
-                                    background: phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--deltek-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--text-muted)',
+                                    background: phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--vintiq-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--text-muted)',
                                     color: 'white'
                                   }}>
                                     {phaseStatus === 'completed' ? '✓ Done' : phaseStatus === 'active' ? '⏳ Working' : phaseStatus === 'blocked' ? '⚠ Blocked' : '○ Pending'}
@@ -3858,7 +3858,7 @@
                             {details.links.github && (
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <span style={{ fontSize: '20px' }}>📦</span>
-                                <a href={details.links.github} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--deltek-blue)', textDecoration: 'none', fontWeight: 500 }}>
+                                <a href={details.links.github} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--vintiq-blue)', textDecoration: 'none', fontWeight: 500 }}>
                                   {details.links.github}
                                 </a>
                               </div>
@@ -3866,7 +3866,7 @@
                             {details.links.deployment && (
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <span style={{ fontSize: '20px' }}>🚀</span>
-                                <a href={details.links.deployment} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--deltek-blue)', textDecoration: 'none', fontWeight: 500 }}>
+                                <a href={details.links.deployment} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--vintiq-blue)', textDecoration: 'none', fontWeight: 500 }}>
                                   {details.links.deployment}
                                 </a>
                               </div>
@@ -3929,7 +3929,7 @@
                   {/* Agents & Workflow Tab */}
                   { true && (
                     <div>
-                      <div style={{ marginBottom: '24px', padding: '20px', background: 'linear-gradient(135deg, var(--deltek-blue) 0%, #0052a3 100%)', borderRadius: '12px', color: 'white' }}>
+                      <div style={{ marginBottom: '24px', padding: '20px', background: 'linear-gradient(135deg, var(--vintiq-blue) 0%, #0052a3 100%)', borderRadius: '12px', color: 'white' }}>
                         <h3 style={{ margin: 0, marginBottom: '8px', fontSize: '20px' }}>👥 Complete Agent Workflow</h3>
                         <p style={{ margin: 0, fontSize: '14px', opacity: 0.9 }}>
                           This project was built using AI-SDLC's full agent workflow. Each agent contributed specific expertise to deliver production-ready code.
@@ -3955,7 +3955,7 @@
                                   gap: '20px',
                                   padding: '20px',
                                   background: 'var(--bg-card)',
-                                  border: '2px solid ' + (phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--deltek-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--border-color)'),
+                                  border: '2px solid ' + (phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--vintiq-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--border-color)'),
                                   borderRadius: '12px',
                                   transition: 'all 0.3s',
                                   position: 'relative'
@@ -3965,7 +3965,7 @@
                                     width: '40px',
                                     height: '40px',
                                     borderRadius: '50%',
-                                    background: phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--deltek-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--text-muted)',
+                                    background: phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--vintiq-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--text-muted)',
                                     color: 'white',
                                     display: 'flex',
                                     alignItems: 'center',
@@ -3990,7 +3990,7 @@
                                           borderRadius: '12px',
                                           fontSize: '11px',
                                           fontWeight: 600,
-                                          background: phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--deltek-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--text-muted)',
+                                          background: phaseStatus === 'completed' ? 'var(--accent-green)' : phaseStatus === 'active' ? 'var(--vintiq-blue)' : phaseStatus === 'blocked' ? 'var(--accent-red)' : 'var(--text-muted)',
                                           color: 'white'
                                         }}>
                                           {phaseStatus === 'completed' ? '✓ Completed' : phaseStatus === 'active' ? '⏳ In Progress' : phaseStatus === 'blocked' ? '⚠ Blocked' : '○ Pending'}
@@ -4015,14 +4015,14 @@
 
                                 {/* Deliverables */}
                                 {phase.outputs && phase.outputs.length > 0 && (
-                                  <div style={{ marginTop: '12px', marginLeft: '60px', padding: '16px', background: 'var(--bg-tertiary)', borderRadius: '8px', borderLeft: '3px solid ' + (phaseStatus === 'completed' ? 'var(--accent-green)' : 'var(--deltek-blue)') }}>
+                                  <div style={{ marginTop: '12px', marginLeft: '60px', padding: '16px', background: 'var(--bg-tertiary)', borderRadius: '8px', borderLeft: '3px solid ' + (phaseStatus === 'completed' ? 'var(--accent-green)' : 'var(--vintiq-blue)') }}>
                                     <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>
                                       📦 Deliverables ({phase.outputs.length}):
                                     </div>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                                       {phase.outputs.slice(0, 5).map((output, j) => (
                                         <div key={j} style={{ fontSize: '13px', color: 'var(--text-secondary)', fontFamily: 'monospace', paddingLeft: '12px', position: 'relative' }}>
-                                          <span style={{ position: 'absolute', left: 0, color: phaseStatus === 'completed' ? 'var(--accent-green)' : 'var(--deltek-blue)' }}>→</span>
+                                          <span style={{ position: 'absolute', left: 0, color: phaseStatus === 'completed' ? 'var(--accent-green)' : 'var(--vintiq-blue)' }}>→</span>
                                           {output}
                                         </div>
                                       ))}
@@ -4071,7 +4071,7 @@
                         </h4>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
                           <div>
-                            <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--deltek-blue)' }}>
+                            <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--vintiq-blue)' }}>
                               {details.project.phases.filter(p => p.status === 'complete' || p.status === 'completed').length}
                             </div>
                             <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Agents Completed</div>
@@ -4083,7 +4083,7 @@
                             <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total Files Created</div>
                           </div>
                           <div>
-                            <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--deltek-blue)' }}>
+                            <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--vintiq-blue)' }}>
                               {details.metrics.duration}m
                             </div>
                             <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total Duration</div>
@@ -4215,7 +4215,7 @@
                       <h4 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>📝 Activity Timeline ({details.changelog.length} events)</h4>
                       <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
                         {details.changelog.map((entry, i) => (
-                          <div key={i} style={{ padding: '16px', marginBottom: '12px', background: 'var(--bg-card)', borderLeft: '3px solid var(--deltek-blue)', borderRadius: '4px' }}>
+                          <div key={i} style={{ padding: '16px', marginBottom: '12px', background: 'var(--bg-card)', borderLeft: '3px solid var(--vintiq-blue)', borderRadius: '4px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                               <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{entry.event}</span>
                               <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
@@ -4410,7 +4410,7 @@
     }
 
     // 3. Sparkline Component
-    function Sparkline({ data, color = 'var(--deltek-blue)' }) {
+    function Sparkline({ data, color = 'var(--vintiq-blue)' }) {
       const max = Math.max(...data, 1);
       return (
         <div className="sparkline">
@@ -4544,7 +4544,7 @@
               <div className="agent-activity-list">
                 {agentActivity.slice(0, 15).map((a, i) => (
                   <div key={i} className="activity-item-mini">
-                    <div className="activity-dot" style={{ background: a.type === 'complete' ? 'var(--accent-green)' : a.type === 'blocked' ? 'var(--accent-red)' : 'var(--deltek-blue)' }}></div>
+                    <div className="activity-dot" style={{ background: a.type === 'complete' ? 'var(--accent-green)' : a.type === 'blocked' ? 'var(--accent-red)' : 'var(--vintiq-blue)' }}></div>
                     <div className="activity-content">
                       <span className="activity-agent">{a.project}</span>
                       <span className="activity-action">{a.action}</span>
@@ -4693,9 +4693,9 @@
                   onClick={() => toggleSelect(p)}
                   style={{
                     padding: '8px 16px',
-                    border: `2px solid ${selected.find(s => s.id === p.id) ? 'var(--deltek-blue)' : 'var(--border-color)'}`,
+                    border: `2px solid ${selected.find(s => s.id === p.id) ? 'var(--vintiq-blue)' : 'var(--border-color)'}`,
                     borderRadius: '8px',
-                    background: selected.find(s => s.id === p.id) ? 'var(--deltek-light)' : 'var(--bg-card)',
+                    background: selected.find(s => s.id === p.id) ? 'var(--vintiq-light)' : 'var(--bg-card)',
                     cursor: 'pointer',
                     fontSize: '13px'
                   }}
@@ -5006,7 +5006,7 @@
           React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } },
             (activity || []).slice(0, 8).map(function(act, i) {
               return React.createElement('div', { key: i, className: 'activity-item' },
-                React.createElement('div', { className: 'activity-icon', style: { background: 'var(--deltek-light)', color: 'var(--deltek-blue)' } }, '📝'),
+                React.createElement('div', { className: 'activity-icon', style: { background: 'var(--vintiq-light)', color: 'var(--vintiq-blue)' } }, '📝'),
                 React.createElement('div', { className: 'activity-content' },
                   React.createElement('div', { className: 'activity-text' },
                     React.createElement('strong', null, act.agent || 'Agent'),
@@ -5451,7 +5451,7 @@
           <aside className="sidebar">
             <div className="sidebar-header">
               <div className="sidebar-logo" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '8px' }}>
-                <img src="assets/brand/deltek-logo-white.svg" alt="Deltek" style={{ height: '24px', width: 'auto' }} />
+                <img src="assets/brand/vintiq-logo-white.svg" alt="Vintiq" style={{ height: '24px', width: 'auto' }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ fontSize: '14px', fontWeight: 600, opacity: 0.95 }}>AI-SDLC</span>
                   <span style={{ fontSize: '9px', opacity: 0.7, letterSpacing: '1px', background: 'rgba(255,255,255,0.15)', padding: '2px 6px', borderRadius: '4px' }}>CONTROL CENTER</span>
@@ -5966,7 +5966,7 @@
               <div className="activity-feed">
                 {activity.slice(0, 5).map((a, i) => {
                   const agent = AGENTS.find(ag => ag.id === a.agent);
-                  const typeColors = { complete: 'var(--accent-green)', blocked: '#d32f2f', start: 'var(--deltek-blue)', progress: 'var(--text-muted)' };
+                  const typeColors = { complete: 'var(--accent-green)', blocked: '#d32f2f', start: 'var(--vintiq-blue)', progress: 'var(--text-muted)' };
                   return (
                     <div key={i} className="activity-item-mini">
                       <div className="activity-dot" style={{ background: typeColors[a.type] || 'var(--text-muted)' }}></div>
@@ -6080,7 +6080,7 @@
 
       const sectionStyle = (isActive) => ({
         padding: '12px 24px',
-        background: isActive ? 'var(--deltek-blue)' : 'transparent',
+        background: isActive ? 'var(--vintiq-blue)' : 'transparent',
         color: isActive ? 'white' : 'var(--text-secondary)',
         border: 'none',
         borderRadius: '8px',
@@ -6114,7 +6114,7 @@
             <div>
               {/* Hero Value Statement */}
               <div style={{
-                background: 'linear-gradient(135deg, var(--deltek-navy) 0%, var(--deltek-marine) 50%, var(--dela-cyan) 100%)',
+                background: 'linear-gradient(135deg, var(--vintiq-navy) 0%, var(--vintiq-marine) 50%, var(--dela-cyan) 100%)',
                 borderRadius: '16px',
                 padding: '32px',
                 marginBottom: '24px',
@@ -6144,9 +6144,9 @@
 
               {/* Value Breakdown Cards */}
               <div className="grid-4 mb-xl">
-                <div className="card" style={{ borderLeft: '4px solid var(--deltek-blue)' }}>
+                <div className="card" style={{ borderLeft: '4px solid var(--vintiq-blue)' }}>
                   <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '8px' }}>LABOR COST SAVINGS</div>
-                  <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--deltek-blue)', marginBottom: '4px' }}>${detailedMetrics.laborSavings.toLocaleString()}</div>
+                  <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--vintiq-blue)', marginBottom: '4px' }}>${detailedMetrics.laborSavings.toLocaleString()}</div>
                   <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
                     ${detailedMetrics.traditionalLaborCost.toLocaleString()} traditional → ${detailedMetrics.aiTokenCost.toFixed(2)} AI
                   </div>
@@ -6192,10 +6192,10 @@
                       <li>• Manual security reviews</li>
                     </ul>
                   </div>
-                  <div style={{ padding: '20px', background: 'var(--deltek-light)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ padding: '20px', background: 'var(--vintiq-light)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: '48px', marginBottom: '8px' }}>→</div>
-                      <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--deltek-blue)' }}>AI-SDLC Transformation</div>
+                      <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--vintiq-blue)' }}>AI-SDLC Transformation</div>
                       <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>8 Specialized Agents</div>
                     </div>
                   </div>
@@ -6226,7 +6226,7 @@
 
                 {/* Benchmarks Used */}
                 <div style={{ background: 'var(--bg-tertiary)', borderRadius: '12px', padding: '20px', marginBottom: '24px' }}>
-                  <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--deltek-blue)', marginBottom: '16px' }}>Industry Benchmarks Applied</h4>
+                  <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--vintiq-blue)', marginBottom: '16px' }}>Industry Benchmarks Applied</h4>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                     {[
                       { label: 'Average Developer Hourly Rate', value: '$85/hour', source: 'Bureau of Labor Statistics' },
@@ -6241,7 +6241,7 @@
                           <div style={{ fontSize: '13px', color: 'var(--text-primary)', fontWeight: 500 }}>{b.label}</div>
                           <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Source: {b.source}</div>
                         </div>
-                        <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--deltek-blue)' }}>{b.value}</div>
+                        <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--vintiq-blue)' }}>{b.value}</div>
                       </div>
                     ))}
                   </div>
@@ -6255,7 +6255,7 @@
                       name: 'Cost Savings',
                       formula: '(Traditional Hours × Hourly Rate × Features) - AI Token Cost',
                       example: `(40h × $85 × ${detailedMetrics.featuresDelivered}) - $${detailedMetrics.aiTokenCost.toFixed(2)} = $${detailedMetrics.laborSavings.toLocaleString()}`,
-                      color: 'var(--deltek-blue)'
+                      color: 'var(--vintiq-blue)'
                     },
                     {
                       name: 'Time Savings',
@@ -6402,7 +6402,7 @@
                             <span style={{ fontSize: '24px' }}><AgentIcon src={phase.icon} size={24} /></span>
                             <div>
                               <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>{phase.phase}</div>
-                              <div style={{ fontSize: '12px', color: 'var(--deltek-blue)' }}>Handled by: {phase.agent}</div>
+                              <div style={{ fontSize: '12px', color: 'var(--vintiq-blue)' }}>Handled by: {phase.agent}</div>
                             </div>
                           </div>
                           <span className="badge badge-success">{savings}% faster</span>
@@ -6431,21 +6431,21 @@
               </div>
 
               {/* Total Time Summary */}
-              <div className="card" style={{ background: 'linear-gradient(135deg, var(--deltek-light), white)', border: '2px solid var(--deltek-blue)' }}>
+              <div className="card" style={{ background: 'linear-gradient(135deg, var(--vintiq-light), white)', border: '2px solid var(--vintiq-blue)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', textAlign: 'center' }}>
                   <div>
                     <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '4px' }}>Traditional Total</div>
                     <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--text-secondary)' }}>{detailedMetrics.traditionalTotalHours}h</div>
                   </div>
-                  <div style={{ fontSize: '32px', color: 'var(--deltek-blue)' }}>→</div>
+                  <div style={{ fontSize: '32px', color: 'var(--vintiq-blue)' }}>→</div>
                   <div>
                     <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '4px' }}>AI-SDLC Total</div>
                     <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--accent-green)' }}>{detailedMetrics.aiTotalHours}h</div>
                   </div>
-                  <div style={{ fontSize: '32px', color: 'var(--deltek-blue)' }}>=</div>
+                  <div style={{ fontSize: '32px', color: 'var(--vintiq-blue)' }}>=</div>
                   <div>
                     <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '4px' }}>Hours Saved</div>
-                    <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--deltek-blue)' }}>{detailedMetrics.hoursSaved}h</div>
+                    <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--vintiq-blue)' }}>{detailedMetrics.hoursSaved}h</div>
                   </div>
                 </div>
               </div>
@@ -6615,7 +6615,7 @@
             <div className="comparison-bar-row">
               <span className="comparison-bar-label">AI-SDLC</span>
               <div className="comparison-bar">
-                <div className="comparison-bar-fill" style={{ width: `${aiPercent}%`, background: inverse ? 'var(--accent-green)' : 'var(--deltek-blue)' }}>
+                <div className="comparison-bar-fill" style={{ width: `${aiPercent}%`, background: inverse ? 'var(--accent-green)' : 'var(--vintiq-blue)' }}>
                   <span className="comparison-bar-value">{ai}{unit}</span>
                 </div>
               </div>
@@ -6646,7 +6646,7 @@
               className="progress-fill"
               style={{
                 width: `${Math.min(progress, 100)}%`,
-                background: achieved ? 'var(--accent-green)' : 'var(--deltek-blue)'
+                background: achieved ? 'var(--accent-green)' : 'var(--vintiq-blue)'
               }}
             ></div>
           </div>
@@ -6889,9 +6889,9 @@
 
           {/* Show current phase status for active projects */}
           {isActive(project) && currentPhase && (
-            <div style={{ padding: '8px 24px', background: 'var(--deltek-light)', borderBottom: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--deltek-blue)', animation: 'pulse 1.5s infinite' }}></span>
-              <span style={{ fontSize: '13px', color: 'var(--deltek-blue)', fontWeight: 500 }}>
+            <div style={{ padding: '8px 24px', background: 'var(--vintiq-light)', borderBottom: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--vintiq-blue)', animation: 'pulse 1.5s infinite' }}></span>
+              <span style={{ fontSize: '13px', color: 'var(--vintiq-blue)', fontWeight: 500 }}>
                 {AGENTS.find(a => a.id === currentPhase.agent)?.name || currentPhase.agent} {currentPhase.status === 'in_progress' ? 'working...' : ''}
               </span>
             </div>
@@ -7099,7 +7099,7 @@
 
       const tabStyle = (isActive) => ({
         padding: '12px 20px',
-        background: isActive ? 'var(--deltek-blue)' : 'transparent',
+        background: isActive ? 'var(--vintiq-blue)' : 'transparent',
         color: isActive ? 'white' : 'var(--text-secondary)',
         border: 'none',
         borderRadius: 'var(--radius-md)',
@@ -7139,7 +7139,7 @@
                 {cheatCodes.commands.map((cmd, i) => (
                   <div key={i} className="card" style={{ padding: '20px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                      <code style={{ background: 'var(--deltek-light)', color: 'var(--deltek-blue)', padding: '8px 16px', borderRadius: '6px', fontWeight: 600, fontSize: '14px' }}>
+                      <code style={{ background: 'var(--vintiq-light)', color: 'var(--vintiq-blue)', padding: '8px 16px', borderRadius: '6px', fontWeight: 600, fontSize: '14px' }}>
                         {cmd.cmd}
                       </code>
                       <button
@@ -7173,7 +7173,7 @@
                       <h4 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>{p.title}</h4>
                       <button
                         onClick={() => navigator.clipboard.writeText(p.prompt)}
-                        style={{ background: 'var(--deltek-light)', color: 'var(--deltek-blue)', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 500 }}
+                        style={{ background: 'var(--vintiq-light)', color: 'var(--vintiq-blue)', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 500 }}
                       >
                         Copy
                       </button>
@@ -7216,7 +7216,7 @@
                         </span>
                       </div>
                       <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{agent.desc}</p>
-                      <p style={{ fontSize: '12px', color: 'var(--deltek-blue)' }}><AgentIcon src="assets/brand/icons/gear-integration.svg" size={12} style={{ marginRight: '4px', verticalAlign: 'middle' }} /> {agent.when}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--vintiq-blue)' }}><AgentIcon src="assets/brand/icons/gear-integration.svg" size={12} style={{ marginRight: '4px', verticalAlign: 'middle' }} /> {agent.when}</p>
                     </div>
                   </div>
                 ))}
@@ -7264,8 +7264,8 @@
               <div className="grid-3">
                 {cheatCodes.bestPractices.map((bp, i) => (
                   <div key={i} className="card">
-                    <h4 style={{ fontWeight: 600, fontSize: '15px', color: 'var(--deltek-blue)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ width: '24px', height: '24px', background: 'var(--deltek-light)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
+                    <h4 style={{ fontWeight: 600, fontSize: '15px', color: 'var(--vintiq-blue)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ width: '24px', height: '24px', background: 'var(--vintiq-light)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
                         {i + 1}
                       </span>
                       {bp.category}
@@ -7461,7 +7461,7 @@
 
       const tabStyle = (isActive) => ({
         padding: '12px 20px',
-        background: isActive ? 'var(--deltek-blue)' : 'transparent',
+        background: isActive ? 'var(--vintiq-blue)' : 'transparent',
         color: isActive ? 'white' : 'var(--text-secondary)',
         border: 'none',
         borderRadius: 'var(--radius-md)',
@@ -7499,10 +7499,10 @@
               </div>
               <div style={{ display: 'grid', gap: '20px' }}>
                 {releaseNotes.map((release, i) => (
-                  <div key={i} className="card" style={{ borderLeft: `4px solid ${release.type === 'major' ? 'var(--deltek-blue)' : 'var(--accent-green)'}` }}>
+                  <div key={i} className="card" style={{ borderLeft: `4px solid ${release.type === 'major' ? 'var(--vintiq-blue)' : 'var(--accent-green)'}` }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <span style={{ fontSize: '24px', fontWeight: 700, color: 'var(--deltek-blue)' }}>v{release.version}</span>
+                        <span style={{ fontSize: '24px', fontWeight: 700, color: 'var(--vintiq-blue)' }}>v{release.version}</span>
                         <span className={`badge ${release.type === 'major' ? 'badge-info' : 'badge-success'}`}>{release.type}</span>
                         {i === 0 && <span className="badge badge-purple">CURRENT</span>}
                       </div>
@@ -7524,7 +7524,7 @@
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                           {release.newScripts.map((s, j) => (
                             <span key={j} style={{ background: 'var(--bg-tertiary)', padding: '4px 10px', borderRadius: '4px', fontSize: '12px', color: 'var(--text-secondary)' }}>
-                              <code style={{ color: 'var(--deltek-blue)' }}>{s.name}</code> - {s.desc}
+                              <code style={{ color: 'var(--vintiq-blue)' }}>{s.name}</code> - {s.desc}
                             </span>
                           ))}
                         </div>
@@ -7619,7 +7619,7 @@
                           <span className={`badge ${agent.model === 'Opus' ? 'badge-purple' : agent.model === 'Sonnet' ? 'badge-info' : 'badge-success'}`} style={{ fontSize: '9px', padding: '2px 6px' }}>
                             {agent.model}
                           </span>
-                          <span style={{ fontSize: '11px', color: 'var(--deltek-blue)' }}>{agent.role}</span>
+                          <span style={{ fontSize: '11px', color: 'var(--vintiq-blue)' }}>{agent.role}</span>
                         </div>
                         <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{agent.desc}</p>
                       </div>
@@ -7636,7 +7636,7 @@
               <div className="section-header mb-lg">
                 <div>
                   <h3 className="section-title">Security & Compliance</h3>
-                  <p className="section-subtitle">Deltek Cloud security architecture and compliance frameworks</p>
+                  <p className="section-subtitle">Vintiq Cloud security architecture and compliance frameworks</p>
                 </div>
                 <a href="../docs/SECURITY-ARCHITECTURE.md" target="_blank" className="btn btn-secondary" style={{ fontSize: '12px' }}>
                   Full Documentation
@@ -7649,7 +7649,7 @@
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
                   {[
                     { name: 'SOC 2 Type 2', status: 'Certified', icon: 'assets/brand/icons/checkmark-badge.svg', color: 'var(--accent-green)', desc: 'Trust Services Criteria (CC1-CC9)', controls: '64+ controls' },
-                    { name: 'FedRAMP Moderate', status: 'Ready', icon: 'assets/brand/icons/building-governance.svg', color: 'var(--deltek-blue)', desc: 'Federal Risk Authorization', controls: '325 controls' },
+                    { name: 'FedRAMP Moderate', status: 'Ready', icon: 'assets/brand/icons/building-governance.svg', color: 'var(--vintiq-blue)', desc: 'Federal Risk Authorization', controls: '325 controls' },
                     { name: 'ISO 27001:2022', status: 'Certified', icon: 'assets/brand/icons/global.svg', color: 'var(--accent-purple)', desc: 'International Security Standard', controls: '93 Annex A controls' },
                     { name: 'NIST 800-171', status: 'Implemented', icon: 'assets/brand/icons/checklist.svg', color: '#ff9800', desc: 'CUI Protection', controls: '110 requirements' },
                     { name: 'CMMC 2.0', status: 'Ready', icon: 'assets/brand/icons/compliance.svg', color: 'var(--accent-cyan)', desc: 'Defense Cybersecurity Maturity', controls: 'Level 2 practices' },
@@ -7680,7 +7680,7 @@
                       { layer: 'Application Security', items: ['SAST/DAST scanning', 'Container security', 'API gateway protection', 'Rate limiting'] }
                     ].map((section, i) => (
                       <div key={i} style={{ background: 'var(--bg-tertiary)', padding: '12px', borderRadius: '8px' }}>
-                        <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--deltek-blue)', marginBottom: '8px' }}>{section.layer}</div>
+                        <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--vintiq-blue)', marginBottom: '8px' }}>{section.layer}</div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                           {section.items.map((item, j) => (
                             <span key={j} style={{ background: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', color: 'var(--text-secondary)' }}>{item}</span>
@@ -7707,7 +7707,7 @@
                     ].map((cc, i) => (
                       <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', background: 'var(--bg-tertiary)', borderRadius: '6px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ background: 'var(--deltek-light)', color: 'var(--deltek-blue)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>{cc.id}</span>
+                          <span style={{ background: 'var(--vintiq-light)', color: 'var(--vintiq-blue)', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>{cc.id}</span>
                           <span style={{ fontSize: '12px', color: 'var(--text-primary)' }}>{cc.name}</span>
                         </div>
                         <span className="badge badge-success" style={{ fontSize: '10px' }}>Compliant</span>
@@ -7773,8 +7773,8 @@
               <div style={{ display: 'grid', gap: '20px' }}>
                 {scripts.map((section, i) => (
                   <div key={i} className="card">
-                    <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--deltek-blue)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ width: '24px', height: '24px', background: 'var(--deltek-light)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
+                    <h4 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', color: 'var(--vintiq-blue)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ width: '24px', height: '24px', background: 'var(--vintiq-light)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
                         {i + 1}
                       </span>
                       {section.category}
@@ -7782,7 +7782,7 @@
                     <div style={{ display: 'grid', gap: '8px' }}>
                       {section.items.map((item, j) => (
                         <div key={j} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--bg-tertiary)', borderRadius: '6px' }}>
-                          <code style={{ background: 'var(--deltek-light)', color: 'var(--deltek-blue)', padding: '4px 10px', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>
+                          <code style={{ background: 'var(--vintiq-light)', color: 'var(--vintiq-blue)', padding: '4px 10px', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>
                             {item.cmd}
                           </code>
                           <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{item.desc}</span>
@@ -7817,12 +7817,12 @@
                     ].map((item, i) => (
                       <li key={i} style={{ padding: '12px 0', borderBottom: i < 3 ? '1px solid var(--border-light)' : 'none' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                          <span style={{ width: '28px', height: '28px', background: 'var(--deltek-light)', color: 'var(--deltek-blue)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '13px' }}>
+                          <span style={{ width: '28px', height: '28px', background: 'var(--vintiq-light)', color: 'var(--vintiq-blue)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '13px' }}>
                             {item.step}
                           </span>
                           <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--text-primary)' }}>{item.title}</span>
                         </div>
-                        <code style={{ display: 'block', background: 'var(--bg-tertiary)', padding: '8px 12px', borderRadius: '4px', fontSize: '12px', color: 'var(--deltek-blue)' }}>
+                        <code style={{ display: 'block', background: 'var(--bg-tertiary)', padding: '8px 12px', borderRadius: '4px', fontSize: '12px', color: 'var(--vintiq-blue)' }}>
                           {item.code}
                         </code>
                       </li>
@@ -7947,7 +7947,7 @@
                 <span style={{ fontWeight: 600, fontSize: '14px' }}>Notifications</span>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   {unreadCount > 0 && (
-                    <button onClick={markAllRead} style={{ fontSize: '12px', color: 'var(--deltek-blue)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                    <button onClick={markAllRead} style={{ fontSize: '12px', color: 'var(--vintiq-blue)', background: 'none', border: 'none', cursor: 'pointer' }}>
                       Mark all read
                     </button>
                   )}
@@ -7980,7 +7980,7 @@
                         style={{
                           padding: '12px 16px',
                           borderBottom: '1px solid var(--border-light)',
-                          background: notif.read ? 'white' : 'var(--deltek-light)',
+                          background: notif.read ? 'white' : 'var(--vintiq-light)',
                           display: 'flex',
                           gap: '12px',
                           alignItems: 'flex-start'
@@ -8010,7 +8010,7 @@
                           </div>
                         </div>
                         {!notif.read && (
-                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--deltek-blue)', flexShrink: 0, marginTop: '6px' }}></div>
+                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--vintiq-blue)', flexShrink: 0, marginTop: '6px' }}></div>
                         )}
                       </div>
                     );

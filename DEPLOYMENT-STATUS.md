@@ -37,7 +37,7 @@
   - `GET /api/exec/list` ✅ Working
 - **Dashboard Integration**: ✅ Visible in AGENTS array
 - **Icon**: data-workflow.svg
-- **Color**: #1742F6 (Deltek Blue)
+- **Color**: #1742F6 (Vintiq Blue)
 
 ### Exec Agent - CLI
 - **Status**: ✅ **WORKING**
@@ -122,7 +122,7 @@ Found 2 presentations ✓
 - [x] Claude API integration
 - [x] Mermaid diagram renderer
 - [x] PPTX generator (python-pptx)
-- [x] Deltek branding applied
+- [x] Vintiq branding applied
 - [x] Graceful degradation (6 levels)
 - [x] Configuration management
 - [x] All tests passing (11/11)

@@ -439,6 +439,6 @@ The platform is now ready to perform **real deployments** to **real Kubernetes c
 
 ---
 
-*Deltek Catalyst - Real Services, Real Data, Real Impact* 🚀
+*Vintiq Catalyst - Real Services, Real Data, Real Impact* 🚀
 
-**Official Deltek Corporate Branding Applied** ✅
+**Official Vintiq Corporate Branding Applied** ✅

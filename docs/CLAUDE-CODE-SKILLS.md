@@ -185,7 +185,7 @@ ensures features meet real user needs.
 
 #### `/exec-agent` - Executive Presentation Generator
 
-Generates professional Deltek-branded PowerPoint presentations for C-Suite,
+Generates professional Vintiq-branded PowerPoint presentations for C-Suite,
 architecture reviews, and status reports. Uses Bayesian optimization to improve
 quality over time.
 

@@ -21,7 +21,7 @@ Complete implementation of the AI-SDLC Context Injection System as specified in 
 ### 3. Source Loaders (`sources/`)
 
 #### `org-context-loader.ts`
-- Loads organizational standards from `~/.claude/org-context/deltek/`
+- Loads organizational standards from `~/.claude/org-context/vintiq/`
 - Provides initialization with defaults
 - 6 standard files:
   - coding-standards.md
@@ -108,7 +108,7 @@ Complete implementation of the AI-SDLC Context Injection System as specified in 
 
 ## Organizational Context Repository
 
-Created comprehensive organizational standards at `~/.claude/org-context/deltek/`:
+Created comprehensive organizational standards at `~/.claude/org-context/vintiq/`:
 
 ### coding-standards.md (80+ lines)
 - SOLID principles
@@ -221,7 +221,7 @@ Created comprehensive test suite (`tests/context-injection.test.ts`):
 All 5 success criteria met:
 
 1. ✅ **All 4 context sources loading**
-   - Organizational: Loading from ~/.claude/org-context/deltek/
+   - Organizational: Loading from ~/.claude/org-context/vintiq/
    - Project: Loading from .claude/context/
    - Historical: Mock implementation ready for memory integration
    - Live: Git status via simple-git
@@ -287,7 +287,7 @@ src/context-injection/
 ├── jest.config.js
 └── README.md
 
-~/.claude/org-context/deltek/
+~/.claude/org-context/vintiq/
 ├── coding-standards.md
 ├── security-policies.md
 ├── architecture-patterns.md
@@ -334,7 +334,7 @@ Development:
 - Strict TypeScript mode enabled
 - Comprehensive error handling
 - Descriptive comments and JSDoc
-- Follows Deltek coding standards
+- Follows Vintiq coding standards
 - Single responsibility per class
 - Dependency injection throughout
 - Test coverage target: >80%

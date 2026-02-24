@@ -1,4 +1,4 @@
-// Prisma Schema for Deltek Catalyst Platform
+// Prisma Schema for Vintiq Catalyst Platform
 // Real data persistence - NO MOCK DATA
 
 datasource db {

@@ -188,7 +188,7 @@ const Phase5Dashboard = ({ projects, costs, activity, stats }) => {
       {/* Phase 5: Enhanced KPI Cards with Trends */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
         {[
-          { label: 'Total Workflows', value: dashboardData.kpis.totalWorkflows.value, ...dashboardData.kpis.totalWorkflows, color: 'var(--deltek-blue)' },
+          { label: 'Total Workflows', value: dashboardData.kpis.totalWorkflows.value, ...dashboardData.kpis.totalWorkflows, color: 'var(--vintiq-blue)' },
           { label: 'Avg Completion', value: dashboardData.kpis.avgCompletionTime.value, ...dashboardData.kpis.avgCompletionTime, color: 'var(--accent-green)' },
           { label: 'Quality Score', value: `${dashboardData.kpis.qualityScore.value}%`, ...dashboardData.kpis.qualityScore, color: 'var(--accent-yellow)' },
           { label: 'Security Score', value: `${dashboardData.kpis.securityScore.value}%`, ...dashboardData.kpis.securityScore, color: 'var(--accent-red)' }

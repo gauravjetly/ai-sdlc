@@ -38,7 +38,7 @@ def check_system_capabilities():
     config = get_config()
 
     print(f"Claude API: {'✅ Available' if config.is_claude_available() else '❌ Not configured (will use template fallback)'}")
-    print(f"Deltek Template: {'✅ Found' if config.is_template_available() else '❌ Not found (will use programmatic slides)'}")
+    print(f"Vintiq Template: {'✅ Found' if config.is_template_available() else '❌ Not found (will use programmatic slides)'}")
 
     # Check Mermaid
     mermaid_renderer = MermaidDiagramRenderer(config)
@@ -244,7 +244,7 @@ def main():
         print("\nNext Steps:")
         print("  - Set ANTHROPIC_API_KEY for Claude integration")
         print("  - Install Mermaid CLI: npm install -g @mermaid-js/mermaid-cli")
-        print("  - Place Deltek template in Downloads folder")
+        print("  - Place Vintiq template in Downloads folder")
         print("  - Run tests: python -m unittest tests.integration.test_phase2_intelligence")
 
     except Exception as e:

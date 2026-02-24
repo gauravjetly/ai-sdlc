@@ -1,6 +1,6 @@
 /**
  * Enforcer Engine
- * @module @deltek/governance-engine/application/services/EnforcerEngine
+ * @module @vintiq/governance-engine/application/services/EnforcerEngine
  */
 
 import { v4 as uuidv4 } from 'uuid';

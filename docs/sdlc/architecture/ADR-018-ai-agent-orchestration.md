@@ -9,7 +9,7 @@
 
 ## Context
 
-The Deltek Catalyst platform includes 8 AI-powered agents:
+The Vintiq Catalyst platform includes 8 AI-powered agents:
 
 1. **Developer Agent** - Dependency updates, code reviews
 2. **SRE Agent** - Health monitoring, auto-scaling

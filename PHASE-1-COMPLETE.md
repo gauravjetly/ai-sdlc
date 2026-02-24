@@ -12,7 +12,7 @@
 
 ### What Was Built
 
-A production-ready **Governance Policy Engine** that enforces Deltek engineering standards automatically. This is the foundation that makes enterprise-grade code the ONLY possible output.
+A production-ready **Governance Policy Engine** that enforces Vintiq engineering standards automatically. This is the foundation that makes enterprise-grade code the ONLY possible output.
 
 ---
 
@@ -70,7 +70,7 @@ src/governance-engine/
 
 ### 2. Policy Configuration
 
-**Deployed to**: `~/.claude/governance/policies/org/deltek-engineering.yaml`
+**Deployed to**: `~/.claude/governance/policies/org/vintiq-engineering.yaml`
 
 **Enforces**:
 - ✅ Repository standards (github.com/DLTKEngineering/* only)
@@ -101,7 +101,7 @@ src/governance-engine/
 | Criterion | Status | Notes |
 |-----------|--------|-------|
 | Parses YAML policies | ✅ PASS | Full YAML parser with inheritance |
-| Blocks non-Deltek repos | ✅ PASS | Repository validator enforces allowlist |
+| Blocks non-Vintiq repos | ✅ PASS | Repository validator enforces allowlist |
 | Enforces 80% coverage | ✅ PASS | Coverage validator with configurable thresholds |
 | Detects secrets | ✅ PASS | Pattern-based secret detection |
 | Validates architecture | ✅ PASS | Layered architecture validator |
@@ -117,7 +117,7 @@ src/governance-engine/
 
 ```bash
 # Validate a policy file
-npx governance validate ~/.claude/governance/policies/org/deltek-engineering.yaml
+npx governance validate ~/.claude/governance/policies/org/vintiq-engineering.yaml
 
 # Check code against policies
 npx governance check /path/to/project
@@ -148,10 +148,10 @@ chmod +x .husky/pre-commit
 ### SDK Integration (For Agents)
 
 ```typescript
-import { GovernanceClient } from '@deltek/governance-engine';
+import { GovernanceClient } from '@vintiq/governance-engine';
 
 const governance = new GovernanceClient({
-  policyPath: '~/.claude/governance/policies/org/deltek-engineering.yaml'
+  policyPath: '~/.claude/governance/policies/org/vintiq-engineering.yaml'
 });
 
 // Before generating code
@@ -179,7 +179,7 @@ if (result.violations.length > 0) {
 
 ### The Vision
 
-**"Anyone using AI-SDLC produces Deltek-compliant, enterprise-grade code because non-compliant code is IMPOSSIBLE to produce"**
+**"Anyone using AI-SDLC produces Vintiq-compliant, enterprise-grade code because non-compliant code is IMPOSSIBLE to produce"**
 
 ### How It Works
 
@@ -287,17 +287,17 @@ if (coverage < policy.minimum) {
 
 ### Phase 3: Context Injection (Weeks 8-10)
 
-**Goal**: Inject Deltek-specific context into every agent action automatically.
+**Goal**: Inject Vintiq-specific context into every agent action automatically.
 
 **Key Features**:
-- Load Deltek standards before every agent execution
+- Load Vintiq standards before every agent execution
 - Inject project-specific context
 - Reference historical decisions (ADRs)
 - Result: Enterprise context in every action
 
 **Start with**:
 ```bash
-/sdlc-start Build context injection system that automatically loads Deltek engineering standards, project-specific conventions, and historical ADRs into agent prompts before execution. This is Phase 3 of 3-phase Agent Intelligence System.
+/sdlc-start Build context injection system that automatically loads Vintiq engineering standards, project-specific conventions, and historical ADRs into agent prompts before execution. This is Phase 3 of 3-phase Agent Intelligence System.
 ```
 
 ---
@@ -307,7 +307,7 @@ if (coverage < policy.minimum) {
 **Phase 1 is COMPLETE!**
 
 We now have:
-- ✅ A governance engine that enforces Deltek standards
+- ✅ A governance engine that enforces Vintiq standards
 - ✅ No more non-compliant code can be produced
 - ✅ Automatic policy enforcement (no human needed)
 - ✅ Foundation for Phases 2 & 3
@@ -321,7 +321,7 @@ We now have:
 ### Check Governance Status
 ```bash
 # View deployed policy
-cat ~/.claude/governance/policies/org/deltek-engineering.yaml
+cat ~/.claude/governance/policies/org/vintiq-engineering.yaml
 
 # Test governance engine
 cd /Users/gauravjetly/aisdlc-2.1.0/src/governance-engine

@@ -1835,7 +1835,7 @@ UI Re-render
 
 - **GitHub Issues**: https://github.com/DLTKEngineering/ai-sdlc/issues
 - **Discussion Forum**: https://github.com/DLTKEngineering/ai-sdlc/discussions
-- **Email**: ai-sdlc@deltek.com
+- **Email**: ai-sdlc@vintiq.com
 
 ---
 
@@ -1994,7 +1994,7 @@ We welcome contributions to the dashboard!
 ## 📄 License
 
 Part of the AI-SDLC Framework
-© 2026 Deltek Engineering
+© 2026 Vintiq Engineering
 
 ---
 

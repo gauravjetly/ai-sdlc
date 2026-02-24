@@ -1,13 +1,13 @@
 import { createTheme } from '@mui/material/styles';
 
-// Deltek Official Brand Colors
+// Vintiq Official Brand Colors
 export const catalystColors = {
-  primary: '#00A3E0',      // Deltek Cyan (Official)
-  secondary: '#002B49',    // Deltek Navy (Official)
-  accent: '#FF6B35',       // Deltek Orange Accent
+  primary: '#F39219',      // Vintiq Orange (Official)
+  secondary: '#120E3A',    // Vintiq Navy (Official)
+  accent: '#DB0064',       // Vintiq Magenta Accent
   success: '#10b981',      // Green
-  info: '#00A3E0',         // Deltek Cyan
-  warning: '#FF6B35',      // Deltek Orange
+  info: '#F39219',         // Vintiq Orange
+  warning: '#EF8433',      // Vintiq Orange Mid
   error: '#DC3545',        // Red
   background: '#F8F9FA',   // Light Gray
   paper: '#FFFFFF',        // White
@@ -15,9 +15,9 @@ export const catalystColors = {
 
 // Dark theme colors matching dashboard
 export const catalystDarkColors = {
-  primary: '#00A3E0',      // Deltek Cyan (same for consistency)
+  primary: '#F39219',      // Vintiq Orange (same for consistency)
   secondary: '#58a6ff',    // Lighter blue for dark mode
-  accent: '#FF6B35',       // Deltek Orange Accent
+  accent: '#DB0064',       // Vintiq Magenta Accent
   success: '#3fb950',      // GitHub-style green
   info: '#58a6ff',         // Light blue
   warning: '#d29922',      // Amber

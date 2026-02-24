@@ -1,6 +1,6 @@
-# 🔄 Deltek Catalyst - CI/CD Pipeline Integration
+# 🔄 Vintiq Catalyst - CI/CD Pipeline Integration
 
-## How to Run Deltek Catalyst in Your Pipelines
+## How to Run Vintiq Catalyst in Your Pipelines
 
 The platform you've built provides **REST APIs** that your CI/CD pipelines can call. Here's how:
 
@@ -20,7 +20,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy via Deltek Catalyst
+      - name: Deploy via Vintiq Catalyst
         run: |
           curl -X POST http://catalyst.company.com/api/v1/deployments \
             -H "Authorization: Bearer ${{ secrets.HARMONY_TOKEN }}" \
@@ -57,7 +57,7 @@ deploy_with_ai:
 ### Method 3: Platform CLI (Coming Soon)
 
 ```bash
-# Future: Deltek Catalyst CLI
+# Future: Vintiq Catalyst CLI
 catalyst deploy myapp --env prod --strategy canary
 catalyst agents execute sre-agent --task health-check
 catalyst clouds compare-costs --workload myapp
@@ -179,7 +179,7 @@ pipeline {
 
 ```yaml
 # .github/workflows/deploy.yml
-name: Deltek Catalyst Deployment
+name: Vintiq Catalyst Deployment
 
 on:
   push:
@@ -268,7 +268,7 @@ Your CI/CD Pipeline
       ↓
    (API Call)
       ↓
-Deltek Catalyst Platform (localhost:3000)
+Vintiq Catalyst Platform (localhost:3000)
       ↓
    (Routes to)
       ↓
@@ -449,7 +449,7 @@ certbot --nginx -d catalyst.company.com
 
 ## 💡 Summary
 
-**How Pipelines Use Deltek Catalyst:**
+**How Pipelines Use Vintiq Catalyst:**
 
 1. **Your Pipeline** → Calls Catalyst REST API
 2. **Catalyst API** → Routes to AI agents

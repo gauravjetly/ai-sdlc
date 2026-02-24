@@ -191,8 +191,8 @@ def demo_quality_scoring():
     )
 
     brand = BrandConfig(
-        id="deltek",
-        name="Deltek",
+        id="vintiq",
+        name="Vintiq",
     )
 
     presentation = Presentation(

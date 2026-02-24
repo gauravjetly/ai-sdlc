@@ -13,7 +13,7 @@ The current Exec Agent generates "diagrams" as colored rectangles with text labe
 The redesigned agent must produce real diagrams from structured project data. These diagrams must:
 
 1. **Be generated programmatically** from architecture specifications and project data (not manually drawn)
-2. **Follow Deltek branding** (colors, fonts, node styles)
+2. **Follow Vintiq branding** (colors, fonts, node styles)
 3. **Support multiple diagram types**: system architecture, data flow, deployment, sequence, Gantt, component, and charts
 4. **Embed cleanly in PowerPoint** at arbitrary positions and sizes
 5. **Cache results** to avoid redundant regeneration
@@ -47,7 +47,7 @@ Structured Data
 Mermaid Syntax Generator (per diagram type)
       |
       v
-Mermaid Theme Application (Deltek brand colors)
+Mermaid Theme Application (Vintiq brand colors)
       |
       v
 Mermaid CLI / mermaid-py --> SVG
@@ -93,10 +93,10 @@ DIAGRAM_TYPE_MAP = {
 }
 ```
 
-### Deltek Theme Configuration
+### Vintiq Theme Configuration
 
 ```python
-DELTEK_MERMAID_THEME = """
+VINTIQ_MERMAID_THEME = """
 %%{init: {
   'theme': 'base',
   'themeVariables': {
@@ -130,7 +130,7 @@ When Mermaid is not available (not installed, rendering fails):
 4. **Quality flag**: The QualityScorer reduces the visual quality score when fallback is used
 
 The native shape fallback generates:
-- Rounded rectangles for components (with Deltek blue fill)
+- Rounded rectangles for components (with Vintiq blue fill)
 - Arrow connectors between related components
 - Text labels inside and beside shapes
 - Subgroup boundaries as dashed rectangles
@@ -164,7 +164,7 @@ This hybrid approach gives us:
 
 - **Real diagrams**: Architecture slides contain actual system topology, not placeholder text
 - **Wide coverage**: 8+ diagram types from a single tool
-- **Brandable**: Mermaid's theming system supports Deltek color palette
+- **Brandable**: Mermaid's theming system supports Vintiq color palette
 - **Cacheable**: SVG/PNG output can be cached by content hash
 - **Graceful degradation**: Two fallback levels (python-pptx charts, native shapes)
 - **Text-based source**: Mermaid syntax is human-readable and versionable

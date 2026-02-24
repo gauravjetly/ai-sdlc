@@ -1,6 +1,6 @@
 /**
  * Validation-related type definitions
- * @module @deltek/governance-engine/types/validation
+ * @module @vintiq/governance-engine/types/validation
  */
 
 import { EnforcementLevel } from './policy.types';

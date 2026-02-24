@@ -1,6 +1,6 @@
 /**
  * Policy domain entity
- * @module @deltek/governance-engine/domain/entities/Policy
+ * @module @vintiq/governance-engine/domain/entities/Policy
  */
 
 import {

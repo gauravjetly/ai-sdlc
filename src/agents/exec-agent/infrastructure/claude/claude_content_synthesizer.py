@@ -131,7 +131,7 @@ Create a 2-3 sentence executive summary focusing on:
 
 Be concise and outcome-focused."""
 
-        system_prompt = "You are an executive presentation writer for Deltek. Write clear, concise, business-focused summaries."
+        system_prompt = "You are an executive presentation writer for Vintiq. Write clear, concise, business-focused summaries."
 
         response = self._call_claude_with_retry(prompt, system_prompt)
 
@@ -156,9 +156,9 @@ Be concise and outcome-focused."""
         technical_depth = audience_context.get('technical_depth', 0.5)
 
         prompts = {
-            'c-suite': "You are an executive presentation writer for Deltek. Focus on high-level outcomes, ROI, and strategic impact. Be concise and business-focused.",
-            'tech-lead': "You are a technical presentation writer for Deltek. Include architecture details, technical decisions, and implementation specifics.",
-            'vp-director': "You are a strategic presentation writer for Deltek. Balance business context with technical overview.",
+            'c-suite': "You are an executive presentation writer for Vintiq. Focus on high-level outcomes, ROI, and strategic impact. Be concise and business-focused.",
+            'tech-lead': "You are a technical presentation writer for Vintiq. Include architecture details, technical decisions, and implementation specifics.",
+            'vp-director': "You are a strategic presentation writer for Vintiq. Balance business context with technical overview.",
         }
 
         base_prompt = prompts.get(audience_type, prompts['vp-director'])

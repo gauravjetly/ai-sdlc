@@ -1,6 +1,6 @@
 /**
  * JSON Schema for policy validation
- * @module @deltek/governance-engine/config/schemas/policy-schema
+ * @module @vintiq/governance-engine/config/schemas/policy-schema
  */
 
 export const policySchema = {

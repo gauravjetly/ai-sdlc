@@ -1,6 +1,6 @@
 # Frequently Asked Questions (FAQ)
 
-Common questions about the Deltek Governance Engine.
+Common questions about the Vintiq Governance Engine.
 
 ## General Questions
 
@@ -328,7 +328,7 @@ See [INSTALLATION-GUIDE.md](./INSTALLATION-GUIDE.md#cicd-integration) for exampl
 
 **Option 1**: Install at root (recommended)
 ```bash
-npm install --save-dev @deltek/governance-engine -w
+npm install --save-dev @vintiq/governance-engine -w
 ```
 
 **Option 2**: Per-workspace policy
@@ -516,7 +516,7 @@ code_quality:
 
 **Bug reports**: https://github.com/DLTKEngineering/governance-engine/issues
 
-**Policy questions**: engineering-governance@deltek.com
+**Policy questions**: engineering-governance@vintiq.com
 
 **Training**: Weekly office hours (Fridays 2-3pm)
 
@@ -547,7 +547,7 @@ code_quality:
 - **Self-service**: Complete documentation in `docs/`
 - **Onboarding sessions**: For new team members
 
-Contact engineering-governance@deltek.com to schedule team training.
+Contact engineering-governance@vintiq.com to schedule team training.
 
 ## Troubleshooting
 
@@ -583,7 +583,7 @@ Contact engineering-governance@deltek.com to schedule team training.
 **Don't see your question here?**
 
 - **Slack**: #engineering-governance
-- **Email**: engineering-governance@deltek.com
+- **Email**: engineering-governance@vintiq.com
 - **Office Hours**: Fridays 2-3pm
 - **Documentation**: See all docs in `deployment/governance-engine/docs/`
 

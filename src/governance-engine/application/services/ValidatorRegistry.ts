@@ -1,6 +1,6 @@
 /**
  * Validator Registry
- * @module @deltek/governance-engine/application/services/ValidatorRegistry
+ * @module @vintiq/governance-engine/application/services/ValidatorRegistry
  */
 
 import { Policy } from '../../types/policy.types';

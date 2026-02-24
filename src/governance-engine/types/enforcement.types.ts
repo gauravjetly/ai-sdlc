@@ -1,6 +1,6 @@
 /**
  * Enforcement-related type definitions
- * @module @deltek/governance-engine/types/enforcement
+ * @module @vintiq/governance-engine/types/enforcement
  */
 
 import { Violation, ViolationSeverity, ValidationWarning, ValidationResult } from './validation.types';

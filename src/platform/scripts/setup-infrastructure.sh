@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Deltek Catalyst - Infrastructure Setup Script
+# Vintiq Catalyst - Infrastructure Setup Script
 # Sets up PostgreSQL, Redis, and runs database migrations
 
 set -e
 
-echo "🚀 Deltek Catalyst - Infrastructure Setup"
+echo "🚀 Vintiq Catalyst - Infrastructure Setup"
 echo "=========================================="
 echo ""
 

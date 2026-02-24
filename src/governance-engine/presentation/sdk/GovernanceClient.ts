@@ -1,6 +1,6 @@
 /**
  * Governance Client SDK
- * @module @deltek/governance-engine/sdk/GovernanceClient
+ * @module @vintiq/governance-engine/sdk/GovernanceClient
  *
  * SDK for integrating governance validation into agent workflows
  */

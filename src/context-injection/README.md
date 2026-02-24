@@ -4,7 +4,7 @@ AI-SDLC Context Injection System that provides context-aware prompts for all AI 
 
 ## Overview
 
-This system automatically injects relevant organizational, project, historical, and live context into AI agent prompts, ensuring agents have the information they need to make Deltek-compliant decisions.
+This system automatically injects relevant organizational, project, historical, and live context into AI agent prompts, ensuring agents have the information they need to make Vintiq-compliant decisions.
 
 ## Features
 
@@ -84,11 +84,11 @@ npm run build
 ### Quick Start
 
 ```typescript
-import { createContextInjectionSystem } from '@deltek/context-injection';
+import { createContextInjectionSystem } from '@vintiq/context-injection';
 
 // Create the system
 const middleware = createContextInjectionSystem({
-  orgName: 'deltek',
+  orgName: 'vintiq',
   enableCache: true,
   autoCleanupInterval: 60000
 });
@@ -101,7 +101,7 @@ const enhancedPrompt = await middleware.execute(
 );
 
 console.log(enhancedPrompt);
-// Original prompt + Deltek context injected
+// Original prompt + Vintiq context injected
 ```
 
 ### Advanced Usage
@@ -117,10 +117,10 @@ import {
   HistoricalContextLoader,
   LiveContextLoader,
   AgentMiddleware
-} from '@deltek/context-injection';
+} from '@vintiq/context-injection';
 
 // Initialize loaders
-const orgLoader = new OrgContextLoader('deltek');
+const orgLoader = new OrgContextLoader('vintiq');
 const projectLoader = new ProjectContextLoader();
 const historicalLoader = new HistoricalContextLoader();
 const liveLoader = new LiveContextLoader();
@@ -190,10 +190,10 @@ const CACHE_TTL = {
 
 ## Organizational Context
 
-The system loads organizational context from `~/.claude/org-context/deltek/`:
+The system loads organizational context from `~/.claude/org-context/vintiq/`:
 
 ```
-~/.claude/org-context/deltek/
+~/.claude/org-context/vintiq/
 ├── coding-standards.md          # SOLID, naming, patterns
 ├── security-policies.md         # Auth, encryption, compliance
 ├── architecture-patterns.md     # Layered architecture, design patterns
@@ -205,9 +205,9 @@ The system loads organizational context from `~/.claude/org-context/deltek/`:
 ### Initialize Organizational Context
 
 ```typescript
-import { OrgContextLoader } from '@deltek/context-injection';
+import { OrgContextLoader } from '@vintiq/context-injection';
 
-const loader = new OrgContextLoader('deltek');
+const loader = new OrgContextLoader('vintiq');
 
 // Check if exists
 const exists = await loader.exists();
@@ -232,7 +232,7 @@ Project-specific context is loaded from `.claude/context/` in your project:
 ### Initialize Project Context
 
 ```typescript
-import { ProjectContextLoader } from '@deltek/context-injection';
+import { ProjectContextLoader } from '@vintiq/context-injection';
 
 const loader = new ProjectContextLoader();
 
@@ -259,7 +259,7 @@ npm run test:watch
 Creates a fully configured context injection system.
 
 **Parameters:**
-- `config.orgName` (string): Organization name (default: 'deltek')
+- `config.orgName` (string): Organization name (default: 'vintiq')
 - `config.enableCache` (boolean): Enable caching (default: true)
 - `config.autoCleanupInterval` (number): Cache cleanup interval in ms (default: 60000)
 
@@ -329,12 +329,12 @@ See `tests/context-injection.test.ts` for comprehensive examples.
 
 ```bash
 # Check if organizational context exists
-ls -la ~/.claude/org-context/deltek/
+ls -la ~/.claude/org-context/vintiq/
 
 # Initialize if missing
 node -e "
 const { OrgContextLoader } = require('./dist');
-const loader = new OrgContextLoader('deltek');
+const loader = new OrgContextLoader('vintiq');
 loader.initialize().then(() => console.log('Initialized'));
 "
 ```
@@ -361,7 +361,7 @@ console.log('Hit rate:', stats.hitRate);
 
 ## Contributing
 
-1. Follow Deltek coding standards
+1. Follow Vintiq coding standards
 2. Write tests for all new features
 3. Maintain >80% test coverage
 4. Update documentation
@@ -373,4 +373,4 @@ MIT
 ## Support
 
 - GitHub Issues: https://github.com/DLTKEngineering/context-injection/issues
-- Email: engineering@deltek.com
+- Email: engineering@vintiq.com

@@ -1,6 +1,6 @@
 /**
  * Report Command
- * @module @deltek/governance-engine/cli/commands/report
+ * @module @vintiq/governance-engine/cli/commands/report
  */
 
 import { Command } from 'commander';

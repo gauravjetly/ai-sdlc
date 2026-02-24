@@ -1,6 +1,6 @@
 /**
  * Validate Command
- * @module @deltek/governance-engine/cli/commands/validate
+ * @module @vintiq/governance-engine/cli/commands/validate
  */
 
 import { Command } from 'commander';

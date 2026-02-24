@@ -16,24 +16,17 @@ export default function Header() {
     >
       <Toolbar>
         <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Box sx={{
-            width: 50,
-            height: 50,
-            background: 'linear-gradient(135deg, #00A3E0 0%, #002B49 100%)',
-            borderRadius: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 'bold',
-            fontSize: '1.5rem',
-            color: 'white'
-          }}>
-            D
+          <Box sx={{ height: 50, display: 'flex', alignItems: 'center' }}>
+            <img
+              src="/vintiq-logo.svg"
+              alt="Vintiq Consultancy"
+              style={{ height: '50px', width: 'auto' }}
+            />
           </Box>
           <Box>
             <Typography variant="h5" component="div" sx={{ fontWeight: 700 }}>
-              <span style={{ color: '#00A3E0' }}>DELTEK</span>{' '}
-              <span style={{ color: '#002B49' }}>CATALYST</span>
+              <span style={{ color: '#F39219' }}>VINTIQ</span>{' '}
+              <span style={{ color: '#120E3A' }}>CATALYST</span>
             </Typography>
             <Typography variant="caption" sx={{ color: '#666' }}>
               AI-Powered Multi-Cloud Control Center

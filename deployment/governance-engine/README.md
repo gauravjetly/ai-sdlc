@@ -1,4 +1,4 @@
-# Deltek Governance Engine - Deployment Package
+# Vintiq Governance Engine - Deployment Package
 
 Complete deployment package for rolling out the Governance Engine across your organization.
 
@@ -45,7 +45,7 @@ curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/m
 /path/to/deployment/governance-engine/scripts/install-governance.sh
 
 # Option 3: Manual npm install
-npm install --save-dev @deltek/governance-engine
+npm install --save-dev @vintiq/governance-engine
 ```
 
 **Read the docs**:
@@ -108,7 +108,7 @@ See [ROLLOUT-PLAN.md](./docs/ROLLOUT-PLAN.md) for complete details.
 **What it does**:
 1. Checks prerequisites (Node.js, npm, git)
 2. Installs governance engine package
-3. Downloads Deltek policy file
+3. Downloads Vintiq policy file
 4. Sets up git pre-commit hooks
 5. Verifies installation
 
@@ -241,7 +241,7 @@ open http://localhost:8000/dashboard.html
 - **Champions**: Team advocates
 
 ### Direct Support (5% of questions)
-- **Email**: engineering-governance@deltek.com
+- **Email**: engineering-governance@vintiq.com
 - **For**: Complex issues, policy questions, escalations
 - **SLA**: Response within 4 hours
 
@@ -468,7 +468,7 @@ MIT License - See LICENSE file for details
 
 ## Contact
 
-**Support**: engineering-governance@deltek.com
+**Support**: engineering-governance@vintiq.com
 **Slack**: #engineering-governance
 **GitHub**: https://github.com/DLTKEngineering/governance-engine
 

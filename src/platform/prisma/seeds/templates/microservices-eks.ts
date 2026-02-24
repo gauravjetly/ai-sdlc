@@ -242,7 +242,7 @@ export function createMicroservicesEKSTemplate(): TemplateDefinition {
       nodes,
       edges,
       metadata: {
-        author: 'Deltek Catalyst Team',
+        author: 'Vintiq Catalyst Team',
         version: '1.0.0',
         tested: true,
         compliance: ['SOC2', 'HIPAA-eligible', 'PCI-DSS-ready'],

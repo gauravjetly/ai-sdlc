@@ -16,7 +16,7 @@ export class ManifestBuilder {
       app: config.application,
       environment: config.environment,
       version: config.version,
-      'managed-by': 'deltek-catalyst',
+      'managed-by': 'vintiq-catalyst',
     };
 
     const deployment: k8s.V1Deployment = {
@@ -27,8 +27,8 @@ export class ManifestBuilder {
         namespace: config.namespace,
         labels,
         annotations: {
-          'deltek.com/strategy': config.strategy,
-          'deltek.com/cloud': config.cloud,
+          'vintiq.com/strategy': config.strategy,
+          'vintiq.com/cloud': config.cloud,
         },
       },
       spec: {
@@ -164,7 +164,7 @@ export class ManifestBuilder {
     const labels = {
       app: config.application,
       environment: config.environment,
-      'managed-by': 'deltek-catalyst',
+      'managed-by': 'vintiq-catalyst',
     };
 
     const service: k8s.V1Service = {
@@ -213,7 +213,7 @@ export class ManifestBuilder {
         labels: {
           app: config.application,
           environment: config.environment,
-          'managed-by': 'deltek-catalyst',
+          'managed-by': 'vintiq-catalyst',
         },
       },
       spec: {

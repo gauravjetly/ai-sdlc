@@ -142,7 +142,7 @@ class DegradationManager:
         strategies = {
             'claude': "Use template-based content with data interpolation",
             'mermaid': "Use python-pptx native shapes for simple diagrams",
-            'template': "Generate programmatic slides with Deltek branding",
+            'template': "Generate programmatic slides with Vintiq branding",
             'data': "Use last known data snapshot with warning banners",
         }
 

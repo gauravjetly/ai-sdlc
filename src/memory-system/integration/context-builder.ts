@@ -129,9 +129,9 @@ export class ContextBuilder {
       sections.push(this.formatComplianceRules(grouped.get('compliance-rules')!));
     }
 
-    // Deltek knowledge
-    if (grouped.has('deltek-knowledge')) {
-      sections.push(this.formatDeltekKnowledge(grouped.get('deltek-knowledge')!));
+    // Vintiq knowledge
+    if (grouped.has('vintiq-knowledge')) {
+      sections.push(this.formatVintiqKnowledge(grouped.get('vintiq-knowledge')!));
     }
 
     sections.push('---');
@@ -285,11 +285,11 @@ export class ContextBuilder {
   }
 
   /**
-   * Format Deltek knowledge
+   * Format Vintiq knowledge
    */
-  private formatDeltekKnowledge(memories: Memory[]): string {
+  private formatVintiqKnowledge(memories: Memory[]): string {
     const lines: string[] = [];
-    lines.push('### 🏢 Deltek Product Knowledge');
+    lines.push('### 🏢 Vintiq Product Knowledge');
     lines.push('');
 
     for (const memory of memories.slice(0, 2)) {

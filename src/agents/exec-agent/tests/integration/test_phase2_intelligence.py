@@ -153,7 +153,7 @@ class TestPhase2Intelligence(unittest.TestCase):
                 type=AudienceType.C_SUITE,
                 detail_level=DetailLevel.MINIMAL,
             ),
-            brand_config=BrandConfig.create_deltek_brand(),
+            brand_config=BrandConfig.create_vintiq_brand(),
         )
 
         # Add a test slide

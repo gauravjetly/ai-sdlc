@@ -9,7 +9,7 @@
 
 ## Context
 
-The Deltek Catalyst Interactive Control Center backend needs to support:
+The Vintiq Catalyst Interactive Control Center backend needs to support:
 
 - 102+ API endpoints across 8 domain areas
 - Multi-tenant data isolation
@@ -71,7 +71,7 @@ The current implementation uses REST with Express.js and OpenAPI 3.0 documentati
 
 ```json
 {
-  "type": "https://api.catalyst.deltek.com/errors/validation",
+  "type": "https://api.catalyst.vintiq.com/errors/validation",
   "title": "Validation Error",
   "status": 400,
   "detail": "The deployment name must be lowercase alphanumeric",

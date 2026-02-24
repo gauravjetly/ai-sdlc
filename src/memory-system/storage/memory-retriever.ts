@@ -356,7 +356,7 @@ export class MemoryRetriever {
       'deployment_patterns',
       'compliance_rules',
       'failed_approaches',
-      'deltek_knowledge',
+      'vintiq_knowledge',
     ];
   }
 

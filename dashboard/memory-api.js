@@ -68,9 +68,9 @@ function getCrossAgentLearnings() {
     return { learning_flows: {}, shared_patterns: {} };
 }
 
-// Get Deltek product knowledge
-function getDeltekKnowledge() {
-    const productsPath = path.join(ARCHITECT_MEMORY, 'deltek-products');
+// Get Vintiq product knowledge
+function getVintiqKnowledge() {
+    const productsPath = path.join(ARCHITECT_MEMORY, 'vintiq-products');
     const products = [];
 
     try {
@@ -96,7 +96,7 @@ function getDeltekKnowledge() {
 function getMemoryStats() {
     const memories = getAgentMemories();
     const crossLearnings = getCrossAgentLearnings();
-    const deltekProducts = getDeltekKnowledge();
+    const vintiqProducts = getVintiqKnowledge();
 
     let totalPatterns = 0;
     let totalSolutions = 0;
@@ -129,9 +129,9 @@ function getMemoryStats() {
             flows: flowCount,
             sharedPatterns: sharedPatternCount
         },
-        deltek: {
-            products: deltekProducts.length,
-            productList: deltekProducts
+        vintiq: {
+            products: vintiqProducts.length,
+            productList: vintiqProducts
         }
     };
 }
@@ -172,7 +172,7 @@ function getTopPatterns() {
 module.exports = {
     getAgentMemories,
     getCrossAgentLearnings,
-    getDeltekKnowledge,
+    getVintiqKnowledge,
     getMemoryStats,
     getTopPatterns
 };

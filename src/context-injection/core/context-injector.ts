@@ -18,7 +18,7 @@ export class ContextInjector {
 ${contextBlock}
 
 ---
-**IMPORTANT**: Follow all Deltek standards above. Build on existing code. Reference past implementations for proven patterns.
+**IMPORTANT**: Follow all Vintiq standards above. Build on existing code. Reference past implementations for proven patterns.
 `;
   }
 
@@ -27,7 +27,7 @@ ${contextBlock}
    */
   private formatContext(context: Context): string {
     const sections: string[] = [
-      '## Deltek Engineering Context (Auto-Injected)',
+      '## Vintiq Engineering Context (Auto-Injected)',
       '',
       this.formatOrganizationalContext(context.organizational),
       this.formatProjectContext(context.project),

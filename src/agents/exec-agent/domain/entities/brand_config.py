@@ -26,15 +26,15 @@ class BrandConfig:
     layout_mappings: Dict[str, int] = field(default_factory=dict)
 
     def __post_init__(self):
-        """Initialize default Deltek brand values if not provided"""
+        """Initialize default Vintiq brand values if not provided"""
         if not self.colors:
-            self.colors = self._get_default_deltek_colors()
+            self.colors = self._get_default_vintiq_colors()
         if not self.typography:
-            self.typography = self._get_default_deltek_typography()
+            self.typography = self._get_default_vintiq_typography()
 
     @staticmethod
-    def _get_default_deltek_colors() -> Dict[str, str]:
-        """Get default Deltek brand colors"""
+    def _get_default_vintiq_colors() -> Dict[str, str]:
+        """Get default Vintiq brand colors"""
         return {
             "primary_blue": "#1742F6",
             "navy": "#081581",
@@ -54,8 +54,8 @@ class BrandConfig:
         }
 
     @staticmethod
-    def _get_default_deltek_typography() -> Dict[str, Dict[str, any]]:
-        """Get default Deltek typography settings"""
+    def _get_default_vintiq_typography() -> Dict[str, Dict[str, any]]:
+        """Get default Vintiq typography settings"""
         return {
             "heading": {"font": "Figtree", "weight": "Bold", "size": 32},
             "subheading": {"font": "Figtree", "weight": "SemiBold", "size": 24},
@@ -80,7 +80,7 @@ class BrandConfig:
         return self.colors.get("primary_blue", "#1742F6")
 
     def get_gradient_colors(self) -> List[str]:
-        """Get the Deltek gradient color sequence"""
+        """Get the Vintiq gradient color sequence"""
         return [
             self.colors.get("dela_cyan", "#08E9EB"),
             self.colors.get("dela_pink", "#FF5DF2"),
@@ -215,16 +215,16 @@ class BrandConfig:
         return len(self.validate()) == 0
 
     @classmethod
-    def create_deltek_brand(cls) -> 'BrandConfig':
+    def create_vintiq_brand(cls) -> 'BrandConfig':
         """
-        Create a default Deltek brand configuration.
+        Create a default Vintiq brand configuration.
 
         Returns:
-            BrandConfig with Deltek defaults
+            BrandConfig with Vintiq defaults
         """
         return cls(
-            id="deltek",
-            name="Deltek",
-            colors=cls._get_default_deltek_colors(),
-            typography=cls._get_default_deltek_typography(),
+            id="vintiq",
+            name="Vintiq",
+            colors=cls._get_default_vintiq_colors(),
+            typography=cls._get_default_vintiq_typography(),
         )

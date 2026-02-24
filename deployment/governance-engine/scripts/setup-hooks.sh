@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# Deltek Governance Engine - Git Hooks Setup Script
+# Vintiq Governance Engine - Git Hooks Setup Script
 # =============================================================================
 # This script sets up git hooks for governance policy enforcement.
 # It can be run standalone or as part of the main installation.
@@ -47,7 +47,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --help)
             cat << EOF
-Deltek Governance Engine - Git Hooks Setup
+Vintiq Governance Engine - Git Hooks Setup
 
 Usage: ./setup-hooks.sh [options]
 
@@ -93,8 +93,8 @@ if [ ! -d .git ]; then
 fi
 
 # Check if governance engine is installed
-if ! npm list @deltek/governance-engine &>/dev/null; then
-    log_error "Governance engine not installed. Run: npm install --save-dev @deltek/governance-engine"
+if ! npm list @vintiq/governance-engine &>/dev/null; then
+    log_error "Governance engine not installed. Run: npm install --save-dev @vintiq/governance-engine"
     exit 1
 fi
 
@@ -160,7 +160,7 @@ create_precommit_hook() {
     cat > .husky/pre-commit << 'EOF'
 #!/bin/sh
 # =============================================================================
-# Deltek Governance Engine - Pre-Commit Hook
+# Vintiq Governance Engine - Pre-Commit Hook
 # =============================================================================
 # This hook runs before each commit to validate code against governance policies.
 #
@@ -236,7 +236,7 @@ create_prepush_hook() {
     cat > .husky/pre-push << 'EOF'
 #!/bin/sh
 # =============================================================================
-# Deltek Governance Engine - Pre-Push Hook
+# Vintiq Governance Engine - Pre-Push Hook
 # =============================================================================
 # This hook runs before pushing to remote to ensure quality gates are met.
 #
@@ -313,7 +313,7 @@ create_commitmsg_hook() {
     cat > .husky/commit-msg << 'EOF'
 #!/bin/sh
 # =============================================================================
-# Deltek Governance Engine - Commit Message Hook
+# Vintiq Governance Engine - Commit Message Hook
 # =============================================================================
 # This hook validates commit messages against the conventional commits format.
 #

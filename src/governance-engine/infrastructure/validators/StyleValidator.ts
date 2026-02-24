@@ -1,6 +1,6 @@
 /**
  * Style Validator
- * @module @deltek/governance-engine/infrastructure/validators/StyleValidator
+ * @module @vintiq/governance-engine/infrastructure/validators/StyleValidator
  */
 
 import { exec } from 'child_process';

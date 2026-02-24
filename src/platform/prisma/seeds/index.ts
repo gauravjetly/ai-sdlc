@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('\n======================================================');
-  console.log('  Deltek Catalyst Platform - Database Seeding');
+  console.log('  Vintiq Catalyst Platform - Database Seeding');
   console.log('======================================================\n');
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`Database: ${process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'localhost'}`);

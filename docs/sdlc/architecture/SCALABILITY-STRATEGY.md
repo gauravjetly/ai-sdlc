@@ -1,4 +1,4 @@
-# Deltek Catalyst Scalability Strategy
+# Vintiq Catalyst Scalability Strategy
 
 **Version**: 1.0.0
 **Date**: 2026-01-30
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This document defines the scalability strategy for the Deltek Catalyst platform, targeting support for 10,000+ concurrent users with sub-200ms response times and 99.99% availability.
+This document defines the scalability strategy for the Vintiq Catalyst platform, targeting support for 10,000+ concurrent users with sub-200ms response times and 99.99% availability.
 
 ---
 

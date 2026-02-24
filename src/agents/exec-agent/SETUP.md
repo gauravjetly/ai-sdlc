@@ -51,7 +51,7 @@ python /Users/gauravjetly/aisdlc-2.1.0/src/agents/exec-agent/exec-agent.py gener
 - Added to AGENTS array in dashboard
 - API endpoints created (/api/exec/generate, /api/exec/list)
 - Self-learning memory system initialized
-- Deltek brand guidelines loaded
+- Vintiq brand guidelines loaded
 
 ### 📊 Presentation Types
 1. **executive-summary** - Complete project overview with KPIs
@@ -64,8 +64,8 @@ python /Users/gauravjetly/aisdlc-2.1.0/src/agents/exec-agent/exec-agent.py gener
 - Archives historical presentations
 - Optimizes diagram styles over time
 
-### 🎨 Deltek Branding
-- Uses official Deltek PowerPoint template
+### 🎨 Vintiq Branding
+- Uses official Vintiq PowerPoint template
 - Applies brand colors (#1742F6, #081581, etc.)
 - Figtree typography throughout
 - Dela AI Lifecycle gradient backgrounds
@@ -74,7 +74,7 @@ python /Users/gauravjetly/aisdlc-2.1.0/src/agents/exec-agent/exec-agent.py gener
 
 ```
 ~/.claude/exec-agent-memory/
-├── deltek-brand/
+├── vintiq-brand/
 │   ├── colors.json          # Brand palette
 │   ├── typography.json      # Font styles
 │   └── layouts.json         # Slide layouts
@@ -124,9 +124,9 @@ pip install python-pptx Pillow
 ```
 
 ### Template Not Found
-The agent looks for the Deltek template at:
+The agent looks for the Vintiq template at:
 ```
-/Users/gauravjetly/Downloads/Deltek PowerPoint Guidelines 2/Deltek PPT Template and Guidelines 011426.potx
+/Users/gauravjetly/Downloads/Vintiq PowerPoint Guidelines 2/Vintiq PPT Template and Guidelines 011426.potx
 ```
 
 If not found, it creates a basic presentation. Copy your template to this location.
@@ -169,7 +169,7 @@ print(f"Updated presentation: {updated}")
 ✅ Agent appears in dashboard AGENTS list
 ✅ API endpoints respond at /api/exec/*
 ✅ Memory directories created
-✅ Deltek brand guidelines loaded
+✅ Vintiq brand guidelines loaded
 ✅ Can generate sample presentation
 ✅ Self-learning log tracks generations
 

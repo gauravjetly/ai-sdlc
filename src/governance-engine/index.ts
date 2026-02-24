@@ -1,13 +1,13 @@
 /**
  * Governance Engine
- * @module @deltek/governance-engine
+ * @module @vintiq/governance-engine
  *
- * Deltek Engineering Governance Policy Engine
+ * Vintiq Engineering Governance Policy Engine
  * Enforces coding standards, security policies, and architectural compliance
  *
  * @example
  * ```typescript
- * import { GovernanceService, GovernanceClient } from '@deltek/governance-engine';
+ * import { GovernanceService, GovernanceClient } from '@vintiq/governance-engine';
  *
  * // CLI-style usage
  * const service = new GovernanceService();

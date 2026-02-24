@@ -1,6 +1,6 @@
 /**
  * Repository Validator
- * @module @deltek/governance-engine/infrastructure/validators/RepositoryValidator
+ * @module @vintiq/governance-engine/infrastructure/validators/RepositoryValidator
  */
 
 import { exec } from 'child_process';

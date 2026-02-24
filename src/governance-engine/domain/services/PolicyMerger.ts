@@ -1,6 +1,6 @@
 /**
  * Policy Merger Service
- * @module @deltek/governance-engine/domain/services/PolicyMerger
+ * @module @vintiq/governance-engine/domain/services/PolicyMerger
  */
 
 import { Policy } from '../../types/policy.types';

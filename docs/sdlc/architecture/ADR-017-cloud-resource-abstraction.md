@@ -9,7 +9,7 @@
 
 ## Context
 
-The Deltek Catalyst platform manages cloud resources across multiple providers:
+The Vintiq Catalyst platform manages cloud resources across multiple providers:
 
 - **Current**: AWS, OCI
 - **Planned**: Azure, GCP

@@ -176,7 +176,7 @@ npm run mcp:test
 │   │   └── (loads org standards into agent prompts)
 │   │
 │   ├── governance-engine/        ← Policy Engine (Phase 1) ✅
-│   │   └── (enforces Deltek standards)
+│   │   └── (enforces Vintiq standards)
 │   │
 │   ├── memory-system/            ← RAG Memory (Phase 2) ✅
 │   │   └── (learns from experience)

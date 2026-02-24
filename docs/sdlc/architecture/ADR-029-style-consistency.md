@@ -11,9 +11,9 @@
 
 The two dashboard applications use different design systems:
 
-### Main Dashboard: Deltek Harmony Design System
+### Main Dashboard: Vintiq Harmony Design System
 - **Typography**: Figtree (Google Fonts), 400/500/600/700 weights
-- **Primary Color**: `#1742F6` (Deltek Blue)
+- **Primary Color**: `#1742F6` (Vintiq Blue)
 - **Navy**: `#081581`
 - **Background**: `#F1F5FA`
 - **Card Background**: `#FFFFFF`
@@ -23,9 +23,9 @@ The two dashboard applications use different design systems:
 - **Dark Mode**: Supported via `[data-theme="dark"]` CSS selector
 - **Gradient**: `linear-gradient(90deg, #08E9EB 0%, #FF5DF2 34%, #3895FF 72%, #7A62FF 94%)`
 
-### Platform Webapp: Deltek Catalyst Theme (Material-UI)
+### Platform Webapp: Vintiq Catalyst Theme (Material-UI)
 - **Typography**: System fonts (-apple-system, BlinkMacSystemFont, Segoe UI, Roboto)
-- **Primary Color**: `#00A3E0` (Deltek Cyan)
+- **Primary Color**: `#00A3E0` (Vintiq Cyan)
 - **Secondary**: `#002B49` (Navy)
 - **Background**: `#F8F9FA`
 - **Card Background**: `#FFFFFF`
@@ -36,7 +36,7 @@ The two dashboard applications use different design systems:
 
 ### The Problem
 
-Both applications carry Deltek branding but look noticeably different:
+Both applications carry Vintiq branding but look noticeably different:
 1. Different primary colors (Blue `#1742F6` vs Cyan `#00A3E0`)
 2. Different fonts (Figtree vs system stack)
 3. Different border radii (8px vs 10px)
@@ -253,7 +253,7 @@ Embed the iframe as-is with no visual alignment.
 
 ### Neutral
 
-1. Users may not notice minor differences -- both are professional, clean, and Deltek-branded
+1. Users may not notice minor differences -- both are professional, clean, and Vintiq-branded
 2. The iframe boundary naturally explains any visual context switch to users
 
 ---
@@ -278,7 +278,7 @@ Embed the iframe as-is with no visual alignment.
 | Dark Mode        | CSS vars          | MUI palette       |
 +------------------+-------------------+-------------------+
 
-Verdict: Both are clean, professional, Deltek-branded.
+Verdict: Both are clean, professional, Vintiq-branded.
          Differences are subtle, not jarring.
          Dark mode sync is the critical alignment point.
 ```
@@ -317,5 +317,5 @@ Verdict: Both are clean, professional, Deltek-branded.
 - [ARCH-20260210-DASHBOARD-INTEGRATION](/docs/sdlc/architecture/ARCH-20260210-DASHBOARD-INTEGRATION.md) -- Main architecture document
 - [ADR-027](/docs/sdlc/architecture/ADR-027-dashboard-integration-strategy.md) -- Integration approach
 - [ADR-028](/docs/sdlc/architecture/ADR-028-routing-strategy.md) -- Routing strategy
-- Deltek Harmony Design System -- `dashboard/index.html` CSS variables
+- Vintiq Harmony Design System -- `dashboard/index.html` CSS variables
 - Material-UI Theming -- `src/platform/webapp/src/styles/theme.ts`

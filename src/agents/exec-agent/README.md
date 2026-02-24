@@ -1,19 +1,19 @@
 # Exec Agent - Executive Presentation Specialist
 
 ## Overview
-The Exec Agent is a self-learning presentation specialist that automatically generates Deltek-branded PowerPoint slides with status updates, architecture diagrams, and visual insights.
+The Exec Agent is a self-learning presentation specialist that automatically generates Vintiq-branded PowerPoint slides with status updates, architecture diagrams, and visual insights.
 
 ## Capabilities
 
 ### 1. Presentation Generation
 - Creates executive-ready PowerPoint presentations
-- Uses official Deltek brand guidelines and templates
+- Uses official Vintiq brand guidelines and templates
 - Generates architecture diagrams (system, data flow, deployment)
 - Creates status dashboards with charts and metrics
 - Produces timeline visualizations (Gantt charts, roadmaps)
 
 ### 2. Self-Learning & Memory
-- **Learns Deltek Design Patterns**: Memorizes slide layouts, color schemes, typography
+- **Learns Vintiq Design Patterns**: Memorizes slide layouts, color schemes, typography
 - **Remembers Stakeholder Preferences**: Executive vs technical audiences, detail levels
 - **Archives Historical Presentations**: References past slides for consistency
 - **Optimizes Diagram Styles**: Learns which visualizations resonate best
@@ -45,7 +45,7 @@ Conductor → BA → Jets → Engineer → Security → QA → Atlas → Custome
 
 ```
 ~/.claude/exec-agent-memory/
-├── deltek-brand/
+├── vintiq-brand/
 │   ├── colors.json (Brand color palette)
 │   ├── typography.json (Font styles and sizes)
 │   ├── layouts.json (Slide layout patterns)
@@ -62,10 +62,10 @@ Conductor → BA → Jets → Engineer → Security → QA → Atlas → Custome
     └── improvements.json (Feedback and iterations)
 ```
 
-## Deltek Brand Guidelines
+## Vintiq Brand Guidelines
 
 ### Color Palette
-- **Primary**: Deltek Blue (#1742F6), Navy (#081581)
+- **Primary**: Vintiq Blue (#1742F6), Navy (#081581)
 - **Gradient**: Dela AI Lifecycle (#08E9EB → #FF5DF2 → #3895FF → #7A62FF)
 - **Accent**: Teal (#00B6C3), Purple (#6D18F1), Magenta (#C200CC)
 - **Text**: Dark Gray (#3C454E), Light Gray (#8a9bac)
@@ -76,7 +76,7 @@ Conductor → BA → Jets → Engineer → Security → QA → Atlas → Custome
 - **Monospace**: SF Mono (for code/IDs)
 
 ### Slide Types
-1. **Title Slide**: Project name, date, Deltek branding
+1. **Title Slide**: Project name, date, Vintiq branding
 2. **Executive Summary**: Key metrics, status, highlights
 3. **Architecture Overview**: System diagram, components
 4. **Status Dashboard**: KPIs, progress bars, metrics
@@ -134,7 +134,7 @@ POST /api/exec/generate
 {
   "optimization": "use_gradient_backgrounds_for_kpi_slides",
   "improvement": "+35% visual appeal rating",
-  "context": "Status dashboard slides with Deltek gradient backgrounds scored higher",
+  "context": "Status dashboard slides with Vintiq gradient backgrounds scored higher",
   "activated": true
 }
 ```
@@ -146,10 +146,10 @@ POST /api/exec/generate
 - 4 KPI cards with sparklines
 - Project health indicator
 - Key highlights (3-5 bullets)
-- Deltek branding footer
+- Vintiq branding footer
 
 ### 2. Architecture Diagram Slide
-- System components with Deltek color coding
+- System components with Vintiq color coding
 - Data flow arrows
 - Integration points highlighted
 - Legend with component types
@@ -174,7 +174,7 @@ POST /api/exec/generate
 ### Phase 2: Intelligence (Complete)
 - ✅ Claude API integration with retry and caching
 - ✅ Mermaid diagram rendering with fallback
-- ✅ PowerPoint generation with Deltek branding
+- ✅ PowerPoint generation with Vintiq branding
 - ✅ 6-level graceful degradation system
 - ✅ 11 integration tests passing
 

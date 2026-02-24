@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Successfully integrated the MultiProjectDashboard component into the Deltek Catalyst Control Center webapp. The scheduling dashboard is now accessible via the main navigation and provides comprehensive multi-project SDLC orchestration capabilities.
+Successfully integrated the MultiProjectDashboard component into the Vintiq Catalyst Control Center webapp. The scheduling dashboard is now accessible via the main navigation and provides comprehensive multi-project SDLC orchestration capabilities.
 
 ---
 
@@ -328,7 +328,7 @@ The integration works out-of-the-box with:
 **Environment Variables** (production):
 ```env
 # Backend API base URL
-VITE_API_BASE_URL=https://api.deltek-catalyst.com
+VITE_API_BASE_URL=https://api.vintiq-catalyst.com
 
 # Auto-refresh interval (milliseconds)
 VITE_DASHBOARD_REFRESH_INTERVAL=30000

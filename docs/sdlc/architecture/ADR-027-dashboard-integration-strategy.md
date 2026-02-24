@@ -11,7 +11,7 @@
 
 The AI-SDLC platform has two separate React applications that provide dashboard functionality:
 
-1. **Main Dashboard** (`dashboard/index.html`) -- A 7,800-line single-file React application using embedded Babel transforms, served by a custom Node.js HTTP server on port 3030. It uses the Deltek Harmony Design System with Figtree typography and CSS custom properties.
+1. **Main Dashboard** (`dashboard/index.html`) -- A 7,800-line single-file React application using embedded Babel transforms, served by a custom Node.js HTTP server on port 3030. It uses the Vintiq Harmony Design System with Figtree typography and CSS custom properties.
 
 2. **Platform Webapp** (`src/platform/webapp/`) -- A modern Vite + React 18 + TypeScript + Material-UI 5 application served on port 3001. It contains two high-value components that need to be integrated into the main dashboard:
    - `MultiProjectDashboard` (scheduling/orchestration, 700+ lines)

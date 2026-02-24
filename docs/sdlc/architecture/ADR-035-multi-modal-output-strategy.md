@@ -91,7 +91,7 @@ class ExportService:
 
 **HTML Renderer**:
 - Generates a self-contained folder with `index.html`, per-slide pages, and assets
-- Uses Jinja2 templates with Deltek CSS (Figtree font, #1742F6 primary, #081581 secondary)
+- Uses Jinja2 templates with Vintiq CSS (Figtree font, #1742F6 primary, #081581 secondary)
 - Charts rendered via Chart.js from metrics data
 - Mermaid diagrams rendered to SVG and embedded inline
 - Navigation: arrow keys, table of contents sidebar
@@ -172,7 +172,7 @@ Use LaTeX/Beamer for PDF generation instead of libreoffice conversion.
 | Risk | Mitigation |
 |------|-----------|
 | libreoffice not installable in some environments | PDF is optional; `is_available()` check prevents errors |
-| HTML template styling diverges from PPTX | Share Deltek CSS constants with PPTX color/font constants |
+| HTML template styling diverges from PPTX | Share Vintiq CSS constants with PPTX color/font constants |
 | Briefing script generation fails (API error) | Fallback: extract bullet points from slides as basic script |
 | HTML folder structure confuses users | Include README.txt in output folder explaining how to open |
 
@@ -185,7 +185,7 @@ Use LaTeX/Beamer for PDF generation instead of libreoffice conversion.
 - `infrastructure/export/pdf_renderer.py` -- libreoffice-based PDF renderer
 - `infrastructure/export/html_renderer.py` -- Jinja2-based HTML renderer
 - `infrastructure/export/briefing_script_writer.py` -- Claude API-based script writer
-- `infrastructure/export/templates/` -- Jinja2 HTML templates with Deltek branding
+- `infrastructure/export/templates/` -- Jinja2 HTML templates with Vintiq branding
 
 **Dependencies to add**:
 - `Jinja2>=3.1` (for HTML templating)

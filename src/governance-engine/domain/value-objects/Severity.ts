@@ -1,6 +1,6 @@
 /**
  * Severity value object
- * @module @deltek/governance-engine/domain/value-objects/Severity
+ * @module @vintiq/governance-engine/domain/value-objects/Severity
  */
 
 import { ViolationSeverity } from '../../types/validation.types';

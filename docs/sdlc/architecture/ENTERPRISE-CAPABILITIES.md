@@ -1,4 +1,4 @@
-# Deltek Catalyst Enterprise Capabilities
+# Vintiq Catalyst Enterprise Capabilities
 
 **Version**: 1.0.0
 **Date**: 2026-01-30
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This document outlines the enterprise capabilities roadmap for the Deltek Catalyst Interactive Control Center, comparing current state with enterprise-ready target state and providing implementation priorities.
+This document outlines the enterprise capabilities roadmap for the Vintiq Catalyst Interactive Control Center, comparing current state with enterprise-ready target state and providing implementation priorities.
 
 ---
 

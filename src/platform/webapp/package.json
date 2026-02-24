@@ -1,7 +1,7 @@
 {
-  "name": "deltek-catalyst-ui",
+  "name": "vintiq-catalyst-ui",
   "version": "1.0.0",
-  "description": "Deltek Catalyst Interactive Control Center",
+  "description": "Vintiq Catalyst Interactive Control Center",
   "private": true,
   "type": "module",
   "scripts": {

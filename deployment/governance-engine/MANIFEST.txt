@@ -1,4 +1,4 @@
-DELTEK GOVERNANCE ENGINE - DEPLOYMENT PACKAGE MANIFEST
+VINTIQ GOVERNANCE ENGINE - DEPLOYMENT PACKAGE MANIFEST
 ======================================================
 
 Package Version: 1.0.0
@@ -174,7 +174,7 @@ Runtime:
   - Git >= 2.20.0
 
 Package:
-  - @deltek/governance-engine (built at ../src/governance-engine/)
+  - @vintiq/governance-engine (built at ../src/governance-engine/)
 
 Infrastructure:
   - Internal npm registry
@@ -185,7 +185,7 @@ Infrastructure:
 SUPPORT
 -------
 
-Email: engineering-governance@deltek.com
+Email: engineering-governance@vintiq.com
 Slack: #engineering-governance
 Docs: See docs/ directory
 Issues: GitHub repository

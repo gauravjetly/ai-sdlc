@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: deltek-catalyst
+  name: vintiq-catalyst
   labels:
-    name: deltek-catalyst
+    name: vintiq-catalyst
     environment: production

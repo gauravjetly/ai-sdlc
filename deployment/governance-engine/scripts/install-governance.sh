@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# Deltek Governance Engine - One-Command Installation Script
+# Vintiq Governance Engine - One-Command Installation Script
 # =============================================================================
 # Usage: curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/install.sh | bash
 # Or:    ./install-governance.sh
@@ -8,7 +8,7 @@
 # This script will:
 # 1. Verify Node.js is installed (>= 18.0.0)
 # 2. Install the governance engine package
-# 3. Download the Deltek Engineering policy
+# 3. Download the Vintiq Engineering policy
 # 4. Set up git hooks for pre-commit validation
 # 5. Verify installation
 #
@@ -25,8 +25,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PACKAGE_NAME="@deltek/governance-engine"
-POLICY_URL="https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/policies/deltek-engineering.yaml"
+PACKAGE_NAME="@vintiq/governance-engine"
+POLICY_URL="https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/policies/vintiq-engineering.yaml"
 MIN_NODE_VERSION="18.0.0"
 GOVERNANCE_DIR=".governance"
 POLICY_FILE="${GOVERNANCE_DIR}/policy.yaml"
@@ -67,7 +67,7 @@ check_command() {
 # Pre-flight Checks
 # =============================================================================
 
-log_info "Starting Deltek Governance Engine installation..."
+log_info "Starting Vintiq Governance Engine installation..."
 echo ""
 
 # Check if we're in a git repository
@@ -157,23 +157,23 @@ fi
 # Download or copy policy file
 if [ -f "$POLICY_FILE" ]; then
     log_warning "Policy file already exists at ${POLICY_FILE}"
-    read -p "Overwrite with latest Deltek policy? (y/n) " -n 1 -r
+    read -p "Overwrite with latest Vintiq policy? (y/n) " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         log_info "Keeping existing policy file"
     else
-        log_info "Downloading latest Deltek Engineering policy..."
+        log_info "Downloading latest Vintiq Engineering policy..."
         if check_command curl; then
             curl -fsSL "$POLICY_URL" > "$POLICY_FILE" 2>/dev/null || {
                 log_warning "Could not download policy. Using local template."
-                cp "$(dirname "$0")/../policies/deltek-engineering.yaml" "$POLICY_FILE" 2>/dev/null || {
+                cp "$(dirname "$0")/../policies/vintiq-engineering.yaml" "$POLICY_FILE" 2>/dev/null || {
                     log_error "Could not find policy template."
                     exit 1
                 }
             }
         else
             log_warning "curl not found. Copying local template..."
-            cp "$(dirname "$0")/../policies/deltek-engineering.yaml" "$POLICY_FILE" 2>/dev/null || {
+            cp "$(dirname "$0")/../policies/vintiq-engineering.yaml" "$POLICY_FILE" 2>/dev/null || {
                 log_error "Could not find policy template."
                 exit 1
             }
@@ -181,18 +181,18 @@ if [ -f "$POLICY_FILE" ]; then
         log_success "Policy file updated"
     fi
 else
-    log_info "Downloading Deltek Engineering policy..."
+    log_info "Downloading Vintiq Engineering policy..."
     if check_command curl; then
         curl -fsSL "$POLICY_URL" > "$POLICY_FILE" 2>/dev/null || {
             log_warning "Could not download policy. Using local template."
-            cp "$(dirname "$0")/../policies/deltek-engineering.yaml" "$POLICY_FILE" 2>/dev/null || {
+            cp "$(dirname "$0")/../policies/vintiq-engineering.yaml" "$POLICY_FILE" 2>/dev/null || {
                 log_error "Could not find policy template."
                 exit 1
             }
         }
     else
         log_warning "curl not found. Copying local template..."
-        cp "$(dirname "$0")/../policies/deltek-engineering.yaml" "$POLICY_FILE" 2>/dev/null || {
+        cp "$(dirname "$0")/../policies/vintiq-engineering.yaml" "$POLICY_FILE" 2>/dev/null || {
             log_error "Could not find policy template."
             exit 1
         }
@@ -231,7 +231,7 @@ if [ -d .git ]; then
     HOOK_FILE=".husky/pre-commit"
     cat > "$HOOK_FILE" << 'EOF'
 #!/bin/sh
-# Deltek Governance Engine - Pre-commit Hook
+# Vintiq Governance Engine - Pre-commit Hook
 # This hook validates code against governance policies before commit
 
 echo "Running governance checks..."
@@ -293,7 +293,7 @@ cat << EOF
 ${GREEN}
 ╔═══════════════════════════════════════════════════════════════════╗
 ║                                                                   ║
-║  ✅  Deltek Governance Engine Installed Successfully!             ║
+║  ✅  Vintiq Governance Engine Installed Successfully!             ║
 ║                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════╝
 ${NC}

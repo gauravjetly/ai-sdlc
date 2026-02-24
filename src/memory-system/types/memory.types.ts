@@ -26,7 +26,7 @@ export type MemoryCategory =
   | 'deployment-patterns'
   | 'compliance-rules'
   | 'failed-approaches'
-  | 'deltek-knowledge'
+  | 'vintiq-knowledge'
   | 'cross-agent-learning'
   | 'ux-patterns'
   | 'process-patterns';

@@ -1,4 +1,4 @@
-# 🎯 Deltek Catalyst Interactive Control Center
+# 🎯 Vintiq Catalyst Interactive Control Center
 
 ## Overview
 
@@ -250,8 +250,8 @@ This is your **NEW** interactive control center with full controls to DO things.
 - **Error Handling**: Try-catch with user alerts
 
 ### Styling
-- **Theme**: Deltek Catalyst brand colors
-  - Primary: #0066CC (Deltek Blue)
+- **Theme**: Vintiq Catalyst brand colors
+  - Primary: #0066CC (Vintiq Blue)
   - Secondary: #004C99 (Deep Blue)
   - Success: #10b981 (Green)
   - Info: #3b82f6 (Blue)
@@ -387,16 +387,16 @@ webapp/
     ├── types/                # TypeScript types
     │   └── index.ts          # Type definitions
     └── styles/               # Styling
-        ├── theme.ts          # MUI theme (Deltek colors)
+        ├── theme.ts          # MUI theme (Vintiq colors)
         └── global.css        # Global styles
 ```
 
 ---
 
-## 🎨 Deltek Catalyst Branding
+## 🎨 Vintiq Catalyst Branding
 
 **Colors:**
-- Primary: #0066CC (Deltek Blue) - Main brand color
+- Primary: #0066CC (Vintiq Blue) - Main brand color
 - Secondary: #004C99 (Deep Blue) - Accent color
 - Success: #10b981 - Status indicators
 - Info: #3b82f6 - Information
@@ -405,7 +405,7 @@ webapp/
 
 **Typography:**
 - System font stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto
-- Headings: Bold, Deltek Blue
+- Headings: Bold, Vintiq Blue
 - Body: Regular, dark gray
 
 **Design Principles:**

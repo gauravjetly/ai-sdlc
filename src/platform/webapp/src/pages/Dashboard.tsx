@@ -21,7 +21,7 @@ export default function Dashboard() {
     <Box>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" sx={{ mb: 1, fontWeight: 600 }}>
-          Welcome to Deltek Catalyst
+          Welcome to Vintiq Catalyst
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Your AI-Powered Multi-Cloud Control Center

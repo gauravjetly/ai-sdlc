@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# Deltek Governance Engine - Configuration Validator
+# Vintiq Governance Engine - Configuration Validator
 # =============================================================================
 # This script verifies that the governance engine is correctly installed
 # and configured. Use it to troubleshoot issues or verify deployment.
@@ -45,7 +45,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --help|-h)
             cat << EOF
-Deltek Governance Engine - Configuration Validator
+Vintiq Governance Engine - Configuration Validator
 
 Usage: ./validate-config.sh [options]
 
@@ -120,7 +120,7 @@ cat << EOF
 ${BLUE}${BOLD}
 ╔═══════════════════════════════════════════════════════════════════╗
 ║                                                                   ║
-║  Deltek Governance Engine - Configuration Validator              ║
+║  Vintiq Governance Engine - Configuration Validator              ║
 ║                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════╝
 ${NC}
@@ -228,13 +228,13 @@ else
 fi
 
 # Check if governance engine is installed
-if npm list @deltek/governance-engine &>/dev/null; then
-    PACKAGE_VERSION=$(npm list @deltek/governance-engine | grep @deltek/governance-engine | head -1 | sed 's/.*@//' | sed 's/ .*//')
+if npm list @vintiq/governance-engine &>/dev/null; then
+    PACKAGE_VERSION=$(npm list @vintiq/governance-engine | grep @vintiq/governance-engine | head -1 | sed 's/.*@//' | sed 's/ .*//')
     log_success "Governance engine installed: v${PACKAGE_VERSION}"
-    log_verbose "Package: @deltek/governance-engine"
+    log_verbose "Package: @vintiq/governance-engine"
 else
     log_error "Governance engine not installed"
-    log_verbose "Install with: npm install --save-dev @deltek/governance-engine"
+    log_verbose "Install with: npm install --save-dev @vintiq/governance-engine"
 fi
 
 # Check if husky is installed

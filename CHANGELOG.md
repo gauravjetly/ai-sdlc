@@ -272,14 +272,14 @@ Every agent now has persistent memory:
 - Agent count increased from 10 to 11 (added Ask Tom)
 - All agents now load memory BEFORE tasks and save learnings AFTER
 - Conductor now auto-invokes Ask Tom on: blockers, 3+ phase failures, >2hr no progress
-- Architect (Jets) enhanced as "World's Best Architect" for ANY system + Deltek specialty
+- Architect (Jets) enhanced as "World's Best Architect" for ANY system + Vintiq specialty
 - README.md updated with Ask Tom documentation and usage examples
 - Dashboard workflow visualization includes Ask Tom as on-demand agent
 - Output directories now include `docs/sdlc/problems/` folder
 - Registry integration supports `ask-tom` agent tracking
 
 ### Enhanced
-- **Architect (Jets)** - Universal architecture expertise with Deltek product specialty
+- **Architect (Jets)** - Universal architecture expertise with Vintiq product specialty
 - **Conductor Blocker Handling** - Step 5 now includes Ask Tom invocation criteria
 - **Quality Standards** - Never-give-up criteria ensures complete problem resolution
 - **Documentation** - Comprehensive problem resolution reports with lessons learned
@@ -388,7 +388,7 @@ Every agent now has persistent memory:
 3. **All agents enhanced** with self-learning capabilities
 4. **Ask Tom available** via `/sdlc-ask-tom [problem]`
 5. **Note**: Agents now learn from every task - patterns, solutions, and learnings persist
-6. **Note**: Jets is now "World's Best Architect" for ANY system (not just Deltek)
+6. **Note**: Jets is now "World's Best Architect" for ANY system (not just Vintiq)
 
 ---
 

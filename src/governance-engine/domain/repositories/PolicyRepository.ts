@@ -1,6 +1,6 @@
 /**
  * Policy Repository Interface
- * @module @deltek/governance-engine/domain/repositories/PolicyRepository
+ * @module @vintiq/governance-engine/domain/repositories/PolicyRepository
  */
 
 import { PolicyEntity } from '../entities/Policy';

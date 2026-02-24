@@ -1,6 +1,6 @@
 # Governance Engine Rollout Plan
 
-Phased deployment strategy for organization-wide adoption of the Deltek Governance Engine.
+Phased deployment strategy for organization-wide adoption of the Vintiq Governance Engine.
 
 ## Executive Summary
 
@@ -20,7 +20,7 @@ Phased deployment strategy for organization-wide adoption of the Deltek Governan
 - [ ] Deploy governance engine package to internal npm registry
 - [ ] Set up monitoring dashboard
 - [ ] Configure Slack channel: #engineering-governance
-- [ ] Prepare support email: engineering-governance@deltek.com
+- [ ] Prepare support email: engineering-governance@vintiq.com
 - [ ] Create internal documentation site
 
 **Week -1: Communication**
@@ -319,7 +319,7 @@ Additional comments:
 1. **Self-service**: Documentation, FAQ
 2. **Peers**: Champions in each team
 3. **Slack**: #engineering-governance (< 1 hour response)
-4. **Email**: engineering-governance@deltek.com (< 4 hours)
+4. **Email**: engineering-governance@vintiq.com (< 4 hours)
 5. **Escalation**: Governance team (immediate for blockers)
 
 **Support Metrics**:
@@ -467,7 +467,7 @@ Additional comments:
 - Weekly office hours
 
 **Direct Support** (5% of questions):
-- Email: engineering-governance@deltek.com
+- Email: engineering-governance@vintiq.com
 - Complex issues
 - Policy questions
 - Escalations
@@ -516,11 +516,11 @@ Additional comments:
 ### Initial Announcement Email
 
 ```
-Subject: Introducing the Deltek Governance Engine
+Subject: Introducing the Vintiq Governance Engine
 
 Hi Engineering Team,
 
-We're excited to announce the Deltek Governance Engine, a new tool
+We're excited to announce the Vintiq Governance Engine, a new tool
 that will help us write more secure, higher quality code.
 
 What is it?
@@ -671,7 +671,7 @@ Questions? #engineering-governance
 - **Scripts**: `/deployment/governance-engine/scripts/`
 - **Dashboard**: [URL to monitoring dashboard]
 - **Slack**: #engineering-governance
-- **Email**: engineering-governance@deltek.com
+- **Email**: engineering-governance@vintiq.com
 
 ---
 

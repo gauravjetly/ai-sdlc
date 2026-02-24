@@ -16,12 +16,12 @@ The current AI-SDLC framework operates with autonomous agents that lack:
 
 1. **Governance Enforcement** - No automatic compliance with organizational policies
 2. **RAG-Enabled Memory** - File-based memory without semantic search capabilities
-3. **Contextual Intelligence** - Agents lack deep context about Deltek standards
+3. **Contextual Intelligence** - Agents lack deep context about Vintiq standards
 4. **Policy-as-Code** - Rules exist in documentation but are not enforced at runtime
 
 ### Solution Vision
 
-**"All code must follow Deltek governance by default, not by human vigilance"**
+**"All code must follow Vintiq governance by default, not by human vigilance"**
 
 This architecture introduces a comprehensive **Agent Intelligence & Governance System** that transforms agents from autonomous executors into **policy-aware, memory-augmented, context-intelligent agents** that enforce governance automatically.
 
@@ -52,7 +52,7 @@ This architecture introduces a comprehensive **Agent Intelligence & Governance S
 │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  ┌─────────────────┐ │
 │  │  Context Engine  │  │  Policy Engine   │  │  Memory Engine   │  │ Learning Engine │ │
 │  │                  │  │                  │  │                  │  │                 │ │
-│  │  - Load Deltek   │  │  - Pre-check     │  │  - Vector search │  │  - Capture      │ │
+│  │  - Load Vintiq   │  │  - Pre-check     │  │  - Vector search │  │  - Capture      │ │
 │  │    standards     │  │    compliance    │  │  - Retrieve      │  │    learnings    │ │
 │  │  - Project ctx   │  │  - Validate      │  │    similar       │  │  - Update       │ │
 │  │  - Historical    │  │    at runtime    │  │    solutions     │  │    knowledge    │ │
@@ -65,7 +65,7 @@ This architecture introduces a comprehensive **Agent Intelligence & Governance S
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
 │                              ENHANCED AGENT PROMPT                                       │
 │                                                                                          │
-│  Original Request + Deltek Standards + Relevant Memories + Active Policies + Context    │
+│  Original Request + Vintiq Standards + Relevant Memories + Active Policies + Context    │
 └─────────────────────────────────────────────────────────────────────────────────────────┘
                                                   │
                                                   ▼
@@ -146,11 +146,11 @@ This architecture introduces a comprehensive **Agent Intelligence & Governance S
 | Integration | Python-native | SDK required | GraphQL |
 | Persistence | SQLite + Parquet | Managed | Custom |
 
-**Why ChromaDB for Deltek**:
+**Why ChromaDB for Vintiq**:
 1. **Local-First**: Runs alongside agents without external dependencies
 2. **Cost-Effective**: No subscription for development/testing
 3. **Simple Integration**: Direct Python API matches agent architecture
-4. **Sufficient Scale**: Deltek's memory needs are <100K vectors
+4. **Sufficient Scale**: Vintiq's memory needs are <100K vectors
 5. **Portable**: Can migrate to Pinecone later if scale requires
 
 ### Memory Collections Structure
@@ -170,7 +170,7 @@ collections = {
             "resolution": "string",    # fix applied
             "project": "string",       # project identifier
             "timestamp": "datetime",
-            "product": "string"        # Deltek product if applicable
+            "product": "string"        # Vintiq product if applicable
         }
     },
 
@@ -221,8 +221,8 @@ collections = {
         }
     },
 
-    "deltek_knowledge": {
-        "description": "Deltek product-specific knowledge",
+    "vintiq_knowledge": {
+        "description": "Vintiq product-specific knowledge",
         "embedding_model": "text-embedding-3-small",
         "metadata_schema": {
             "product": "string",       # Costpoint, Vantagepoint, etc.
@@ -322,7 +322,7 @@ Agent Request: "Build authentication for API"
 │     ├── security_findings: "authentication vulnerabilities"     │
 │     ├── code_patterns: "authentication API implementation"      │
 │     ├── architecture_decisions: "authentication architecture"   │
-│     └── deltek_knowledge: "authentication Deltek standards"     │
+│     └── vintiq_knowledge: "authentication Vintiq standards"     │
 │                                                                  │
 │  3. Rank Results:                                                │
 │     - Semantic similarity score                                  │
@@ -335,7 +335,7 @@ Agent Request: "Build authentication for API"
 │       { pattern: "OAuth 2.0 with refresh tokens", score: 0.95 },│
 │       { finding: "JWT without expiry is vulnerable", score: 0.92 },│
 │       { adr: "ADR-003: JWT with 15min expiry", score: 0.88 },   │
-│       { deltek: "MFA required for all APIs", score: 0.85 }      │
+│       { vintiq: "MFA required for all APIs", score: 0.85 }      │
 │     ]                                                            │
 └─────────────────────────────────────────────────────────────────┘
                     │
@@ -388,11 +388,11 @@ Agent Request: "Build authentication for API"
 ### Policy Definition Schema (YAML)
 
 ```yaml
-# ~/.claude/governance/policies/deltek-engineering.yaml
+# ~/.claude/governance/policies/vintiq-engineering.yaml
 
 version: "1.0.0"
-name: "Deltek Engineering Standards"
-description: "Mandatory governance policies for all Deltek engineering projects"
+name: "Vintiq Engineering Standards"
+description: "Mandatory governance policies for all Vintiq engineering projects"
 effective_date: "2026-01-01"
 last_updated: "2026-01-26"
 
@@ -405,7 +405,7 @@ extends:
 repository:
   allowed_organizations:
     - "github.com/DLTKEngineering"
-    - "github.com/deltek-internal"
+    - "github.com/vintiq-internal"
 
   branch_naming:
     pattern: "^(feature|bugfix|hotfix|release)/[A-Z]+-[0-9]+-[a-z0-9-]+$"
@@ -847,7 +847,7 @@ Request: "Create user authentication API"
                     │           CONTEXT SOURCES                │
                     │                                         │
                     │  ┌─────────────────────────────────┐    │
-                    │  │  Deltek Standards (Org-wide)    │    │
+                    │  │  Vintiq Standards (Org-wide)    │    │
                     │  │  - Coding standards             │    │
                     │  │  - Security policies            │    │
                     │  │  - Architecture patterns        │    │
@@ -897,7 +897,7 @@ Request: "Create user authentication API"
                     │                                         │
                     │  [Base Agent Prompt]                    │
                     │  +                                      │
-                    │  [Deltek Standards Context]             │
+                    │  [Vintiq Standards Context]             │
                     │  +                                      │
                     │  [Project Context]                      │
                     │  +                                      │
@@ -918,8 +918,8 @@ interface ContextInjectionService {
     // Build complete context for agent
     buildContext(request: AgentRequest): Promise<EnhancedContext>;
 
-    // Get Deltek standards for topic
-    getDeltekStandards(topic: string): Promise<DeltekStandard[]>;
+    // Get Vintiq standards for topic
+    getVintiqStandards(topic: string): Promise<VintiqStandard[]>;
 
     // Get project context
     getProjectContext(projectId: string): Promise<ProjectContext>;
@@ -935,8 +935,8 @@ interface EnhancedContext {
     // Original request
     originalRequest: string;
 
-    // Deltek-specific standards
-    deltekStandards: {
+    // Vintiq-specific standards
+    vintiqStandards: {
         architecture: ArchitectureStandard[];
         security: SecurityStandard[];
         compliance: ComplianceRequirement[];
@@ -978,7 +978,7 @@ interface EnhancedContext {
 // Context priority for trimming when over budget
 const CONTEXT_PRIORITY = {
     activePolicies: 1,        // Highest - never trim
-    deltekStandards: 2,       // Very high - minimal trim
+    vintiqStandards: 2,       // Very high - minimal trim
     projectContext: 3,        // High
     securityFindings: 4,      // Medium-high
     relevantPatterns: 5,      // Medium
@@ -992,7 +992,7 @@ const CONTEXT_PRIORITY = {
 ```markdown
 ## ENHANCED AGENT CONTEXT
 
-### DELTEK ENGINEERING STANDARDS (MANDATORY)
+### VINTIQ ENGINEERING STANDARDS (MANDATORY)
 
 #### Architecture Requirements
 - Pattern: Layered Architecture (Presentation → Application → Domain → Infrastructure)
@@ -1074,7 +1074,7 @@ const CONTEXT_PRIORITY = {
 
 [Original user request inserted here]
 
-**IMPORTANT**: Follow all Deltek standards above. The governance system will validate your output against these policies.
+**IMPORTANT**: Follow all Vintiq standards above. The governance system will validate your output against these policies.
 ```
 
 ---
@@ -1097,7 +1097,7 @@ const CONTEXT_PRIORITY = {
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
 │                         LAYER 4: CONTEXT-AWARE AGENT                                     │
 │                                                                                          │
-│  - Understands Deltek standards deeply                                                   │
+│  - Understands Vintiq standards deeply                                                   │
 │  - Applies project-specific conventions                                                  │
 │  - References historical decisions (ADRs)                                                │
 │  - Adapts to team preferences                                                            │
@@ -1215,8 +1215,8 @@ class ContextAwareLayer implements IntelligenceLayer {
     priority = 4;
 
     async process(input: LayerInput): Promise<LayerOutput> {
-        // 1. Load Deltek standards
-        const deltekStandards = await this.contextService.getDeltekStandards(
+        // 1. Load Vintiq standards
+        const vintiqStandards = await this.contextService.getVintiqStandards(
             input.taskType
         );
 
@@ -1232,7 +1232,7 @@ class ContextAwareLayer implements IntelligenceLayer {
 
         return {
             ...input,
-            deltekStandards,
+            vintiqStandards,
             projectContext,
             liveContext
         };
@@ -1327,7 +1327,7 @@ CREATE TABLE memories (
 
     CONSTRAINT valid_collection CHECK (collection IN (
         'security_findings', 'code_patterns', 'architecture_decisions',
-        'failed_approaches', 'compliance_rules', 'deltek_knowledge'
+        'failed_approaches', 'compliance_rules', 'vintiq_knowledge'
     ))
 );
 
@@ -1436,7 +1436,7 @@ CREATE INDEX idx_learning_agent ON learning_events(source_agent);
 │
 ├── policies/
 │   ├── org/                       # Organization-level policies
-│   │   ├── deltek-engineering.yaml
+│   │   ├── vintiq-engineering.yaml
 │   │   ├── security-baseline.yaml
 │   │   └── compliance-rules.yaml
 │   │
@@ -1450,7 +1450,7 @@ CREATE INDEX idx_learning_agent ON learning_events(source_agent);
 │       └── architect-policies.yaml
 │
 ├── context/
-│   ├── deltek-standards/          # Deltek-specific standards
+│   ├── vintiq-standards/          # Vintiq-specific standards
 │   │   ├── architecture.yaml
 │   │   ├── security.yaml
 │   │   ├── compliance.yaml
@@ -1529,7 +1529,7 @@ CREATE INDEX idx_learning_agent ON learning_events(source_agent);
 ### Phase 3: Context Injection (3 weeks)
 
 **Week 1: Context Sources**
-- [ ] Implement Deltek standards loader
+- [ ] Implement Vintiq standards loader
 - [ ] Implement project context retrieval
 - [ ] Implement live context gathering
 - [ ] Create context ranking algorithm
@@ -1595,7 +1595,7 @@ def migrate_file_memory_to_vectors():
     # Target collections
     collection_mapping = {
         'patterns': 'code_patterns',
-        'products': 'deltek_knowledge',
+        'products': 'vintiq_knowledge',
         'technologies': 'code_patterns',
         'knowledge': 'architecture_decisions'
     }
@@ -1805,12 +1805,12 @@ See accompanying ADR documents:
 
 ---
 
-## Appendix A: Deltek-Specific Governance Rules
+## Appendix A: Vintiq-Specific Governance Rules
 
 ```yaml
-# deltek-specific-rules.yaml
+# vintiq-specific-rules.yaml
 
-deltek_products:
+vintiq_products:
   costpoint:
     api_standards:
       - "Use official Costpoint REST API"

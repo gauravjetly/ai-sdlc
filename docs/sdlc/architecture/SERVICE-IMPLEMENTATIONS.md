@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides detailed code structures, interface definitions, and implementation patterns for each service in the Deltek Catalyst platform. All implementations perform **REAL** operations.
+This document provides detailed code structures, interface definitions, and implementation patterns for each service in the Vintiq Catalyst platform. All implementations perform **REAL** operations.
 
 ---
 

@@ -17,15 +17,15 @@ Phase 2 adds intelligence capabilities to the Exec Agent through Claude API inte
 **File**: `infrastructure/config/config.py`
 
 - Centralized configuration system
-- Environment variable loading (ANTHROPIC_API_KEY, DELTEK_TEMPLATE_PATH)
-- Deltek brand colors and typography
+- Environment variable loading (ANTHROPIC_API_KEY, VINTIQ_TEMPLATE_PATH)
+- Vintiq brand colors and typography
 - Cache settings
 - Graceful degradation thresholds
 - Default detection for template and SDLC paths
 
 **Key Features**:
 - Automatic template discovery
-- Brand guidelines (Figtree font, Deltek color palette)
+- Brand guidelines (Figtree font, Vintiq color palette)
 - Configurable retry logic
 - Cache TTL management
 
@@ -66,14 +66,14 @@ content = synthesizer.synthesize_slide_content(
 
 - Implements `DiagramRendererPort` for diagram rendering
 - Mermaid CLI integration (if installed)
-- Deltek brand color application
+- Vintiq brand color application
 - SVG and PNG output
 - Diagram caching by content hash
 - Fallback to branded placeholder SVG
 
 **Features**:
 - Renders Mermaid syntax to SVG/PNG
-- Applies Deltek theme colors
+- Applies Vintiq theme colors
 - Detects Mermaid CLI availability
 - Generates branded fallback when Mermaid unavailable
 - SVG to PNG conversion (requires cairosvg)
@@ -89,19 +89,19 @@ content = synthesizer.synthesize_slide_content(
 
 **Files**:
 - `infrastructure/pptx/pptx_presentation_renderer.py` - Main renderer
-- `infrastructure/pptx/deltek_theme.py` - Brand theme
+- `infrastructure/pptx/vintiq_theme.py` - Brand theme
 
 - Implements `PresentationRendererPort` using python-pptx
 - Converts domain Presentation entities to .pptx files
-- Deltek template loading with fallback to blank
+- Vintiq template loading with fallback to blank
 - Multiple slide layouts (title, content, metrics, diagram)
-- Deltek brand theme application
+- Vintiq brand theme application
 
 **Features**:
-- Loads Deltek PowerPoint template (if available)
+- Loads Vintiq PowerPoint template (if available)
 - Renders title slides, content slides, metrics slides
 - Creates KPI cards with brand colors
-- Applies Figtree font and Deltek color palette
+- Applies Figtree font and Vintiq color palette
 - Diagram placeholders (embedding in future enhancement)
 
 **Slide Types Supported**:
@@ -233,11 +233,11 @@ Two-level caching system:
 
 ### 5. Brand Consistency
 
-Deltek brand applied across all components:
+Vintiq brand applied across all components:
 - Colors: #1742F6 (primary), #081581 (navy)
 - Font: Figtree (with Arial fallback)
 - Mermaid diagrams styled with brand colors
-- PowerPoint slides use Deltek theme
+- PowerPoint slides use Vintiq theme
 
 ---
 
@@ -255,8 +255,8 @@ npm install -g @mermaid-js/mermaid-cli
 # Set Claude API key (optional, falls back to templates)
 export ANTHROPIC_API_KEY=your_key_here
 
-# Set Deltek template path (optional, auto-detected)
-export DELTEK_TEMPLATE_PATH=/path/to/template.potx
+# Set Vintiq template path (optional, auto-detected)
+export VINTIQ_TEMPLATE_PATH=/path/to/template.potx
 ```
 
 ### Generate Presentation with Intelligence
@@ -366,7 +366,7 @@ from domain.entities.brand_config import BrandConfig
 from domain.entities.slide import Slide, SlideType, ContentLayout
 
 r = PptxPresentationRenderer()
-p = Presentation(id='test', project_id='TEST', type=PresentationType.EXECUTIVE_SUMMARY, status=PresentationStatus.DRAFT, title='Test', audience_profile=AudienceProfile(id='c', name='C', type=AudienceType.C_SUITE, detail_level=DetailLevel.MINIMAL), brand_config=BrandConfig.create_deltek_brand())
+p = Presentation(id='test', project_id='TEST', type=PresentationType.EXECUTIVE_SUMMARY, status=PresentationStatus.DRAFT, title='Test', audience_profile=AudienceProfile(id='c', name='C', type=AudienceType.C_SUITE, detail_level=DetailLevel.MINIMAL), brand_config=BrandConfig.create_vintiq_brand())
 s = Slide(id='s1', type=SlideType.TITLE, layout=ContentLayout.TITLE_ONLY, title='Test', order=0)
 p.add_slide(s)
 success = r.render_to_pptx(p, '/tmp/test.pptx')
@@ -387,7 +387,7 @@ print(f'PPTX created: {success}')
 | Graceful degradation levels | 6 | 6 | ✅ |
 | Cache implementation | Yes | Yes | ✅ |
 | Retry logic | Yes | Yes | ✅ |
-| Deltek branding applied | Yes | Yes | ✅ |
+| Vintiq branding applied | Yes | Yes | ✅ |
 | Dependencies optional | Yes | Yes | ✅ |
 
 ---
@@ -408,7 +408,7 @@ print(f'PPTX created: {success}')
 
 ### Infrastructure - PPTX (3 files, 552 lines)
 - `infrastructure/pptx/__init__.py` (4 lines)
-- `infrastructure/pptx/deltek_theme.py` (126 lines)
+- `infrastructure/pptx/vintiq_theme.py` (126 lines)
 - `infrastructure/pptx/pptx_presentation_renderer.py` (422 lines)
 
 ### Infrastructure - Resilience (2 files, 243 lines)
@@ -434,10 +434,10 @@ print(f'PPTX created: {success}')
 2. **Claude API Integration**: Content synthesis with retry and caching
 3. **Template Fallback**: Works without Claude API
 4. **Mermaid Rendering**: Generates diagrams (or fallback SVG)
-5. **PPTX Generation**: Creates PowerPoint files with Deltek branding
+5. **PPTX Generation**: Creates PowerPoint files with Vintiq branding
 6. **Graceful Degradation**: 6-level system with logging
 7. **Caching**: LLM responses and diagrams cached
-8. **Brand Consistency**: Deltek colors and fonts throughout
+8. **Brand Consistency**: Vintiq colors and fonts throughout
 9. **Error Handling**: Comprehensive try-catch with fallbacks
 10. **Integration Tests**: All 11 tests passing
 
@@ -492,7 +492,7 @@ print(f'PPTX created: {success}')
 - [x] Claude API integration works with retry logic
 - [x] Template fallback works without Claude
 - [x] Mermaid rendering generates diagrams (or fallback)
-- [x] PPTX files generated with Deltek branding
+- [x] PPTX files generated with Vintiq branding
 - [x] Graceful degradation implemented (6 levels)
 - [x] LLM and diagram responses cached
 - [x] Integration tests pass (11/11)
@@ -508,7 +508,7 @@ print(f'PPTX created: {success}')
 **Key Achievements**:
 - Claude API integration with caching and retry
 - Mermaid diagram rendering with fallback
-- PowerPoint generation with Deltek branding
+- PowerPoint generation with Vintiq branding
 - 6-level graceful degradation system
 - 11 integration tests, all passing
 - Complete fallback system (works without any external dependencies)
@@ -524,7 +524,7 @@ print(f'PPTX created: {success}')
 - **Optional**: anthropic (Claude API) - falls back to templates
 - **Optional**: Mermaid CLI - falls back to placeholder SVG
 - **Optional**: cairosvg (SVG to PNG) - returns SVG if unavailable
-- **Optional**: Deltek template - creates programmatic slides if unavailable
+- **Optional**: Vintiq template - creates programmatic slides if unavailable
 
 **Quality Gates**:
 - [x] All integration tests passing (11/11)
@@ -533,7 +533,7 @@ print(f'PPTX created: {success}')
 - [x] Claude fallback verified
 - [x] Mermaid fallback verified
 - [x] PPTX generation verified
-- [x] Deltek branding applied consistently
+- [x] Vintiq branding applied consistently
 - [x] Code is clean, typed, and documented
 
 **Next Phase**: Implement Phase 3 (Learning) with Bayesian preference updates, feedback collection, and quality scoring.

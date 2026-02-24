@@ -86,7 +86,7 @@ EOF
     if [ -d "$ARCHITECT_MEMORY" ]; then
         mkdir -p "$temp_dir/architect"
         cp -r "$ARCHITECT_MEMORY"/* "$temp_dir/architect/" 2>/dev/null
-        echo -e "  ${GREEN}✓${NC} architect: Deltek knowledge"
+        echo -e "  ${GREEN}✓${NC} architect: Vintiq knowledge"
     fi
 
     # Create archive

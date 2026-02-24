@@ -50,7 +50,7 @@ mkdir -p ~/.claude/governance/memory/source/test-strategies
 mkdir -p ~/.claude/governance/memory/source/deployment-patterns
 mkdir -p ~/.claude/governance/memory/source/compliance-rules
 mkdir -p ~/.claude/governance/memory/source/failed-approaches
-mkdir -p ~/.claude/governance/memory/source/deltek-knowledge
+mkdir -p ~/.claude/governance/memory/source/vintiq-knowledge
 echo "✓ Directory structure created"
 echo ""
 

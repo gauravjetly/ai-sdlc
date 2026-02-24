@@ -26,8 +26,8 @@ Phase 4: Optimization   ░░░░░░░░░░░░░░░░░░�
 - ✅ Context injection built and ready (`src/context-injection/`)
 - ✅ Deployment package created (`deployment/governance-engine/`)
 - ✅ Documentation complete (6 guides, 1,200+ pages)
-- ✅ Organizational context deployed (`~/.claude/org-context/deltek/`)
-- ✅ Policy deployed (`~/.claude/governance/policies/org/deltek-engineering.yaml`)
+- ✅ Organizational context deployed (`~/.claude/org-context/vintiq/`)
+- ✅ Policy deployed (`~/.claude/governance/policies/org/vintiq-engineering.yaml`)
 - ✅ Monitoring dashboard running (http://localhost:3030)
 
 ### Package Preparation

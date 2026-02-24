@@ -1,6 +1,6 @@
 /**
  * Violation domain entity
- * @module @deltek/governance-engine/domain/entities/Violation
+ * @module @vintiq/governance-engine/domain/entities/Violation
  */
 
 import { v4 as uuidv4 } from 'uuid';

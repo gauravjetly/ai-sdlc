@@ -49,7 +49,7 @@ export function createContextInjectionSystem(
   config: ContextInjectionConfig = {}
 ): AgentMiddleware {
   const {
-    orgName = 'deltek',
+    orgName = 'vintiq',
     enableCache = true,
     autoCleanupInterval = 60000
   } = config;

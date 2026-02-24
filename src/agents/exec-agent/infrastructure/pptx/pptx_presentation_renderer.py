@@ -20,7 +20,7 @@ from domain.interfaces.presentation_renderer_port import PresentationRendererPor
 from domain.entities.presentation import Presentation
 from domain.entities.slide import Slide, SlideType
 from infrastructure.config.config import Config, get_config
-from infrastructure.pptx.deltek_theme import DeltekTheme
+from infrastructure.pptx.vintiq_theme import VintiqTheme
 
 
 class PptxPresentationRenderer(PresentationRendererPort):
@@ -30,7 +30,7 @@ class PptxPresentationRenderer(PresentationRendererPort):
     Converts domain Presentation entities to .pptx files using python-pptx.
 
     Features:
-    - Deltek brand theme application
+    - Vintiq brand theme application
     - Template loading (with fallback to blank)
     - Diagram embedding
     - Multiple layout types
@@ -45,7 +45,7 @@ class PptxPresentationRenderer(PresentationRendererPort):
             config: Configuration instance
         """
         self.config = config or get_config()
-        self.theme = DeltekTheme()
+        self.theme = VintiqTheme()
 
     def render_to_pptx(
         self,
@@ -97,7 +97,7 @@ class PptxPresentationRenderer(PresentationRendererPort):
         Returns:
             Template path if available, None otherwise
         """
-        return self.config.deltek_template_path if self.config.is_template_available() else None
+        return self.config.vintiq_template_path if self.config.is_template_available() else None
 
     def _load_template(self) -> PptxPresentation:
         """Load PowerPoint template or create blank"""
@@ -195,7 +195,7 @@ class PptxPresentationRenderer(PresentationRendererPort):
             if hasattr(title_shape, 'text_frame'):
                 title_shape.text = presentation.title
 
-                # Apply Deltek branding
+                # Apply Vintiq branding
                 self.theme.apply_text_style(
                     title_shape.text_frame,
                     self.theme.get_title_style()
@@ -325,7 +325,7 @@ class PptxPresentationRenderer(PresentationRendererPort):
                     left, top, card_width, card_height
                 )
 
-                # Apply Deltek branding
+                # Apply Vintiq branding
                 self.theme.apply_shape_fill(card, self.theme.COLOR_BACKGROUND)
                 card.line.color.rgb = self.theme.COLOR_PRIMARY
 

@@ -49,7 +49,7 @@ app.get('/config', (req, res) => {
   res.json({
     apiKey: API_KEY,
     dbPassword: DB_PASSWORD,
-    internalEndpoint: 'http://internal.deltek.com/admin'
+    internalEndpoint: 'http://internal.vintiq.com/admin'
   });
 });
 ```
@@ -165,7 +165,7 @@ The engine validated:
 
 The engine checked:
 - GitHub organization allowlist
-- Blocked non-Deltek repositories
+- Blocked non-Vintiq repositories
 
 **Result**: ✅ **Wrong repo detected and flagged**
 
@@ -238,7 +238,7 @@ Time wasted: 0
 | Detect hardcoded API key | Block | Blocked | ✅ PASS |
 | Detect SQL injection | Warn | (Not tested) | ⏭️ SKIP |
 | Detect XSS vulnerability | Warn | (Not tested) | ⏭️ SKIP |
-| Enforce Deltek repo | Warn | Warned | ✅ PASS |
+| Enforce Vintiq repo | Warn | Warned | ✅ PASS |
 | Block commit on critical | Exit 1 | Exit 1 | ✅ PASS |
 | Show fix recommendations | Yes | Yes | ✅ PASS |
 | Fast execution (<3s) | Yes | 1.2s | ✅ PASS |
@@ -252,7 +252,7 @@ Time wasted: 0
 
 ### ✅ Ready for Production
 
-The governance engine is ready to be deployed to all Deltek engineering projects:
+The governance engine is ready to be deployed to all Vintiq engineering projects:
 
 1. **Functionality**: All core features working
 2. **Performance**: Fast enough for developer workflow
@@ -265,7 +265,7 @@ The governance engine is ready to be deployed to all Deltek engineering projects
 
 1. **Install in all projects**:
    ```bash
-   npm install --save-dev @deltek/governance-engine
+   npm install --save-dev @vintiq/governance-engine
    ```
 
 2. **Configure pre-commit hook**:
@@ -276,7 +276,7 @@ The governance engine is ready to be deployed to all Deltek engineering projects
 
 3. **Deploy policy file**:
    ```bash
-   cp ~/.claude/governance/policies/org/deltek-engineering.yaml \
+   cp ~/.claude/governance/policies/org/vintiq-engineering.yaml \
       ./.governance.yaml
    ```
 
@@ -334,7 +334,7 @@ The governance engine is ready to be deployed to all Deltek engineering projects
 1. Deploy to pilot projects (3-5 teams)
 2. Gather feedback for 2 weeks
 3. Refine policies based on feedback
-4. Roll out to all Deltek engineering projects
+4. Roll out to all Vintiq engineering projects
 5. Start Phase 2 (RAG Memory System)
 
 ---

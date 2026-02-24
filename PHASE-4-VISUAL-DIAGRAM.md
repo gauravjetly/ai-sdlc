@@ -241,9 +241,9 @@ Borders                              Borders
   Default: #d0d7de                     Default: #30363d
 
 Brand Colors (Consistent)
-  Primary:   #00A3E0 (Deltek Cyan)
-  Secondary: #002B49 (Deltek Navy)
-  Accent:    #FF6B35 (Deltek Orange)
+  Primary:   #00A3E0 (Vintiq Cyan)
+  Secondary: #002B49 (Vintiq Navy)
+  Accent:    #FF6B35 (Vintiq Orange)
 ```
 
 ## Performance Timeline

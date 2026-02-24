@@ -210,7 +210,7 @@ export MEMORY_SOURCE_PATH="~/.claude/governance/memory/source"
 - `deployment-patterns` - Deployment configs
 - `compliance-rules` - Compliance requirements
 - `failed-approaches` - Anti-patterns
-- `deltek-knowledge` - Deltek product knowledge
+- `vintiq-knowledge` - Vintiq product knowledge
 
 ## Troubleshooting
 

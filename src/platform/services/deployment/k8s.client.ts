@@ -241,7 +241,7 @@ export class KubernetesClient {
           metadata: {
             name: namespace,
             labels: {
-              'managed-by': 'deltek-catalyst',
+              'managed-by': 'vintiq-catalyst',
             },
           },
         };

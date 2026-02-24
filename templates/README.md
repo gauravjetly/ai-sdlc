@@ -9,7 +9,7 @@ Pre-built project templates to accelerate development. Reference these templates
 | [auth-system](./auth-system/) | Complete authentication with OAuth, MFA, RBAC | 26-43 hours |
 | [crud-api](./crud-api/) | RESTful CRUD API with validation and pagination | 9-12 hours |
 | [microservice](./microservice/) | Production-ready microservice with observability | 19-35 hours |
-| [deltek-integration](./deltek-integration/) | Deltek product integration patterns | 34-76 hours |
+| [vintiq-integration](./vintiq-integration/) | Vintiq product integration patterns | 34-76 hours |
 
 ## Usage
 
@@ -25,8 +25,8 @@ Reference a template in your SDLC start command:
 # Use microservice template
 /sdlc-start Build order processing microservice, following templates/microservice
 
-# Use Deltek integration template
-/sdlc-start Build Costpoint project sync, following templates/deltek-integration
+# Use Vintiq integration template
+/sdlc-start Build Costpoint project sync, following templates/vintiq-integration
 ```
 
 ## What's in Each Template
@@ -84,7 +84,7 @@ templates/
 │   └── TEMPLATE.md
 ├── microservice/
 │   └── TEMPLATE.md
-└── deltek-integration/
+└── vintiq-integration/
     └── TEMPLATE.md
 ```
 

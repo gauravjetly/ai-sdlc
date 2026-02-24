@@ -1,6 +1,6 @@
 /**
  * Architecture Validator
- * @module @deltek/governance-engine/infrastructure/validators/ArchitectureValidator
+ * @module @vintiq/governance-engine/infrastructure/validators/ArchitectureValidator
  */
 
 import * as fs from 'fs/promises';

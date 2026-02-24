@@ -1,6 +1,6 @@
 # Git Hooks Setup Guide
 
-Complete guide for setting up and managing git hooks with the Deltek Governance Engine.
+Complete guide for setting up and managing git hooks with the Vintiq Governance Engine.
 
 ## Table of Contents
 
@@ -592,7 +592,7 @@ ls -la .husky/
 **Debug**:
 ```bash
 # Check if governance is installed
-npm list @deltek/governance-engine
+npm list @vintiq/governance-engine
 
 # Check if CLI works
 npx governance --version
@@ -604,7 +604,7 @@ npx governance --version
 **Fix**:
 ```bash
 # Re-install governance engine
-npm install --save-dev @deltek/governance-engine
+npm install --save-dev @vintiq/governance-engine
 
 # Update hook to use full path
 cat > .husky/pre-commit << 'EOF'

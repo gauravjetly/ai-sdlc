@@ -1,11 +1,11 @@
-# Deltek Cloud Security Architecture
+# Vintiq Cloud Security Architecture
 
 ## Complete Security & Compliance Framework for Enterprise Submissions
 
 **Version:** 2.3.0
 **Last Updated:** 2026-01-20
 **Classification:** Internal / Customer-Facing
-**Author:** Deltek Cloud Engineering
+**Author:** Vintiq Cloud Engineering
 
 ---
 
@@ -32,7 +32,7 @@
 
 ## Executive Summary
 
-This document provides comprehensive security architecture documentation for Deltek Cloud solutions, designed to support all security submissions including:
+This document provides comprehensive security architecture documentation for Vintiq Cloud solutions, designed to support all security submissions including:
 
 - **SOC 2 Type 2** audits
 - **FedRAMP Moderate** authorization
@@ -60,7 +60,7 @@ This document provides comprehensive security architecture documentation for Del
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                    DELTEK CLOUD COMPLIANCE STACK                         │
+│                    VINTIQ CLOUD COMPLIANCE STACK                         │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
@@ -1286,7 +1286,7 @@ CMMC Level 2 aligns directly with NIST 800-171. See [NIST Controls](#nist-contro
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 2.3.0 | 2026-01-20 | Deltek Cloud Engineering | Initial comprehensive version |
+| 2.3.0 | 2026-01-20 | Vintiq Cloud Engineering | Initial comprehensive version |
 
 ---
 
@@ -1299,10 +1299,10 @@ CMMC Level 2 aligns directly with NIST 800-171. See [NIST Controls](#nist-contro
 - [CIS Controls v8](https://www.cisecurity.org/controls/v8)
 - [CMMC 2.0](https://dodcio.defense.gov/CMMC/)
 - [SOC 2 Trust Services Criteria](https://us.aicpa.org/interestareas/frc/assuranceadvisoryservices/serviceorganization-smanagement)
-- [Deltek Cloud Compliance](https://www.deltek.com/en/about/security-and-trust/compliance)
+- [Vintiq Cloud Compliance](https://www.vintiq.com/en/about/security-and-trust/compliance)
 
 ---
 
 **Classification:** Internal / Customer-Facing
-**Owner:** Deltek Cloud Engineering
+**Owner:** Vintiq Cloud Engineering
 **Review Cycle:** Annual

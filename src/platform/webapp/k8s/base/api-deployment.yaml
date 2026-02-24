@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: catalyst-api
-  namespace: deltek-catalyst
+  namespace: vintiq-catalyst
   labels:
     app: catalyst-api
     component: backend
@@ -91,7 +91,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: catalyst-api
-  namespace: deltek-catalyst
+  namespace: vintiq-catalyst
   labels:
     app: catalyst-api
 spec:
@@ -108,4 +108,4 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: catalyst-api
-  namespace: deltek-catalyst
+  namespace: vintiq-catalyst

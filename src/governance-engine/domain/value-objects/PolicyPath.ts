@@ -1,6 +1,6 @@
 /**
  * PolicyPath value object
- * @module @deltek/governance-engine/domain/value-objects/PolicyPath
+ * @module @vintiq/governance-engine/domain/value-objects/PolicyPath
  */
 
 import * as path from 'path';
@@ -30,7 +30,7 @@ export class PolicyPath {
    * Create from default policy location
    */
   static default(): PolicyPath {
-    return new PolicyPath('~/.claude/governance/policies/org/deltek-engineering.yaml');
+    return new PolicyPath('~/.claude/governance/policies/org/vintiq-engineering.yaml');
   }
 
   /**

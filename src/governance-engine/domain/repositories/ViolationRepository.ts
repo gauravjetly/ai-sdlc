@@ -1,6 +1,6 @@
 /**
  * Violation Repository Interface
- * @module @deltek/governance-engine/domain/repositories/ViolationRepository
+ * @module @vintiq/governance-engine/domain/repositories/ViolationRepository
  */
 
 import { Violation } from '../../types/validation.types';

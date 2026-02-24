@@ -16,7 +16,7 @@ The governance system needs to store diverse types of "memories" that agents cre
 - Architecture decisions (ADRs)
 - Failed approaches to avoid
 - Compliance rules and implementations
-- Deltek product-specific knowledge
+- Vintiq product-specific knowledge
 
 These memories need to support:
 1. **Semantic Search**: Find memories by meaning, not just keywords
@@ -158,7 +158,7 @@ These memories need to support:
 │   ├── SOC2-001.md
 │   └── index.json
 │
-└── deltek_knowledge/
+└── vintiq_knowledge/
     ├── costpoint/
     │   ├── API-001-authentication.md
     │   └── INT-001-cobra-integration.md
@@ -256,7 +256,7 @@ When implementing JWT authentication:
 
 - [CWE-798: Hard-coded Credentials](https://cwe.mitre.org/data/definitions/798.html)
 - [OWASP JWT Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html)
-- [Deltek Security Standards](internal://standards/security/authentication.yaml)
+- [Vintiq Security Standards](internal://standards/security/authentication.yaml)
 ```
 
 ### Memory Document Format (JSON for Structured Data)

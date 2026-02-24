@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-This is a complete, production-ready deployment package for rolling out the Deltek Governance Engine across your engineering organization. Everything needed for successful deployment is included.
+This is a complete, production-ready deployment package for rolling out the Vintiq Governance Engine across your engineering organization. Everything needed for successful deployment is included.
 
 ### What's Included
 
@@ -517,7 +517,7 @@ open http://localhost:8000/dashboard.html
    - [ ] Deploy to internal npm registry
    - [ ] Set up monitoring dashboard with real data
    - [ ] Create #engineering-governance Slack channel
-   - [ ] Set up engineering-governance@deltek.com email
+   - [ ] Set up engineering-governance@vintiq.com email
 
 3. **Team Preparation**:
    - [ ] Train support team
@@ -603,7 +603,7 @@ open http://localhost:8000/dashboard.html
 
 ## Contact and Support
 
-**Governance Team**: engineering-governance@deltek.com
+**Governance Team**: engineering-governance@vintiq.com
 **Slack Channel**: #engineering-governance (to be created)
 **GitHub**: https://github.com/DLTKEngineering/governance-engine
 

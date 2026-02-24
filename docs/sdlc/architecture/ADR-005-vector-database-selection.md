@@ -193,9 +193,9 @@ LIMIT 5;
 | Scale (our needs) | Sufficient | Overkill | Sufficient | Sufficient |
 | Migration Path | To Pinecone | N/A | Complex | To Pinecone |
 
-**Why ChromaDB wins for Deltek**:
+**Why ChromaDB wins for Vintiq**:
 
-1. **Security Requirements**: Deltek handles sensitive government contractor data. Local-first operation ensures data never leaves the network.
+1. **Security Requirements**: Vintiq handles sensitive government contractor data. Local-first operation ensures data never leaves the network.
 
 2. **Cost Efficiency**: Zero recurring costs during development and for smaller teams. Budget can be allocated to more critical infrastructure.
 

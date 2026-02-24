@@ -1411,7 +1411,7 @@ naming_conventions:
   pattern: "{org}-{product}-{env}-{resource_type}-{id}"
 
   organizations:
-    - "dltek"    # Deltek Engineering
+    - "dltek"    # Vintiq Engineering
     - "acme"     # Acme Corp
 
   products:
@@ -1495,21 +1495,21 @@ DOMAIN STRUCTURE:
 
 EXAMPLES:
   • Development:
-    - api.dev.portal.deltek.com
-    - web.dev.portal.deltek.com
-    - admin.dev.portal.deltek.com
+    - api.dev.portal.vintiq.com
+    - web.dev.portal.vintiq.com
+    - admin.dev.portal.vintiq.com
 
   • UAT:
-    - api.uat.portal.deltek.com
-    - web.uat.portal.deltek.com
+    - api.uat.portal.vintiq.com
+    - web.uat.portal.vintiq.com
 
   • Production:
-    - api.portal.deltek.com
-    - www.portal.deltek.com (or custom: portal.deltek.com)
+    - api.portal.vintiq.com
+    - www.portal.vintiq.com (or custom: portal.vintiq.com)
 
   • DR:
-    - api.dr.portal.deltek.com
-    - web.dr.portal.deltek.com
+    - api.dr.portal.vintiq.com
+    - web.dr.portal.vintiq.com
 ```
 
 ```gherkin
@@ -1517,7 +1517,7 @@ GIVEN DNS records
 WHEN certificates are needed
 THEN the system MUST:
   • Auto-provision TLS certificates using Let's Encrypt or ACM
-  • Create wildcard certificates (*.dev.portal.deltek.com)
+  • Create wildcard certificates (*.dev.portal.vintiq.com)
   • Auto-renew certificates 30 days before expiration
   • Support custom domains (e.g., portal.customer.com)
   • Validate domain ownership via DNS (automated)
@@ -1539,11 +1539,11 @@ THEN the system MUST:
 **DNS Configuration**:
 ```yaml
 dns_configuration:
-  base_domain: "deltek.com"
+  base_domain: "vintiq.com"
 
   environments:
     development:
-      subdomain: "dev.portal.deltek.com"
+      subdomain: "dev.portal.vintiq.com"
       ttl: 300  # 5 minutes
       records:
         - name: "api"
@@ -1551,20 +1551,20 @@ dns_configuration:
           value: "load-balancer-ip"
         - name: "*.api"  # Wildcard for API versions
           type: "CNAME"
-          value: "api.dev.portal.deltek.com"
+          value: "api.dev.portal.vintiq.com"
 
     production:
-      subdomain: "portal.deltek.com"
+      subdomain: "portal.vintiq.com"
       ttl: 60  # 1 minute (for fast failover)
       records:
         - name: "api"
           type: "A"
           value: "load-balancer-ip"
           healthcheck: true
-          failover_target: "api.dr.portal.deltek.com"
+          failover_target: "api.dr.portal.vintiq.com"
 
     dr:
-      subdomain: "dr.portal.deltek.com"
+      subdomain: "dr.portal.vintiq.com"
       region: "us-west-2"
       ttl: 60
       records:
@@ -1580,15 +1580,15 @@ dns_configuration:
     wildcard_certs: true
 
     certificates_to_provision:
-      - domain: "*.dev.portal.deltek.com"
+      - domain: "*.dev.portal.vintiq.com"
         validation: "dns"
-      - domain: "*.uat.portal.deltek.com"
+      - domain: "*.uat.portal.vintiq.com"
         validation: "dns"
-      - domain: "*.portal.deltek.com"
+      - domain: "*.portal.vintiq.com"
         validation: "dns"
-      - domain: "portal.deltek.com"
+      - domain: "portal.vintiq.com"
         validation: "dns"
-      - domain: "*.dr.portal.deltek.com"
+      - domain: "*.dr.portal.vintiq.com"
         validation: "dns"
 ```
 

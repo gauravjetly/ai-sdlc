@@ -1,8 +1,8 @@
-# 🚀 Deltek Harmony - Deployment Guide
+# 🚀 Vintiq Harmony - Deployment Guide
 
 ## Overview
 
-This guide covers deploying Deltek Harmony to various environments.
+This guide covers deploying Vintiq Harmony to various environments.
 
 ---
 

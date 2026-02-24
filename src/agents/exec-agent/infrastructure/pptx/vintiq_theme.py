@@ -1,7 +1,7 @@
 """
-Deltek Theme - Brand guidelines for PowerPoint
+Vintiq Theme - Brand guidelines for PowerPoint
 
-Provides Deltek-specific styling for presentations.
+Provides Vintiq-specific styling for presentations.
 """
 
 from typing import Dict
@@ -12,30 +12,30 @@ from pptx.dml.color import RGBColor
 
 
 @dataclass
-class DeltekTheme:
+class VintiqTheme:
     """
-    Deltek brand theme for PowerPoint presentations.
+    Vintiq Consultancy brand theme for PowerPoint presentations.
 
     Contains colors, fonts, and layout specifications.
     """
 
     # Brand Colors (RGB tuples)
-    COLOR_PRIMARY = RGBColor(23, 66, 246)  # #1742F6 Deltek Blue
-    COLOR_NAVY = RGBColor(8, 21, 129)  # #081581
-    COLOR_TEAL = RGBColor(0, 182, 195)  # #00B6C3
-    COLOR_PURPLE = RGBColor(109, 24, 241)  # #6D18F1
-    COLOR_MAGENTA = RGBColor(194, 0, 204)  # #C200CC
-    COLOR_TEXT_DARK = RGBColor(60, 69, 78)  # #3C454E
-    COLOR_TEXT_LIGHT = RGBColor(138, 155, 172)  # #8a9bac
+    COLOR_PRIMARY = RGBColor(243, 146, 25)   # #F39219 Vintiq Orange
+    COLOR_NAVY = RGBColor(18, 14, 58)         # #120E3A Vintiq Dark Navy
+    COLOR_MAGENTA = RGBColor(219, 0, 100)     # #DB0064 Vintiq Magenta
+    COLOR_ORANGE_MID = RGBColor(239, 132, 51) # #EF8433 Vintiq Orange Mid
+    COLOR_ORANGE_RED = RGBColor(231, 94, 85)  # #E75E55 Vintiq Orange-Red
+    COLOR_TEXT_DARK = RGBColor(18, 14, 58)    # #120E3A Navy
+    COLOR_TEXT_LIGHT = RGBColor(138, 155, 172) # #8a9bac
     COLOR_WHITE = RGBColor(255, 255, 255)
-    COLOR_BACKGROUND = RGBColor(245, 247, 250)  # #F5F7FA
+    COLOR_BACKGROUND = RGBColor(245, 247, 250) # #F5F7FA
 
-    # Gradient Colors
+    # Gradient Colors (orange → magenta)
     GRADIENT_COLORS = [
-        RGBColor(8, 233, 235),  # #08E9EB
-        RGBColor(255, 93, 242),  # #FF5DF2
-        RGBColor(56, 149, 255),  # #3895FF
-        RGBColor(122, 98, 255),  # #7A62FF
+        RGBColor(243, 146, 25),  # #F39219
+        RGBColor(239, 132, 51),  # #EF8433
+        RGBColor(231, 94, 85),   # #E75E55
+        RGBColor(219, 0, 100),   # #DB0064
     ]
 
     # Typography
@@ -137,8 +137,8 @@ class DeltekTheme:
         """Get list of colors for charts"""
         return [
             cls.COLOR_PRIMARY,
-            cls.COLOR_TEAL,
-            cls.COLOR_PURPLE,
+            cls.COLOR_ORANGE_MID,
+            cls.COLOR_ORANGE_RED,
             cls.COLOR_MAGENTA,
             cls.COLOR_NAVY,
         ]

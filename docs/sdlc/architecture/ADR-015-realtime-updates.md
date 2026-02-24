@@ -9,7 +9,7 @@
 
 ## Context
 
-The Deltek Catalyst platform requires real-time updates for:
+The Vintiq Catalyst platform requires real-time updates for:
 
 - Deployment progress tracking (0-100%)
 - Agent execution status
@@ -31,7 +31,7 @@ The current implementation uses HTTP polling with 3-second intervals.
 
 ```typescript
 // WebSocket connection
-const ws = new WebSocket('wss://acme.catalyst.deltek.com/ws');
+const ws = new WebSocket('wss://acme.catalyst.vintiq.com/ws');
 
 // Message format
 interface WSMessage {
@@ -63,7 +63,7 @@ ws.onmessage = (event) => {
 ```typescript
 // SSE connection
 const eventSource = new EventSource(
-  'https://acme.catalyst.deltek.com/api/v1/events?channels=deployments:deploy-123:progress',
+  'https://acme.catalyst.vintiq.com/api/v1/events?channels=deployments:deploy-123:progress',
   { withCredentials: true }
 );
 

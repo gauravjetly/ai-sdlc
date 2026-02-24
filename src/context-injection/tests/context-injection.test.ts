@@ -161,7 +161,7 @@ describe('Context Injection System', () => {
   describe('Integration Tests', () => {
     it('should create context injection system', () => {
       const middleware = createContextInjectionSystem({
-        orgName: 'deltek',
+        orgName: 'vintiq',
         enableCache: true
       });
 
@@ -171,7 +171,7 @@ describe('Context Injection System', () => {
 
     it('should handle context injection end-to-end', async () => {
       const middleware = createContextInjectionSystem({
-        orgName: 'deltek',
+        orgName: 'vintiq',
         enableCache: false
       });
 
@@ -182,13 +182,13 @@ describe('Context Injection System', () => {
       });
 
       expect(result.enhancedPrompt).toContain('Build a REST API with authentication');
-      expect(result.enhancedPrompt).toContain('Deltek');
+      expect(result.enhancedPrompt).toContain('Vintiq');
       expect(result.contextMetadata.totalTokens).toBeGreaterThan(0);
     });
 
     it('should cache context between requests', async () => {
       const middleware = createContextInjectionSystem({
-        orgName: 'deltek',
+        orgName: 'vintiq',
         enableCache: true
       });
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide provides step-by-step instructions for executing real operations in the Deltek Catalyst platform. Every operation described here performs REAL actions - there is no mock data.
+This guide provides step-by-step instructions for executing real operations in the Vintiq Catalyst platform. Every operation described here performs REAL actions - there is no mock data.
 
 ---
 

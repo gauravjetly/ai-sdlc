@@ -9,7 +9,7 @@
 
 ## Context and Problem Statement
 
-Currently, Deltek engineering policies exist only in documentation. Compliance is enforced through manual code reviews and post-commit scanning. This creates several problems:
+Currently, Vintiq engineering policies exist only in documentation. Compliance is enforced through manual code reviews and post-commit scanning. This creates several problems:
 
 1. **Late Detection**: Policy violations found after code is written, requiring rework
 2. **Inconsistent Enforcement**: Different reviewers interpret policies differently
@@ -43,7 +43,7 @@ We need a **Policy-as-Code** engine that:
 │                    POLICY DEFINITION LAYER                       │
 │  ┌─────────────────────────────────────────────────────────┐    │
 │  │  YAML Policy Files                                       │    │
-│  │  ├── org/deltek-engineering.yaml                        │    │
+│  │  ├── org/vintiq-engineering.yaml                        │    │
 │  │  ├── project/{id}/overrides.yaml                        │    │
 │  │  └── agent/{type}/policies.yaml                         │    │
 │  └─────────────────────────────────────────────────────────┘    │
@@ -109,7 +109,7 @@ We need a **Policy-as-Code** engine that:
 
 **Example Rego Policy**:
 ```rego
-package deltek.security
+package vintiq.security
 
 deny[msg] {
     input.code contains "password"
@@ -200,7 +200,7 @@ We will **integrate Semgrep** for code-specific policies while using our custom 
 # policy-schema.yaml
 
 $schema: "http://json-schema.org/draft-07/schema#"
-title: "Deltek Policy Definition"
+title: "Vintiq Policy Definition"
 
 properties:
   version:
@@ -355,7 +355,7 @@ interface PolicyContext {
     agentType: AgentType;
     requestType: RequestType;
     complianceScopes: string[];
-    deltekProducts?: string[];
+    vintiqProducts?: string[];
 }
 
 interface PolicyResult {
@@ -524,7 +524,7 @@ Agent Policies (Additional)
 
 Example:
 ```yaml
-# Organization level: deltek-engineering.yaml
+# Organization level: vintiq-engineering.yaml
 security:
   secrets:
     no_hardcoded: true
@@ -534,7 +534,7 @@ security:
 
 # Project level: project-auth-service/overrides.yaml
 extends:
-  - deltek-engineering.yaml
+  - vintiq-engineering.yaml
 
 security:
   test_coverage:

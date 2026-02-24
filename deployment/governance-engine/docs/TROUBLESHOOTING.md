@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-Common issues and solutions for the Deltek Governance Engine.
+Common issues and solutions for the Vintiq Governance Engine.
 
 ## Quick Diagnostics
 
@@ -21,7 +21,7 @@ This checks:
 
 ### Installation Issues
 
-#### Issue: "npm ERR! 404 Not Found - GET https://registry.npmjs.org/@deltek%2fgovernance-engine"
+#### Issue: "npm ERR! 404 Not Found - GET https://registry.npmjs.org/@vintiq%2fgovernance-engine"
 
 **Cause**: Package not published to npm yet
 
@@ -35,7 +35,7 @@ cd /path/to/aisdlc-2.1.0/src/governance-engine
 npm link
 
 cd /path/to/your/project
-npm link @deltek/governance-engine
+npm link @vintiq/governance-engine
 ```
 
 #### Issue: "Node.js version too old"
@@ -86,10 +86,10 @@ echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
 mkdir -p .governance
 
 # Download policy
-curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/policies/deltek-engineering.yaml > .governance/policy.yaml
+curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/governance-engine/main/policies/vintiq-engineering.yaml > .governance/policy.yaml
 
 # Or copy from template
-cp /path/to/deployment/governance-engine/policies/deltek-engineering.yaml .governance/policy.yaml
+cp /path/to/deployment/governance-engine/policies/vintiq-engineering.yaml .governance/policy.yaml
 
 # Verify
 ls -la .governance/policy.yaml
@@ -132,17 +132,17 @@ repository:
   branch_naming:
 ```
 
-#### Issue: "Cannot find module '@deltek/governance-engine'"
+#### Issue: "Cannot find module '@vintiq/governance-engine'"
 
 **Cause**: Package not installed or node_modules corrupted
 
 **Solution**:
 ```bash
 # Verify installation
-npm list @deltek/governance-engine
+npm list @vintiq/governance-engine
 
 # If not installed:
-npm install --save-dev @deltek/governance-engine
+npm install --save-dev @vintiq/governance-engine
 
 # If corrupted:
 rm -rf node_modules package-lock.json
@@ -190,7 +190,7 @@ npx governance --version
 cat > .husky/pre-commit << 'EOF'
 #!/bin/sh
 PATH="$PATH:./node_modules/.bin"
-npx --no-install @deltek/governance-engine check --staged || exit 1
+npx --no-install @vintiq/governance-engine check --staged || exit 1
 EOF
 
 chmod +x .husky/pre-commit
@@ -439,7 +439,7 @@ npm ci  # Not npm install
 # Lock governance version
 {
   "devDependencies": {
-    "@deltek/governance-engine": "1.0.0"  # Exact version
+    "@vintiq/governance-engine": "1.0.0"  # Exact version
   }
 }
 ```
@@ -614,7 +614,7 @@ Use the comprehensive validator:
    - Feature requests
    - Detailed troubleshooting
 
-3. **Email**: engineering-governance@deltek.com
+3. **Email**: engineering-governance@vintiq.com
    - Policy questions
    - Compliance concerns
    - Escalations
@@ -713,7 +713,7 @@ If none of these solutions work:
 
 2. **Contact support**:
    - Slack: #engineering-governance
-   - Email: engineering-governance@deltek.com
+   - Email: engineering-governance@vintiq.com
    - Attach: diagnostics.txt
 
 3. **Emergency bypass** (last resort):

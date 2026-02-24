@@ -13,7 +13,7 @@ async function main() {
 
   // Create the context injection system
   const middleware = createContextInjectionSystem({
-    orgName: 'deltek',
+    orgName: 'vintiq',
     enableCache: true,
     autoCleanupInterval: 60000
   });

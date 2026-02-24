@@ -58,7 +58,7 @@ Build a **Governance Policy Engine** that transforms agents from autonomous exec
 Feature: Policy YAML Parser
 
 Scenario: Parse valid policy file
-  Given a valid YAML policy file at "policies/deltek-engineering.yaml"
+  Given a valid YAML policy file at "policies/vintiq-engineering.yaml"
   When the parser loads the file
   Then it should return a structured Policy object
   And the object should contain all defined rules

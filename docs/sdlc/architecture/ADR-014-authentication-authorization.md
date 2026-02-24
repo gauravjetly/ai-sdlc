@@ -9,7 +9,7 @@
 
 ## Context
 
-The Deltek Catalyst platform requires enterprise-grade authentication and authorization supporting:
+The Vintiq Catalyst platform requires enterprise-grade authentication and authorization supporting:
 
 - Single Sign-On (SSO) with corporate identity providers
 - Multi-factor authentication (MFA)
@@ -202,7 +202,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 
     if (!token) {
       return res.status(401).json({
-        type: 'https://api.catalyst.deltek.com/errors/auth/missing-token',
+        type: 'https://api.catalyst.vintiq.com/errors/auth/missing-token',
         title: 'Authentication Required',
         status: 401,
         detail: 'No authentication token provided'
@@ -215,7 +215,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     // Check token revocation
     if (await isTokenRevoked(payload.jti)) {
       return res.status(401).json({
-        type: 'https://api.catalyst.deltek.com/errors/auth/revoked-token',
+        type: 'https://api.catalyst.vintiq.com/errors/auth/revoked-token',
         title: 'Token Revoked',
         status: 401
       });
@@ -240,7 +240,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({
-        type: 'https://api.catalyst.deltek.com/errors/auth/expired-token',
+        type: 'https://api.catalyst.vintiq.com/errors/auth/expired-token',
         title: 'Token Expired',
         status: 401,
         detail: 'Access token has expired. Please refresh.'
@@ -248,7 +248,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     }
 
     return res.status(403).json({
-      type: 'https://api.catalyst.deltek.com/errors/auth/invalid-token',
+      type: 'https://api.catalyst.vintiq.com/errors/auth/invalid-token',
       title: 'Invalid Token',
       status: 403
     });
@@ -278,7 +278,7 @@ export const requirePermission = (...requiredPermissions: string[]) => {
       });
 
       return res.status(403).json({
-        type: 'https://api.catalyst.deltek.com/errors/auth/forbidden',
+        type: 'https://api.catalyst.vintiq.com/errors/auth/forbidden',
         title: 'Insufficient Permissions',
         status: 403,
         detail: `Required: ${requiredPermissions.join(' or ')}`
@@ -291,7 +291,7 @@ export const requirePermission = (...requiredPermissions: string[]) => {
 
     if (!policyResult.allowed) {
       return res.status(403).json({
-        type: 'https://api.catalyst.deltek.com/errors/auth/policy-denied',
+        type: 'https://api.catalyst.vintiq.com/errors/auth/policy-denied',
         title: 'Policy Denied',
         status: 403,
         detail: policyResult.reason

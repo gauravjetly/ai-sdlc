@@ -188,8 +188,8 @@ class PresentationGenerator:
         Returns:
             BrandConfig entity
         """
-        # Try to load Deltek brand from memory
-        config_data = self.memory_store.load_brand_config("deltek")
+        # Try to load Vintiq brand from memory
+        config_data = self.memory_store.load_brand_config("vintiq")
 
         if config_data:
             return BrandConfig(
@@ -201,8 +201,8 @@ class PresentationGenerator:
                 layout_mappings=config_data.get('layout_mappings', {}),
             )
 
-        # Create default Deltek brand
-        brand = BrandConfig.create_deltek_brand()
+        # Create default Vintiq brand
+        brand = BrandConfig.create_vintiq_brand()
 
         # Save for future use
         self.memory_store.save_brand_config(brand.id, {

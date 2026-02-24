@@ -9,7 +9,7 @@
 
 ## Context
 
-The Deltek Catalyst frontend requires state management for:
+The Vintiq Catalyst frontend requires state management for:
 
 - Server state (API data): Deployments, resources, agents, costs
 - UI state: Dialogs, wizards, navigation, filters

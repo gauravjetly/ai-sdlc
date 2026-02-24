@@ -105,7 +105,7 @@ Try it in your current session - it might work immediately:
 When you invoke the exec-agent skill, Claude will:
 
 1. Execute the Exec Agent CLI command
-2. Generate a Deltek-branded PowerPoint presentation
+2. Generate a Vintiq-branded PowerPoint presentation
 3. Use Bayesian learning to optimize for your audience
 4. Apply quality scoring across 6 dimensions
 5. Save the .pptx file to `~/.claude/exec-agent-memory/presentations/`
@@ -115,7 +115,7 @@ When you invoke the exec-agent skill, Claude will:
 
 ## 📊 Features
 
-- ✅ **Deltek Branding**: Colors (#1742F6), Figtree font, professional layouts
+- ✅ **Vintiq Branding**: Colors (#1742F6), Figtree font, professional layouts
 - ✅ **Self-Learning**: Bayesian optimization improves with feedback
 - ✅ **Quality Scoring**: 6-dimensional assessment
 - ✅ **Multiple Types**: Executive summary, architecture, status reports
@@ -232,6 +232,6 @@ To verify the skill is installed:
 ✅ **CLI Working**: Tested and verified
 ✅ **Ready to Use**: `/exec-agent list`
 
-The Exec Agent is now available as a Claude Code skill! Just type `/exec-agent` to start generating professional Deltek-branded presentations.
+The Exec Agent is now available as a Claude Code skill! Just type `/exec-agent` to start generating professional Vintiq-branded presentations.
 
 **Next**: Try it in a new conversation or restart Claude Code to activate the skill.

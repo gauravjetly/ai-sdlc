@@ -32,7 +32,7 @@ class DiagramStyle:
     """
 
     background_color: str = "#FFFFFF"
-    primary_color: str = "#1742F6"  # Deltek Blue
+    primary_color: str = "#1742F6"  # Vintiq Blue
     secondary_color: str = "#081581"  # Navy
     accent_color: str = "#00B6C3"  # Teal
     font_family: str = "Figtree"

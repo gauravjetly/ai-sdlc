@@ -160,7 +160,7 @@ def test_presentation_validate_complete():
         detail_level=DetailLevel.MINIMAL,
     )
 
-    brand = BrandConfig.create_deltek_brand()
+    brand = BrandConfig.create_vintiq_brand()
 
     presentation = Presentation(
         id="test-pres-1",

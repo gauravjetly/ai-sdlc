@@ -1,6 +1,6 @@
 /**
  * Governance Service
- * @module @deltek/governance-engine/application/services/GovernanceService
+ * @module @vintiq/governance-engine/application/services/GovernanceService
  */
 
 import * as path from 'path';
@@ -29,7 +29,7 @@ const execAsync = promisify(exec);
  * Default policy paths to search
  */
 const DEFAULT_POLICY_PATHS = [
-  '~/.claude/governance/policies/org/deltek-engineering.yaml',
+  '~/.claude/governance/policies/org/vintiq-engineering.yaml',
   '.governance/policy.yaml',
   'governance-policy.yaml',
 ];

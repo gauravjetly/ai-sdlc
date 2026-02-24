@@ -25,11 +25,11 @@ The Agent Intelligence System is **100% ready for pilot deployment**. All three 
 ### Deployment Artifacts
 
 ✅ **Packages Built**:
-- `@deltek/governance-engine` (445 packages, 0 vulnerabilities)
+- `@vintiq/governance-engine` (445 packages, 0 vulnerabilities)
 - `@aisdlc/memory-system` (431 packages, 0 vulnerabilities)
-- `@deltek/context-injection` (383 packages, 0 vulnerabilities)
+- `@vintiq/context-injection` (383 packages, 0 vulnerabilities)
 
-✅ **Organizational Context**: 6 files (1,200+ lines) at `~/.claude/org-context/deltek/`
+✅ **Organizational Context**: 6 files (1,200+ lines) at `~/.claude/org-context/vintiq/`
 
 ✅ **Documentation**:
 - Quick Start Guide (5 minutes)
@@ -171,16 +171,16 @@ cd /path/to/pilot-project
 **2. Install governance engine**:
 ```bash
 # Link from local build
-npm link @deltek/governance-engine
+npm link @vintiq/governance-engine
 
 # Or install from registry (when published)
-npm install --save-dev @deltek/governance-engine
+npm install --save-dev @vintiq/governance-engine
 ```
 
 **3. Deploy policy file**:
 ```bash
 mkdir -p .governance
-curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/ai-sdlc/main/deployment/governance-engine/policies/deltek-engineering.yaml > .governance/policy.yaml
+curl -fsSL https://raw.githubusercontent.com/DLTKEngineering/ai-sdlc/main/deployment/governance-engine/policies/vintiq-engineering.yaml > .governance/policy.yaml
 ```
 
 **4. Set up git hooks**:
@@ -324,7 +324,7 @@ git commit -m "test: Validate governance hook"
 
 **Level 2: Asynchronous Support** (Target: 15% of issues)
 - Slack #engineering-governance
-- Email: engineering-governance@deltek.com
+- Email: engineering-governance@vintiq.com
 - Response time: <4 hours
 
 **Level 3: Synchronous Support** (Target: 5% of issues)
@@ -532,7 +532,7 @@ git commit -m "test: Validate governance hook"
 
 ### Support Contacts
 
-**Primary**: engineering-governance@deltek.com
+**Primary**: engineering-governance@vintiq.com
 **Slack**: #engineering-governance
 **Emergency**: [Your contact]
 

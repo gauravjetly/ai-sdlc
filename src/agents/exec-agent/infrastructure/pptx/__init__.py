@@ -1,6 +1,6 @@
 """PowerPoint rendering package"""
 
 from .pptx_presentation_renderer import PptxPresentationRenderer
-from .deltek_theme import DeltekTheme
+from .vintiq_theme import VintiqTheme
 
-__all__ = ['PptxPresentationRenderer', 'DeltekTheme']
+__all__ = ['PptxPresentationRenderer', 'VintiqTheme']

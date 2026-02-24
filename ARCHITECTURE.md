@@ -198,7 +198,7 @@ Result: Entire sprint planned with minute-level accuracy
    Your request: "Build a REST API"
 
    What you get automatically:
-   - Deltek coding standards (SOLID, layered architecture)
+   - Vintiq coding standards (SOLID, layered architecture)
    - Project tech stack (Express, TypeScript, PostgreSQL)
    - Security requirements (authentication, encryption)
    - Testing requirements (80% coverage, integration tests)
@@ -515,7 +515,7 @@ The AI-SDLC architecture is built on three foundational systems:
 │  │              CONTEXT SOURCES                                  │  │
 │  │                                                               │  │
 │  │  1. Organizational Context                                   │  │
-│  │     ~/.claude/org-context/deltek/                            │  │
+│  │     ~/.claude/org-context/vintiq/                            │  │
 │  │     - coding-standards.md                                    │  │
 │  │     - security-policies.md                                   │  │
 │  │     - architecture-patterns.md                               │  │
@@ -563,7 +563,7 @@ The AI-SDLC architecture is built on three foundational systems:
 │  │                                                               │  │
 │  │  Original request: "Build REST API"                          │  │
 │  │  +                                                            │  │
-│  │  Deltek standards (1,200+ lines)                             │  │
+│  │  Vintiq standards (1,200+ lines)                             │  │
 │  │  +                                                            │  │
 │  │  Project context (tech stack, ADRs)                          │  │
 │  │  +                                                            │  │
@@ -576,7 +576,7 @@ The AI-SDLC architecture is built on three foundational systems:
 ```
 
 **What It Does**:
-- Automatically loads 1,200+ lines of Deltek engineering standards
+- Automatically loads 1,200+ lines of Vintiq engineering standards
 - Injects project-specific context (tech stack, ADRs)
 - Adds live git context (branch, commits, changes)
 - Manages token budgets (smart trimming)
@@ -702,7 +702,7 @@ The AI-SDLC architecture is built on three foundational systems:
 
 # What happens behind the scenes:
 # 1. Context system loads:
-#    - Deltek standards (layered architecture, SOLID)
+#    - Vintiq standards (layered architecture, SOLID)
 #    - Project tech stack (Express, TypeScript, PostgreSQL)
 #    - Security requirements (file upload validation, size limits)
 #    - Testing requirements (80% coverage)
@@ -807,7 +807,7 @@ ls docs/sdlc/architecture/ADR-*.md
 cat .governance/policy.yaml
 
 # Or organizational default
-cat ~/.claude/governance/policies/deltek-engineering.yaml
+cat ~/.claude/governance/policies/vintiq-engineering.yaml
 ```
 
 **Step 2: Understand policy structure**
@@ -968,7 +968,7 @@ Base Agent:
 4. Returns result
 
 Limitations:
-- No knowledge of Deltek standards
+- No knowledge of Vintiq standards
 - No memory of similar work
 - No governance checks
 - Generic output (may not match your style)
@@ -1099,7 +1099,7 @@ Result: Secure, compliant code, zero manual review
 **What it is**: Agent + organizational knowledge injection
 
 **What it does**:
-- Injects Deltek engineering standards
+- Injects Vintiq engineering standards
 - Loads project-specific context (tech stack, ADRs)
 - Retrieves team conventions
 - Adds compliance requirements
@@ -1108,7 +1108,7 @@ Result: Secure, compliant code, zero manual review
 ```typescript
 interface ContextAwareLayer {
     // Get org standards
-    getDeltekStandards(topics: string[]): Promise<DeltekStandard[]>;
+    getVintiqStandards(topics: string[]): Promise<VintiqStandard[]>;
 
     // Get project context
     getProjectContext(projectId: string): Promise<ProjectContext>;
@@ -1126,7 +1126,7 @@ interface ContextAwareLayer {
 User: "Build payment processing feature"
 
 Context-Aware Agent:
-1. Loads Deltek standards:
+1. Loads Vintiq standards:
    - Security: PCI-DSS compliance required
    - Architecture: Layered pattern mandatory
    - Encryption: AES-256 for card data
@@ -1151,7 +1151,7 @@ Result: Enterprise-grade, compliant implementation
 ```
 
 **Context Sources**:
-- `~/.claude/org-context/deltek/` - Organizational standards (1,200+ lines)
+- `~/.claude/org-context/vintiq/` - Organizational standards (1,200+ lines)
 - `package.json`, `README.md` - Project details
 - `docs/architecture/ADR-*.md` - Architecture decisions
 - `git log`, `git diff` - Live repository context
@@ -1509,12 +1509,12 @@ vs Traditional "everything mixed" approach:
 │     → Found: SEC-2024-112 (MFA bypass vulnerability)            │
 │                                                                   │
 │  2. Policy Pre-Check:                                            │
-│     ✓ Repository: github.com/deltek/... (allowed)               │
+│     ✓ Repository: github.com/vintiq/... (allowed)               │
 │     ✓ User: authorized developer role                           │
 │     ✓ Context: Architecture docs exist                          │
 │                                                                   │
 │  3. Context Injection:                                           │
-│     → Deltek security policies (OAuth 2.0, MFA requirements)    │
+│     → Vintiq security policies (OAuth 2.0, MFA requirements)    │
 │     → Project tech stack (Express, TypeScript, PostgreSQL)      │
 │     → Team conventions (error codes, logging patterns)          │
 │     → Compliance (SOC 2, GDPR requirements)                     │
@@ -1912,7 +1912,7 @@ Total: ~15m (18% improvement)
 ~/.claude/sdlc-warmup
 
 # Loads and caches:
-# - Deltek standards
+# - Vintiq standards
 # - Project context
 # - Recent ADRs
 
@@ -2049,7 +2049,7 @@ Intelligence System:
    → Found: SEC-2024-134 (Backup codes best practice)
 
 2. Context injection (0ms, cached):
-   → Deltek security: 2FA required for admin users
+   → Vintiq security: 2FA required for admin users
    → Project: Express + Passport.js already configured
    → Team convention: Use speakeasy library
 
@@ -2240,7 +2240,7 @@ Onboarding Session:
 
    → Review generated code together:
    → Explain layered architecture
-   → Point out Deltek conventions
+   → Point out Vintiq conventions
    → Show test structure
 
 3. First Solo Task (5 minutes):
@@ -2576,8 +2576,8 @@ All significant architectural decisions are documented as ADRs in `docs/sdlc/arc
 - Support: #engineering-governance
 
 **Email**:
-- Technical: ai-sdlc@deltek.com
-- Security: security@deltek.com
+- Technical: ai-sdlc@vintiq.com
+- Security: security@vintiq.com
 
 ### Training Resources
 

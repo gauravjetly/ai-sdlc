@@ -556,7 +556,7 @@ program
     const service = createGovernanceService();
 
     const result = await service.validate({
-      policyPaths: options.policy || ['~/.claude/governance/policies/org/deltek-engineering.yaml'],
+      policyPaths: options.policy || ['~/.claude/governance/policies/org/vintiq-engineering.yaml'],
       files: options.files || (options.staged ? await getStagedFiles() : await getAllFiles()),
       enforcement: {
         bypass: options.bypass,
@@ -597,7 +597,7 @@ async function main() {
 
   const result = await service.validate({
     files: stagedFiles,
-    policyPaths: ['~/.claude/governance/policies/org/deltek-engineering.yaml'],
+    policyPaths: ['~/.claude/governance/policies/org/vintiq-engineering.yaml'],
   });
 
   if (!result.passed) {
@@ -638,7 +638,7 @@ export class GovernanceClient {
    */
   async getActivePolicies(context: AgentContext): Promise<PolicySummary> {
     const policies = await this.service.loadPolicies([
-      '~/.claude/governance/policies/org/deltek-engineering.yaml',
+      '~/.claude/governance/policies/org/vintiq-engineering.yaml',
     ]);
 
     return {
@@ -952,7 +952,7 @@ export class SecureLogger {
 ```json
 // package.json
 {
-  "name": "@deltek/governance-engine",
+  "name": "@vintiq/governance-engine",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -986,10 +986,10 @@ export class SecureLogger {
 
 ```bash
 # Global installation
-npm install -g @deltek/governance-engine
+npm install -g @vintiq/governance-engine
 
 # Project installation
-npm install --save-dev @deltek/governance-engine
+npm install --save-dev @vintiq/governance-engine
 
 # Setup hooks
 npx governance setup-hooks
