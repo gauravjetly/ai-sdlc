@@ -202,7 +202,7 @@ export class BadService {
         secretFile,
         `
 export const config = {
-  apiKey: "sk_live_abcdef1234567890abcdefghij",
+  apiKey: "sk_live_YOUR_STRIPE_KEY_HERE",
   awsKey: "AKIAIOSFODNN7EXAMPLE",
 };
 `
@@ -251,7 +251,7 @@ export const config = {
       await fs.writeFile(
         secretFile,
         `
-const apiKey = "sk_live_abcdef1234567890abcdefghij";
+const apiKey = "sk_live_YOUR_STRIPE_KEY_HERE";
 `
       );
 
