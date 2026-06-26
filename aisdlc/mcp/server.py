@@ -326,7 +326,136 @@ MCP_TOOLS = [
             "properties": {},
         },
     },
+    # ── v3: Intelligence Tools ─────────────────────────────────────────────────
+    {"name": "sdlc_debate_decision",
+     "description": "Run a multi-agent debate on an architectural decision. Returns the winning position with evidence from multiple expert perspectives.",
+     "inputSchema": {"type": "object", "properties": {"question": {"type": "string"}, "options": {"type": "array", "items": {"type": "string"}}, "rounds": {"type": "integer", "default": 3}}, "required": ["question"]}},
+    {"name": "sdlc_challenge_design",
+     "description": "Run the adversarial agent to find weaknesses, edge cases, and failure modes in a design before implementation.",
+     "inputSchema": {"type": "object", "properties": {"design": {"type": "string"}, "context": {"type": "object"}}, "required": ["design"]}},
+    {"name": "sdlc_plan_roadmap",
+     "description": "Generate a 12-24 month product roadmap with milestones, dependencies, and resource estimates.",
+     "inputSchema": {"type": "object", "properties": {"vision": {"type": "string"}, "horizon_months": {"type": "integer", "default": 12}}, "required": ["vision"]}},
+    # ── v3: Engineering Depth ──────────────────────────────────────────────────
+    {"name": "sdlc_design_domain",
+     "description": "Apply Domain-Driven Design: define bounded contexts, aggregates, domain events, and ubiquitous language.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_design_api",
+     "description": "Design API contracts with full OpenAPI 3.1 spec, contract tests, and breaking change detection.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_plan_db_migration",
+     "description": "Plan safe database migrations with rollback scripts, zero-downtime strategies, and data validation.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_design_events",
+     "description": "Design event-driven architecture with Kafka/RabbitMQ, event sourcing, CQRS, and saga patterns.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_generate_sdk",
+     "description": "Auto-generate client SDKs (Python, TypeScript, Go, Java) from an OpenAPI specification.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "languages": {"type": "array", "items": {"type": "string"}}}, "required": ["description"]}},
+    {"name": "sdlc_review_code",
+     "description": "Perform automated code review: bugs, performance issues, security vulnerabilities, style, and architectural concerns.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_refactor_code",
+     "description": "Identify and execute safe refactoring opportunities with test coverage verification.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_upgrade_deps",
+     "description": "Analyze and upgrade dependencies with compatibility testing and security patch prioritization.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    # ── v3: Security Depth ─────────────────────────────────────────────────────
+    {"name": "sdlc_scan_dast",
+     "description": "Run dynamic application security testing (DAST) against a running application URL.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "target_url": {"type": "string"}}, "required": ["description"]}},
+    {"name": "sdlc_generate_sbom",
+     "description": "Generate Software Bill of Materials (SBOM) and analyze supply chain risks.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_run_pentest",
+     "description": "Execute automated penetration testing scenarios and generate a detailed security report.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_audit_privacy",
+     "description": "Audit GDPR/CCPA compliance, detect PII exposure, and generate data minimization recommendations.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_generate_policies",
+     "description": "Generate OPA/Rego policies for zero-trust enforcement and compliance automation.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    # ── v3: Infrastructure ─────────────────────────────────────────────────────
+    {"name": "sdlc_generate_terraform",
+     "description": "Generate Terraform/Pulumi IaC for AWS, GCP, Azure, or multi-cloud deployments.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "cloud": {"type": "string", "default": "aws"}}, "required": ["description"]}},
+    {"name": "sdlc_plan_multi_cloud",
+     "description": "Design a multi-cloud strategy with portability, cost optimization, and vendor lock-in avoidance.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_configure_mesh",
+     "description": "Configure Istio/Linkerd service mesh with mTLS, traffic management, and observability.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_forecast_costs",
+     "description": "Forecast cloud infrastructure costs with growth projections and optimization recommendations.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "monthly_growth_rate": {"type": "number", "default": 0.15}}, "required": ["description"]}},
+    {"name": "sdlc_plan_dr",
+     "description": "Design disaster recovery strategy with RTO/RPO targets and automated failover procedures.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_setup_gitops",
+     "description": "Configure ArgoCD/Flux GitOps pipelines for continuous delivery and infrastructure sync.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "tool": {"type": "string", "default": "argocd"}}, "required": ["description"]}},
+    # ── v3: Observability ──────────────────────────────────────────────────────
+    {"name": "sdlc_instrument_otel",
+     "description": "Generate OpenTelemetry instrumentation code for traces, metrics, and logs with Collector config.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "language": {"type": "string", "default": "python"}, "framework": {"type": "string"}}, "required": ["description"]}},
+    {"name": "sdlc_define_slos",
+     "description": "Define SLOs with error budgets, multi-window burn rate alerts, and Prometheus recording rules.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "services": {"type": "array", "items": {"type": "string"}}}, "required": ["description"]}},
+    {"name": "sdlc_respond_incident",
+     "description": "Generate incident runbook with automated remediation steps, escalation matrix, and post-mortem template.",
+     "inputSchema": {"type": "object", "properties": {"alert": {"type": "string"}, "context": {"type": "object"}}, "required": ["alert"]}},
+    {"name": "sdlc_plan_capacity",
+     "description": "Generate capacity plan with traffic forecasts, resource projections, and infrastructure scaling milestones.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "monthly_growth_rate": {"type": "number", "default": 0.15}}, "required": ["description"]}},
+    {"name": "sdlc_build_bi",
+     "description": "Design BI dashboards, KPI catalog, data warehouse schema, and analytical SQL queries.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_analyze_logs",
+     "description": "Analyze logs for anomalies, extract patterns, identify root causes, and generate alerting rules.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "log_samples": {"type": "string"}}, "required": ["description"]}},
+    # ── v3: Collaboration ──────────────────────────────────────────────────────
+    {"name": "sdlc_plan_sprint",
+     "description": "Plan a sprint from the backlog with story estimates, capacity calculation, and risk register.",
+     "inputSchema": {"type": "object", "properties": {"backlog": {"type": "array", "items": {"type": "object"}}, "team_velocity": {"type": "integer", "default": 40}}, "required": ["backlog"]}},
+    {"name": "sdlc_write_status_report",
+     "description": "Generate executive status report, sprint review deck, and stakeholder communications.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "audience": {"type": "string", "default": "executive"}}, "required": ["description"]}},
+    {"name": "sdlc_generate_docs",
+     "description": "Auto-generate all project documentation: README, API docs, architecture docs, runbooks, ADRs.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "context": {"type": "object"}}, "required": ["description"]}},
+    {"name": "sdlc_generate_changelog",
+     "description": "Generate CHANGELOG.md, release notes, and migration guides from git commits.",
+     "inputSchema": {"type": "object", "properties": {"commits": {"type": "array", "items": {"type": "object"}}, "current_version": {"type": "string", "default": "1.0.0"}}, "required": ["commits"]}},
+    {"name": "sdlc_onboard_developer",
+     "description": "Generate developer onboarding guide, automated environment setup script, and first-week plan.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "role": {"type": "string", "default": "backend_engineer"}}, "required": ["description"]}},
+    # ── v3: AI/ML ──────────────────────────────────────────────────────────────
+    {"name": "sdlc_design_ml_pipeline",
+     "description": "Design end-to-end ML pipeline from data ingestion to model serving, monitoring, and retraining.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "problem_type": {"type": "string", "default": "classification"}}, "required": ["description"]}},
+    {"name": "sdlc_engineer_prompt",
+     "description": "Design optimized LLM system prompts with few-shot examples, chain-of-thought, guardrails, and test cases.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "output_type": {"type": "string", "default": "json"}}, "required": ["description"]}},
+    {"name": "sdlc_evaluate_model",
+     "description": "Design model evaluation framework with benchmarks, quality gates, and regression test suite.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "task_type": {"type": "string", "default": "text_generation"}}, "required": ["description"]}},
+    {"name": "sdlc_design_vector_db",
+     "description": "Design vector database architecture for RAG, semantic search, hybrid search, and embeddings.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "scale": {"type": "string", "default": "medium"}}, "required": ["description"]}},
+    {"name": "sdlc_audit_ai_safety",
+     "description": "Audit AI system for bias, fairness, toxicity, hallucination, privacy leakage, and safety guardrails.",
+     "inputSchema": {"type": "object", "properties": {"description": {"type": "string"}, "risk_level": {"type": "string", "default": "medium"}}, "required": ["description"]}},
+    # ── v3: Platform ───────────────────────────────────────────────────────────
+    {"name": "sdlc_list_agents",
+     "description": "List all 50+ available AI-SDLC agents with descriptions, phases, and tags.",
+     "inputSchema": {"type": "object", "properties": {"tags": {"type": "array", "items": {"type": "string"}}, "phase": {"type": "string"}}}},
+    {"name": "sdlc_list_templates",
+     "description": "List all available project templates: SaaS B2B, microservices, ML platform, data platform, API gateway.",
+     "inputSchema": {"type": "object", "properties": {}}},
 ]
+
 
 
 # ── MCP Server ────────────────────────────────────────────────────────────────
@@ -341,7 +470,7 @@ class AISdlcMCPServer:
 
     SERVER_INFO = {
         "name":    "ai-sdlc",
-        "version": "2.0.0",
+        "version": "3.0.0",
     }
 
     CAPABILITIES = {
@@ -665,10 +794,205 @@ class AISdlcMCPServer:
             "errors":    result.errors,
         }
 
+    # ── v3 Tool Handlers: Generic agent dispatcher ───────────────────────────
+
+    def _run_agent_by_type(self, agent_type: str, task: Dict, context: Optional[Dict] = None) -> Dict:
+        """Generic dispatcher for all v3 agent-backed tools."""
+        self._lazy_init()
+        from aisdlc.agents.all_agents import create_agent
+        agent  = create_agent(agent_type, llm=self._conductor.llm, memory=self._memory)
+        if not agent:
+            # Try engineering/security/infra/obs/collab/aiml modules
+            agent = self._try_extended_agents(agent_type)
+        if not agent:
+            return {"error": f"Agent '{agent_type}' not found"}
+        result = agent.run(task, context or {})
+        return {
+            "agent":     agent_type,
+            "success":   getattr(result, "success", True),
+            "output":    getattr(result, "output", result),
+            "artifacts": getattr(result, "artifacts", []),
+        }
+
+    def _try_extended_agents(self, agent_type: str):
+        """Try to instantiate agents from extended modules."""
+        modules = [
+            "aisdlc.agents.engineering_agents",
+            "aisdlc.security.advanced_security",
+            "aisdlc.infrastructure.infra_agents",
+            "aisdlc.observability.observability_suite",
+            "aisdlc.collaboration.collaboration_agents",
+            "aisdlc.aiml.aiml_agents",
+            "aisdlc.intelligence.debate_engine",
+            "aisdlc.intelligence.reasoning_engine",
+        ]
+        for mod_name in modules:
+            try:
+                import importlib
+                mod = importlib.import_module(mod_name)
+                factory = getattr(mod, "create_agent", None)
+                if factory:
+                    agent = factory(agent_type, llm=self._conductor.llm, memory=self._memory)
+                    if agent:
+                        return agent
+            except Exception:
+                pass
+        return None
+
+    # Intelligence
+    def _tool_sdlc_debate_decision(self, question: str, options: Optional[List[str]] = None, rounds: int = 3) -> Dict:
+        self._lazy_init()
+        from aisdlc.intelligence.debate_engine import DebateEngine
+        engine = DebateEngine(llm_gateway=self._conductor.llm)
+        result = engine.run({"question": question, "options": options or [], "rounds": rounds}, {})
+        return getattr(result, "output", result) if not isinstance(result, dict) else result
+
+    def _tool_sdlc_challenge_design(self, design: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("adversarial_agent", {"design": design}, context)
+
+    def _tool_sdlc_plan_roadmap(self, vision: str, horizon_months: int = 12) -> Dict:
+        return self._run_agent_by_type("long_horizon_planner", {"vision": vision, "horizon": horizon_months}, {})
+
+    # Engineering Depth
+    def _tool_sdlc_design_domain(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("ddd_agent", {"description": description}, context)
+
+    def _tool_sdlc_design_api(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("api_contract_agent", {"description": description}, context)
+
+    def _tool_sdlc_plan_db_migration(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("db_migration_agent", {"description": description}, context)
+
+    def _tool_sdlc_design_events(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("event_driven_agent", {"description": description}, context)
+
+    def _tool_sdlc_generate_sdk(self, description: str, languages: Optional[List[str]] = None) -> Dict:
+        return self._run_agent_by_type("sdk_generator_agent", {"description": description, "languages": languages or ["python", "typescript"]}, {})
+
+    def _tool_sdlc_review_code(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("code_review_agent", {"description": description}, context)
+
+    def _tool_sdlc_refactor_code(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("refactoring_agent", {"description": description}, context)
+
+    def _tool_sdlc_upgrade_deps(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("dependency_upgrade_agent", {"description": description}, context)
+
+    # Security Depth
+    def _tool_sdlc_scan_dast(self, description: str, target_url: str = "") -> Dict:
+        return self._run_agent_by_type("dast_engine", {"description": description, "target_url": target_url}, {})
+
+    def _tool_sdlc_generate_sbom(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("sbom_agent", {"description": description}, context)
+
+    def _tool_sdlc_run_pentest(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("pen_test_agent", {"description": description}, context)
+
+    def _tool_sdlc_audit_privacy(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("privacy_agent", {"description": description}, context)
+
+    def _tool_sdlc_generate_policies(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("policy_as_code_agent", {"description": description}, context)
+
+    # Infrastructure
+    def _tool_sdlc_generate_terraform(self, description: str, cloud: str = "aws") -> Dict:
+        return self._run_agent_by_type("terraform_agent", {"description": description, "cloud": cloud}, {})
+
+    def _tool_sdlc_plan_multi_cloud(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("multi_cloud_agent", {"description": description}, context)
+
+    def _tool_sdlc_configure_mesh(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("service_mesh_agent", {"description": description}, context)
+
+    def _tool_sdlc_forecast_costs(self, description: str, monthly_growth_rate: float = 0.15) -> Dict:
+        return self._run_agent_by_type("cost_forecast_agent", {"description": description, "monthly_growth_rate": monthly_growth_rate}, {})
+
+    def _tool_sdlc_plan_dr(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("disaster_recovery_agent", {"description": description}, context)
+
+    def _tool_sdlc_setup_gitops(self, description: str, tool: str = "argocd") -> Dict:
+        return self._run_agent_by_type("gitops_agent", {"description": description, "tool": tool}, {})
+
+    # Observability
+    def _tool_sdlc_instrument_otel(self, description: str, language: str = "python", framework: str = "") -> Dict:
+        return self._run_agent_by_type("otel_agent", {"description": description, "language": language, "framework": framework}, {})
+
+    def _tool_sdlc_define_slos(self, description: str, services: Optional[List[str]] = None) -> Dict:
+        return self._run_agent_by_type("slo_agent", {"description": description, "services": services or []}, {})
+
+    def _tool_sdlc_respond_incident(self, alert: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("incident_response_agent", {"alert": alert}, context)
+
+    def _tool_sdlc_plan_capacity(self, description: str, monthly_growth_rate: float = 0.15) -> Dict:
+        return self._run_agent_by_type("capacity_planning_agent", {"description": description, "monthly_growth_rate": monthly_growth_rate}, {})
+
+    def _tool_sdlc_build_bi(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("bi_agent", {"description": description}, context)
+
+    def _tool_sdlc_analyze_logs(self, description: str, log_samples: str = "") -> Dict:
+        return self._run_agent_by_type("log_intelligence_agent", {"description": description, "log_samples": log_samples}, {})
+
+    # Collaboration
+    def _tool_sdlc_plan_sprint(self, backlog: List[Dict], team_velocity: int = 40) -> Dict:
+        return self._run_agent_by_type("pm_agent", {"backlog": backlog, "team_velocity": team_velocity}, {})
+
+    def _tool_sdlc_write_status_report(self, description: str, audience: str = "executive") -> Dict:
+        return self._run_agent_by_type("stakeholder_agent", {"description": description, "audience": audience}, {})
+
+    def _tool_sdlc_generate_docs(self, description: str, context: Optional[Dict] = None) -> Dict:
+        return self._run_agent_by_type("documentation_agent", {"description": description}, context)
+
+    def _tool_sdlc_generate_changelog(self, commits: List[Dict], current_version: str = "1.0.0") -> Dict:
+        return self._run_agent_by_type("changelog_agent", {"commits": commits, "current_version": current_version}, {})
+
+    def _tool_sdlc_onboard_developer(self, description: str, role: str = "backend_engineer") -> Dict:
+        return self._run_agent_by_type("onboarding_agent", {"description": description, "role": role}, {})
+
+    # AI/ML
+    def _tool_sdlc_design_ml_pipeline(self, description: str, problem_type: str = "classification") -> Dict:
+        return self._run_agent_by_type("ml_pipeline_agent", {"description": description, "problem_type": problem_type}, {})
+
+    def _tool_sdlc_engineer_prompt(self, description: str, output_type: str = "json") -> Dict:
+        return self._run_agent_by_type("prompt_engineering_agent", {"description": description, "output_type": output_type}, {})
+
+    def _tool_sdlc_evaluate_model(self, description: str, task_type: str = "text_generation") -> Dict:
+        return self._run_agent_by_type("model_eval_agent", {"description": description, "task_type": task_type}, {})
+
+    def _tool_sdlc_design_vector_db(self, description: str, scale: str = "medium") -> Dict:
+        return self._run_agent_by_type("vector_db_agent", {"description": description, "scale": scale}, {})
+
+    def _tool_sdlc_audit_ai_safety(self, description: str, risk_level: str = "medium") -> Dict:
+        return self._run_agent_by_type("ai_safety_agent", {"description": description, "risk_level": risk_level}, {})
+
+    # Platform meta
+    def _tool_sdlc_list_agents(self, tags: Optional[List[str]] = None, phase: Optional[str] = None) -> Dict:
+        from aisdlc.core.agent_registry import registry
+        return {
+            "agents": registry.list_agents(tags=tags, phase=phase),
+            "total":  registry.total_agents,
+        }
+
+    def _tool_sdlc_list_templates(self) -> Dict:
+        try:
+            from aisdlc.platform.platform_features import ProjectTemplatesLibrary
+            lib = ProjectTemplatesLibrary()
+            return {"templates": [
+                {"id": t.template_id, "name": t.name, "description": t.description}
+                for t in lib.list_all()
+            ]}
+        except Exception:
+            return {"templates": [
+                {"id": "saas-b2b-multitenant",  "name": "SaaS B2B Multi-Tenant"},
+                {"id": "microservices-platform", "name": "Microservices Platform"},
+                {"id": "ml-platform",            "name": "ML/AI Platform"},
+                {"id": "data-platform",          "name": "Data Platform"},
+                {"id": "api-gateway-platform",   "name": "API Gateway Platform"},
+            ]}
+
     def _tool_sdlc_health_check(self) -> Dict:
         status: Dict[str, Any] = {
             "status":    "healthy",
-            "version":   "2.0.0",
+            "version":   "3.0.0",
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "components": {},
         }
