@@ -1,0 +1,245 @@
+version: "3.9"
+
+# =============================================================================
+# AI-SDLC Self-Hosted Stack
+# =============================================================================
+# Services:
+#   aisdlc-api     — REST API server (port 8000)
+#   aisdlc-mcp     — MCP server over SSE (port 8765)
+#   chromadb       — Vector store for agent memory
+#   redis          — Working memory cache + task queue
+#   postgres       — Project ledger persistence
+#   nginx          — Reverse proxy + TLS termination
+#   prometheus     — Metrics collection
+#   grafana        — Metrics dashboards
+#   loki           — Log aggregation
+# =============================================================================
+
+x-common-env: &common-env
+  AISDLC_WORKSPACE: /data/projects
+  LOG_LEVEL: INFO
+  REDIS_URL: redis://redis:6379/0
+  POSTGRES_URL: postgresql://aisdlc:${POSTGRES_PASSWORD:-aisdlc_secret}@postgres:5432/aisdlc
+  CHROMA_HOST: chromadb
+  CHROMA_PORT: "8001"
+
+services:
+
+  # ── AI-SDLC REST API ────────────────────────────────────────────────────────
+  aisdlc-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    image: aisdlc/api:latest
+    container_name: aisdlc-api
+    restart: unless-stopped
+    environment:
+      <<: *common-env
+      API_HOST: 0.0.0.0
+      API_PORT: "8000"
+      # LLM Provider (set at least one)
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      AISDLC_DEFAULT_PROVIDER: ${AISDLC_DEFAULT_PROVIDER:-openai}
+      AISDLC_DEFAULT_MODEL: ${AISDLC_DEFAULT_MODEL:-gpt-4o}
+      # Integrations (optional)
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      JIRA_BASE_URL: ${JIRA_BASE_URL:-}
+      JIRA_EMAIL: ${JIRA_EMAIL:-}
+      JIRA_API_TOKEN: ${JIRA_API_TOKEN:-}
+    volumes:
+      - aisdlc-data:/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro  # For Docker tool
+    ports:
+      - "8000:8000"
+    depends_on:
+      chromadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - aisdlc-net
+    labels:
+      - "prometheus.io/scrape=true"
+      - "prometheus.io/port=8000"
+      - "prometheus.io/path=/api/v1/metrics"
+
+  # ── AI-SDLC MCP Server ──────────────────────────────────────────────────────
+  aisdlc-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: mcp
+    image: aisdlc/mcp:latest
+    container_name: aisdlc-mcp
+    restart: unless-stopped
+    environment:
+      <<: *common-env
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      AISDLC_DEFAULT_PROVIDER: ${AISDLC_DEFAULT_PROVIDER:-openai}
+      AISDLC_DEFAULT_MODEL: ${AISDLC_DEFAULT_MODEL:-gpt-4o}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    volumes:
+      - aisdlc-data:/data
+    ports:
+      - "8765:8765"
+    depends_on:
+      - chromadb
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8765/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aisdlc-net
+
+  # ── Vector Store (ChromaDB) ─────────────────────────────────────────────────
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: aisdlc-chromadb
+    restart: unless-stopped
+    environment:
+      CHROMA_SERVER_HOST: 0.0.0.0
+      CHROMA_SERVER_HTTP_PORT: "8001"
+      PERSIST_DIRECTORY: /chroma/data
+      ANONYMIZED_TELEMETRY: "false"
+    volumes:
+      - chroma-data:/chroma/data
+    ports:
+      - "8001:8001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/api/v1/heartbeat"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aisdlc-net
+
+  # ── Cache & Queue (Redis) ───────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: aisdlc-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aisdlc-net
+
+  # ── Database (PostgreSQL) ───────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: aisdlc-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       aisdlc
+      POSTGRES_USER:     aisdlc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aisdlc_secret}
+      PGDATA:            /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./deploy/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aisdlc -d aisdlc"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aisdlc-net
+
+  # ── Reverse Proxy (Nginx) ───────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: aisdlc-nginx
+    restart: unless-stopped
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/nginx/conf.d:/etc/nginx/conf.d:ro
+      - nginx-certs:/etc/nginx/certs
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - aisdlc-api
+      - aisdlc-mcp
+    networks:
+      - aisdlc-net
+
+  # ── Metrics (Prometheus) ────────────────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: aisdlc-prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=30d"
+      - "--web.enable-lifecycle"
+    volumes:
+      - ./deploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - aisdlc-net
+
+  # ── Dashboards (Grafana) ────────────────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:latest
+    container_name: aisdlc-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP:     "false"
+      GF_SERVER_ROOT_URL:         "%(protocol)s://%(domain)s/grafana"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./deploy/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./deploy/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - aisdlc-net
+
+volumes:
+  aisdlc-data:
+  chroma-data:
+  redis-data:
+  postgres-data:
+  nginx-certs:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  aisdlc-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
