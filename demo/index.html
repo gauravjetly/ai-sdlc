@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI-SDLC v3.0 — Live Demo: Build a Multi-Tenant SaaS CRM</title>
+  <meta name="description" content="Watch AI-SDLC autonomously build a production-ready multi-tenant SaaS CRM from a single command — end to end, NoOps, self-healing." />
+
+  <!-- ── Plausible Analytics (self-hostable, privacy-first, no cookies) ── -->
+  <script defer data-domain="ai-sdlc.yourdomain.com" src="https://plausible.io/js/script.tagged-events.js"></script>
+
+  <!-- ── Google Analytics 4 (optional — swap in your own G-XXXXXXXX) ── -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', {
+      page_title: 'AI-SDLC Demo — aisdlc run',
+      page_location: window.location.href,
+      send_page_view: true
+    });
+  </script>
+
+  <!-- ── Inline analytics engine (works without any external service) ── -->
+  <script>
+    // ─── Self-contained page analytics ───────────────────────────────────────
+    const Analytics = (() => {
+      const SESSION_KEY = 'aisdlc_session';
+      const STORE_KEY   = 'aisdlc_analytics';
+
+      function getSession() {
+        let s = sessionStorage.getItem(SESSION_KEY);
+        if (!s) {
+          s = 'sess_' + Math.random().toString(36).slice(2);
+          sessionStorage.setItem(SESSION_KEY, s);
+        }
+        return s;
+      }
+
+      function getStore() {
+        try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); }
+        catch { return {}; }
+      }
+
+      function saveStore(data) {
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch {}
+      }
+
+      function track(event, props = {}) {
+        const store   = getStore();
+        const session = getSession();
+        const entry   = {
+          event,
+          session,
+          ts:         Date.now(),
+          referrer:   document.referrer || 'direct',
+          ua:         navigator.userAgent.slice(0, 80),
+          ...props,
+        };
+
+        // Append to local store
+        if (!store.events) store.events = [];
+        store.events.push(entry);
+        if (store.events.length > 500) store.events = store.events.slice(-500);
+        store.pageviews = (store.pageviews || 0) + (event === 'pageview' ? 1 : 0);
+        store.sessions  = store.sessions  || {};
+        store.sessions[session] = (store.sessions[session] || 0) + 1;
+        saveStore(store);
+
+        // Forward to GA4 if loaded
+        if (typeof gtag === 'function' && event !== 'pageview') {
+          gtag('event', event, props);
+        }
+
+        // Forward to Plausible if loaded
+        if (typeof window.plausible === 'function') {
+          window.plausible(event, { props });
+        }
+
+        console.debug('[Analytics]', event, props);
+      }
+
+      function getStats() {
+        const store = getStore();
+        const evts  = store.events || [];
+        const counts = {};
+        evts.forEach(e => { counts[e.event] = (counts[e.event] || 0) + 1; });
+        return {
+          total_events:    evts.length,
+          total_pageviews: store.pageviews || 0,
+          unique_sessions: Object.keys(store.sessions || {}).length,
+          event_counts:    counts,
+          last_events:     evts.slice(-5).reverse(),
+        };
+      }
+
+      // Track time-on-page
+      const startTime = Date.now();
+      window.addEventListener('beforeunload', () => {
+        track('time_on_page', { seconds: Math.round((Date.now() - startTime) / 1000) });
+      });
+
+      return { track, getStats };
+    })();
+
+    // Track initial pageview
+    document.addEventListener('DOMContentLoaded', () => {
+      Analytics.track('pageview', { page: 'aisdlc_run_demo' });
+    });
+  </script>
+
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0a0e1a;
+      --bg2:         #0f1629;
+      --bg3:         #141d35;
+      --border:      #1e2d4a;
+      --accent:      #00d4ff;
+      --accent2:     #7c3aed;
+      --accent3:     #10b981;
+      --accent4:     #f59e0b;
+      --accent5:     #ef4444;
+      --text:        #e2e8f0;
+      --text-dim:    #64748b;
+      --text-bright: #f8fafc;
+      --font-mono:   'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      --font-sans:   'Inter', system-ui, -apple-system, sans-serif;
+      --radius:      12px;
+      --shadow:      0 4px 32px rgba(0,0,0,0.5);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Analytics Dashboard (top bar) ───────────────────────────────────── */
+    #analytics-bar {
+      background: linear-gradient(90deg, #0f1629, #141d35);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 12px;
+      color: var(--text-dim);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    #analytics-bar .ab-label {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #analytics-bar .ab-label::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent3);
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    .ab-stat { display: flex; align-items: center; gap: 6px; }
+    .ab-stat strong { color: var(--text-bright); font-size: 13px; }
+
+    .ab-divider { width: 1px; height: 16px; background: var(--border); }
+
+    #analytics-bar .ab-right {
+      margin-left: auto;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .ab-badge {
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 24px 60px;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,255,0.07) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.2);
+      color: var(--accent);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      letter-spacing: 0.04em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      color: var(--text-bright);
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 640px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .hero-cmd {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      color: var(--text-bright);
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .hero-cmd:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 24px rgba(0,212,255,0.15);
+    }
+
+    .hero-cmd .prompt { color: var(--accent3); font-weight: 700; }
+    .hero-cmd .cmd    { color: var(--accent); }
+    .hero-cmd .arg    { color: #f8c555; }
+    .hero-cmd .flag   { color: #c792ea; }
+
+    .copy-btn {
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.2);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: var(--font-sans);
+    }
+
+    .copy-btn:hover { background: rgba(0,212,255,0.2); }
+
+    /* ── Section Layout ───────────────────────────────────────────────────── */
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-sub {
+      color: var(--text-dim);
+      margin-bottom: 36px;
+      font-size: 0.95rem;
+    }
+
+    /* ── Analytics Dashboard Panel ────────────────────────────────────────── */
+    #analytics-panel {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 48px;
+    }
+
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .metric-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .metric-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-bright);
+      font-family: var(--font-mono);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .metric-value.accent  { color: var(--accent); }
+    .metric-value.green   { color: var(--accent3); }
+    .metric-value.purple  { color: var(--accent2); }
+    .metric-value.amber   { color: var(--accent4); }
+    .metric-value.red     { color: var(--accent5); }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+
+    /* Event stream */
+    .event-stream {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .event-row {
+      display: flex;
+      gap: 12px;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
+
+    .event-time  { color: var(--text-dim); min-width: 80px; }
+    .event-name  { color: var(--accent); min-width: 180px; }
+    .event-props { color: var(--text-dim); }
+
+    /* ── Terminal ─────────────────────────────────────────────────────────── */
+    .terminal-wrap {
+      background: #0a0c14;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .terminal-bar {
+      background: #141928;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #28c840; }
+
+    .terminal-title {
+      margin-left: 8px;
+      font-size: 12px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    .run-btn {
+      margin-left: auto;
+      background: var(--accent3);
+      color: #000;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      font-family: var(--font-sans);
+    }
+
+    .run-btn:hover   { background: #0ea572; }
+    .run-btn:active  { transform: scale(0.97); }
+    .run-btn:disabled { background: var(--text-dim); cursor: not-allowed; }
+
+    .terminal-body {
+      padding: 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      min-height: 420px;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+
+    .t-prompt { color: var(--accent3); }
+    .t-cmd    { color: var(--text-bright); }
+    .t-phase  { color: var(--accent4); font-weight: 700; }
+    .t-agent  { color: var(--accent); }
+    .t-ok     { color: var(--accent3); }
+    .t-warn   { color: var(--accent4); }
+    .t-err    { color: var(--accent5); }
+    .t-dim    { color: var(--text-dim); }
+    .t-file   { color: #c792ea; }
+    .t-num    { color: #f8c555; }
+    .t-cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--accent);
+      animation: blink 1s step-end infinite;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ── Pipeline Phases ──────────────────────────────────────────────────── */
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .phase-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      transition: border-color 0.3s, background 0.3s, transform 0.2s;
+      cursor: default;
+    }
+
+    .phase-card.active {
+      border-color: var(--accent4);
+      background: rgba(245,158,11,0.06);
+      animation: pulse-card 1.5s ease infinite;
+    }
+
+    .phase-card.done {
+      border-color: var(--accent3);
+      background: rgba(16,185,129,0.06);
+    }
+
+    .phase-card.done:hover { transform: translateY(-2px); }
+
+    @keyframes pulse-card {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
+      50%       { box-shadow: 0 0 0 6px rgba(245,158,11,0.1); }
+    }
+
+    .phase-icon  { font-size: 1.4rem; margin-bottom: 8px; }
+    .phase-name  { font-size: 13px; font-weight: 700; color: var(--text-bright); margin-bottom: 4px; }
+    .phase-agent { font-size: 11px; color: var(--text-dim); font-family: var(--font-mono); }
+
+    .phase-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 8px;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .status-pending  { background: rgba(100,116,139,0.15); color: var(--text-dim); }
+    .status-running  { background: rgba(245,158,11,0.15);  color: var(--accent4); }
+    .status-done     { background: rgba(16,185,129,0.15);  color: var(--accent3); }
+    .status-skipped  { background: rgba(100,116,139,0.1);  color: var(--text-dim); }
+
+    /* ── Artifacts ────────────────────────────────────────────────────────── */
+    .artifacts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .artifact-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.2s;
+    }
+
+    .artifact-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .artifact-card:hover { border-color: var(--accent2); }
+
+    .artifact-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .artifact-body { flex: 1; min-width: 0; }
+
+    .artifact-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-bright);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .artifact-desc { font-size: 12px; color: var(--text-dim); }
+
+    .artifact-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Options Panel ────────────────────────────────────────────────────── */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .option-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .option-group select,
+    .option-group input {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text-bright);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: var(--font-mono);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .option-group select:focus,
+    .option-group input:focus { border-color: var(--accent); }
+
+    .option-group select option { background: var(--bg3); }
+
+    /* ── Stats Bar ────────────────────────────────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      margin-top: 32px;
+    }
+
+    .stat-item { text-align: center; }
+    .stat-val  { font-size: 1.6rem; font-weight: 800; color: var(--text-bright); font-family: var(--font-mono); }
+    .stat-lbl  { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ── MCP Config ───────────────────────────────────────────────────────── */
+    .code-block {
+      background: #0a0c14;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .code-block .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+
+    .kw   { color: #c792ea; }
+    .str  { color: #c3e88d; }
+    .key  { color: var(--accent); }
+    .num  { color: #f8c555; }
+    .cmt  { color: var(--text-dim); }
+
+    /* ── Footer ───────────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Scrollbar ────────────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* ── Responsive ───────────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      #analytics-bar { gap: 12px; font-size: 11px; }
+      .hero h1 { font-size: 1.8rem; }
+      .hero-cmd { font-size: 0.85rem; flex-wrap: wrap; }
+      .stats-bar { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Analytics Status Bar ─────────────────────────────────────────────── -->
+<div id="analytics-bar">
+  <span class="ab-label">Live Analytics</span>
+  <div class="ab-divider"></div>
+  <div class="ab-stat">👁 <strong id="ab-pv">1</strong> <span>pageview</span></div>
+  <div class="ab-divider"></div>
+  <div class="ab-stat">🧑 <strong id="ab-sess">1</strong> <span>session</span></div>
+  <div class="ab-divider"></div>
+  <div class="ab-stat">⚡ <strong id="ab-evts">0</strong> <span>events</span></div>
+  <div class="ab-divider"></div>
+  <div class="ab-stat">⏱ <strong id="ab-time">0s</strong> <span>on page</span></div>
+  <div class="ab-right">
+    <span class="ab-badge">Plausible Ready</span>
+    <span class="ab-badge">GA4 Ready</span>
+    <span class="ab-badge">Self-Hosted</span>
+  </div>
+</div>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-badge">⚡ AI-SDLC v3.0 — 55 MCP Tools · 50+ Agents · NoOps</div>
+  <h1>Build a <span>Multi-Tenant SaaS CRM</span><br>with One Command</h1>
+  <p>Watch the fully autonomous AI-SDLC pipeline take a single idea from raw description to production-ready, self-healing, enterprise software — end to end.</p>
+
+  <div class="hero-cmd" id="hero-cmd" onclick="copyCommand(this)">
+    <span class="prompt">$</span>
+    <span class="cmd">aisdlc run</span>
+    <span class="arg">"Build a multi-tenant SaaS CRM for real estate agents"</span>
+    <span class="flag">--provider openai --model gpt-4o</span>
+    <button class="copy-btn" onclick="event.stopPropagation(); copyCommand(document.getElementById('hero-cmd'))">Copy</button>
+  </div>
+</section>
+
+<!-- ── Analytics Dashboard ───────────────────────────────────────────────── -->
+<div class="section">
+  <h2 class="section-title">📊 Page Analytics</h2>
+  <p class="section-sub">Real-time event tracking — every interaction on this page is captured. Works with Plausible, GA4, or fully self-contained.</p>
+
+  <div id="analytics-panel">
+    <div class="analytics-grid">
+      <div class="metric-card">
+        <div class="metric-value accent" id="m-pageviews">1</div>
+        <div class="metric-label">Page Views</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value green" id="m-sessions">1</div>
+        <div class="metric-label">Sessions</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value purple" id="m-events">0</div>
+        <div class="metric-label">Total Events</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value amber" id="m-runs">0</div>
+        <div class="metric-label">Demo Runs</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="m-copies">0</div>
+        <div class="metric-label">Command Copies</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value green" id="m-time">0s</div>
+        <div class="metric-label">Time on Page</div>
+      </div>
+    </div>
+
+    <div style="font-size:12px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;">
+      Live Event Stream
+    </div>
+    <div class="event-stream" id="event-stream">
+      <div class="event-row">
+        <span class="event-time">just now</span>
+        <span class="event-name">pageview</span>
+        <span class="event-props">page=aisdlc_run_demo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Options ─────────────────────────────────────────────────────────── -->
+  <h2 class="section-title">⚙️ Configure Your Run</h2>
+  <p class="section-sub">Customize the pipeline before running the demo.</p>
+
+  <div class="options-grid">
+    <div class="option-group">
+      <label>LLM Provider</label>
+      <select id="opt-provider" onchange="updateCommand()">
+        <option value="openai"    selected>OpenAI</option>
+        <option value="anthropic">Anthropic (Claude)</option>
+        <option value="google">   Google (Gemini)</option>
+        <option value="ollama">   Ollama (Local)</option>
+        <option value="groq">     Groq</option>
+      </select>
+    </div>
+    <div class="option-group">
+      <label>Model</label>
+      <select id="opt-model" onchange="updateCommand()">
+        <option value="gpt-4o"                    selected>gpt-4o</option>
+        <option value="gpt-4o-mini">              gpt-4o-mini</option>
+        <option value="claude-3-5-sonnet-20240620">claude-3-5-sonnet-20240620</option>
+        <option value="gemini-1.5-pro">           gemini-1.5-pro</option>
+        <option value="llama3:70b">               llama3:70b (Ollama)</option>
+      </select>
+    </div>
+    <div class="option-group">
+      <label>Project Template</label>
+      <select id="opt-template" onchange="updateCommand()">
+        <option value="saas-b2b-multitenant" selected>SaaS B2B Multi-Tenant</option>
+        <option value="microservices-platform">Microservices Platform</option>
+        <option value="ml-platform">           ML / AI Platform</option>
+        <option value="data-platform">         Data Platform</option>
+        <option value="api-gateway-platform">  API Gateway Platform</option>
+      </select>
+    </div>
+    <div class="option-group">
+      <label>Workspace Directory</label>
+      <input type="text" id="opt-workspace" value="./projects/crm-saas" oninput="updateCommand()" />
+    </div>
+  </div>
+
+  <!-- Live command preview -->
+  <div class="code-block" style="margin-bottom:28px;">
+    <button class="copy-btn" onclick="copyLiveCommand()">Copy</button>
+    <div id="live-cmd">
+      <span class="t-prompt">$</span>
+      <span style="color:var(--accent)"> aisdlc run </span>
+      <span style="color:#f8c555">"Build a multi-tenant SaaS CRM for real estate agents"</span>
+      <span style="color:#c792ea"> --provider openai --model gpt-4o --template saas-b2b-multitenant --workspace ./projects/crm-saas</span>
+    </div>
+  </div>
+
+  <!-- ── Terminal Demo ────────────────────────────────────────────────────── -->
+  <h2 class="section-title">🖥️ Live Terminal Demo</h2>
+  <p class="section-sub">Click <strong>Run Pipeline</strong> to simulate the full autonomous execution.</p>
+
+  <div class="terminal-wrap">
+    <div class="terminal-bar">
+      <div class="dot dot-r"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+      <span class="terminal-title">aisdlc — bash — 120×40</span>
+      <button class="run-btn" id="run-btn" onclick="runDemo()">▶ Run Pipeline</button>
+    </div>
+    <div class="terminal-body" id="terminal"></div>
+  </div>
+
+  <!-- ── Pipeline Phases ──────────────────────────────────────────────────── -->
+  <h2 class="section-title" style="margin-top:56px;">🔄 Pipeline Phases</h2>
+  <p class="section-sub">15 autonomous agents execute in sequence, each feeding context to the next.</p>
+
+  <div class="pipeline" id="pipeline">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- ── Artifacts ────────────────────────────────────────────────────────── -->
+  <h2 class="section-title" style="margin-top:56px;">📦 Generated Artifacts</h2>
+  <p class="section-sub">Everything the pipeline produces — code, configs, docs, tests, IaC — ready for production.</p>
+
+  <div class="artifacts-grid" id="artifacts-grid">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- ── Stats Bar ────────────────────────────────────────────────────────── -->
+  <div class="stats-bar" id="stats-bar" style="display:none;">
+    <div class="stat-item"><div class="stat-val" id="s-agents">0</div><div class="stat-lbl">Agents Run</div></div>
+    <div class="stat-item"><div class="stat-val" id="s-files">0</div><div class="stat-lbl">Files Generated</div></div>
+    <div class="stat-item"><div class="stat-val" id="s-lines">0</div><div class="stat-lbl">Lines of Code</div></div>
+    <div class="stat-item"><div class="stat-val" id="s-tests">0</div><div class="stat-lbl">Tests Written</div></div>
+    <div class="stat-item"><div class="stat-val" id="s-tokens">0</div><div class="stat-lbl">Tokens Used</div></div>
+    <div class="stat-item"><div class="stat-val" id="s-cost">$0.00</div><div class="stat-lbl">Est. Cost</div></div>
+    <div class="stat-item"><div class="stat-val" id="s-time">0s</div><div class="stat-lbl">Run Time</div></div>
+  </div>
+
+  <!-- ── MCP Config ────────────────────────────────────────────────────────── -->
+  <h2 class="section-title" style="margin-top:56px;">🔌 Connect via MCP</h2>
+  <p class="section-sub">Add to Claude Desktop, Cursor, or any MCP-compatible AI model to use all 55 tools natively.</p>
+
+  <div class="code-block">
+    <button class="copy-btn" onclick="copyMCP()">Copy</button>
+    <div>
+      <span class="cmt">// ~/.claude/claude_desktop_config.json</span><br>
+      <span class="key">{</span><br>
+      &nbsp;&nbsp;<span class="str">"mcpServers"</span><span class="key">:</span> <span class="key">{</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"ai-sdlc"</span><span class="key">:</span> <span class="key">{</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"command"</span><span class="key">:</span> <span class="str">"python3"</span><span class="key">,</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"args"</span><span class="key">:</span> <span class="key">[</span><span class="str">"-m"</span><span class="key">,</span> <span class="str">"aisdlc.mcp.server"</span><span class="key">,</span> <span class="str">"--transport"</span><span class="key">,</span> <span class="str">"stdio"</span><span class="key">],</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"cwd"</span><span class="key">:</span> <span class="str">"/path/to/ai-sdlc"</span><span class="key">,</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"env"</span><span class="key">:</span> <span class="key">{</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"AISDLC_DEFAULT_PROVIDER"</span><span class="key">:</span> <span class="str">"openai"</span><span class="key">,</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"AISDLC_DEFAULT_MODEL"</span><span class="key">:</span> <span class="str">"gpt-4o"</span><span class="key">,</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"OPENAI_API_KEY"</span><span class="key">:</span> <span class="str">"sk-..."</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">}</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="key">}</span><br>
+      &nbsp;&nbsp;<span class="key">}</span><br>
+      <span class="key">}</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ─────────────────────────────────────────────────────────────── -->
+<footer>
+  <p>
+    <a href="https://github.com/gauravjetly/ai-sdlc" target="_blank">GitHub: gauravjetly/ai-sdlc</a>
+    &nbsp;·&nbsp; AI-SDLC v3.0.0 &nbsp;·&nbsp; 55 MCP Tools &nbsp;·&nbsp; 50+ Agents &nbsp;·&nbsp; NoOps · Self-Healing
+  </p>
+  <p style="margin-top:8px; font-size:11px;">
+    Analytics: <a href="https://plausible.io" target="_blank">Plausible</a> (privacy-first) + GA4 + Self-contained event store
+  </p>
+</footer>
+
+<!-- ── Scripts ────────────────────────────────────────────────────────────── -->
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+const PHASES = [
+  { icon:'💡', name:'Ideation',         agent:'ideation_agent',      time: 800  },
+  { icon:'📋', name:'Business Analysis',agent:'ba_agent',            time: 1200 },
+  { icon:'🏗️', name:'Architecture',     agent:'architect_agent',     time: 1500 },
+  { icon:'🎨', name:'UX Design',        agent:'ux_agent',            time: 1000 },
+  { icon:'🗄️', name:'Data Engineering', agent:'data_engineer_agent', time: 900  },
+  { icon:'🔒', name:'Security',         agent:'security_engine',     time: 1100 },
+  { icon:'⚙️', name:'Engineering',      agent:'engineer_agent',      time: 2000 },
+  { icon:'🧪', name:'QA & Testing',     agent:'qa_agent',            time: 1300 },
+  { icon:'🚀', name:'DevOps / CI-CD',   agent:'devops_agent',        time: 1000 },
+  { icon:'🔧', name:'Self-Healing',     agent:'healing_engine',      time: 800  },
+  { icon:'💥', name:'Chaos Engineering',agent:'chaos_agent',         time: 700  },
+  { icon:'📜', name:'Compliance',       agent:'compliance_agent',    time: 600  },
+  { icon:'💰', name:'FinOps',           agent:'finops_agent',        time: 500  },
+  { icon:'🔄', name:'Maintenance',      agent:'maintenance_agent',   time: 600  },
+  { icon:'📊', name:'Observability',    agent:'otel_agent',          time: 700  },
+];
+
+const ARTIFACTS = [
+  { name:'PRD.md',                      desc:'Full Product Requirements Document',       tag:'Docs',     color:'#7c3aed', icon:'📄' },
+  { name:'ARCHITECTURE.md',             desc:'System design with component diagrams',    tag:'Design',   color:'#0ea5e9', icon:'🏗️' },
+  { name:'src/api/main.py',             desc:'FastAPI multi-tenant REST API',            tag:'Code',     color:'#10b981', icon:'⚙️' },
+  { name:'src/models/tenant.py',        desc:'Multi-tenant data models (SQLAlchemy)',    tag:'Code',     color:'#10b981', icon:'⚙️' },
+  { name:'src/auth/jwt_handler.py',     desc:'JWT + RBAC authentication service',       tag:'Security', color:'#ef4444', icon:'🔒' },
+  { name:'tests/test_api.py',           desc:'pytest suite — 94% coverage',             tag:'Tests',    color:'#f59e0b', icon:'🧪' },
+  { name:'tests/test_e2e.py',           desc:'End-to-end Playwright test suite',        tag:'Tests',    color:'#f59e0b', icon:'🧪' },
+  { name:'k8s/deployment.yaml',         desc:'Kubernetes Deployment + HPA + PDB',       tag:'K8s',      color:'#3b82f6', icon:'☸️' },
+  { name:'k8s/network-policy.yaml',     desc:'Zero-trust NetworkPolicy (Istio)',        tag:'Security', color:'#ef4444', icon:'🔒' },
+  { name:'terraform/main.tf',           desc:'AWS EKS + RDS + ElastiCache IaC',         tag:'IaC',      color:'#8b5cf6', icon:'🌍' },
+  { name:'.github/workflows/ci.yml',    desc:'GitHub Actions CI/CD pipeline',           tag:'DevOps',   color:'#06b6d4', icon:'🚀' },
+  { name:'helm/values.yaml',            desc:'Helm chart for multi-env deployment',     tag:'K8s',      color:'#3b82f6', icon:'☸️' },
+  { name:'monitoring/alerts.yaml',      desc:'Prometheus alerting rules + SLOs',        tag:'Observe',  color:'#f97316', icon:'📊' },
+  { name:'monitoring/otel-config.yaml', desc:'OpenTelemetry Collector configuration',   tag:'Observe',  color:'#f97316', icon:'📊' },
+  { name:'chaos/experiments.yaml',      desc:'Chaos Monkey + Litmus chaos tests',       tag:'Chaos',    color:'#dc2626', icon:'💥' },
+  { name:'docs/API.md',                 desc:'Full OpenAPI 3.1 documentation',          tag:'Docs',     color:'#7c3aed', icon:'📄' },
+  { name:'docs/RUNBOOK.md',             desc:'Incident response runbook',               tag:'Docs',     color:'#7c3aed', icon:'📄' },
+  { name:'scripts/self-heal.sh',        desc:'Auto-remediation shell script',           tag:'NoOps',    color:'#10b981', icon:'🔧' },
+  { name:'security/sbom.json',          desc:'Software Bill of Materials (CycloneDX)',  tag:'Security', color:'#ef4444', icon:'🔒' },
+  { name:'CHANGELOG.md',               desc:'Auto-generated release changelog',         tag:'Docs',     color:'#7c3aed', icon:'📄' },
+];
+
+const TERMINAL_LINES = [
+  { t:0,    html: '<span class="t-prompt">$</span> <span class="t-cmd">aisdlc run "Build a multi-tenant SaaS CRM for real estate agents" --provider openai --model gpt-4o</span>' },
+  { t:200,  html: '' },
+  { t:300,  html: '<span class="t-dim">╔══════════════════════════════════════════════════════════════╗</span>' },
+  { t:350,  html: '<span class="t-dim">║</span>  <span style="color:var(--accent);font-weight:700">AI-SDLC v3.0.0</span>  <span class="t-dim">Fully Autonomous · NoOps · Self-Healing</span>  <span class="t-dim">║</span>' },
+  { t:400,  html: '<span class="t-dim">╚══════════════════════════════════════════════════════════════╝</span>' },
+  { t:500,  html: '' },
+  { t:600,  html: '<span class="t-ok">✔</span>  LLM Gateway connected  <span class="t-dim">[openai / gpt-4o]</span>' },
+  { t:700,  html: '<span class="t-ok">✔</span>  Memory system initialised  <span class="t-dim">[ChromaDB + Redis]</span>' },
+  { t:800,  html: '<span class="t-ok">✔</span>  Tool registry loaded  <span class="t-dim">[GitHub, Docker, K8s, Jira, Prometheus]</span>' },
+  { t:900,  html: '<span class="t-ok">✔</span>  Project ID: <span class="t-num">proj-a7f3c9d2</span>  Workspace: <span class="t-file">./projects/crm-saas</span>' },
+  { t:1000, html: '' },
+  { t:1100, html: '<span class="t-phase">━━━ PHASE 1/15: Ideation Agent ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:1200, html: '  <span class="t-agent">→</span> Analysing market landscape for real estate CRM...' },
+  { t:1800, html: '  <span class="t-agent">→</span> Identifying 6 core personas: Agent, Broker, Admin, Client, Developer, FinOps' },
+  { t:2200, html: '  <span class="t-ok">✔</span> Product vision, success metrics, and feature priority matrix generated' },
+  { t:2400, html: '  <span class="t-file">  📄 docs/VISION.md</span>  <span class="t-dim">(1,240 tokens)</span>' },
+  { t:2500, html: '' },
+  { t:2600, html: '<span class="t-phase">━━━ PHASE 2/15: Business Analysis Agent ━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:2700, html: '  <span class="t-agent">→</span> Generating 47 user stories across 8 epics...' },
+  { t:3400, html: '  <span class="t-agent">→</span> Writing acceptance criteria and non-functional requirements...' },
+  { t:3900, html: '  <span class="t-ok">✔</span> PRD complete — 47 stories, 8 epics, 12 NFRs' },
+  { t:4000, html: '  <span class="t-file">  📄 docs/PRD.md</span>  <span class="t-dim">(3,812 tokens)</span>' },
+  { t:4100, html: '' },
+  { t:4200, html: '<span class="t-phase">━━━ PHASE 3/15: Architect Agent ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:4300, html: '  <span class="t-agent">→</span> Running multi-agent debate: Monolith vs Microservices vs Modular Monolith...' },
+  { t:5000, html: '  <span class="t-agent">→</span> Winner: <span class="t-ok">Modular Monolith</span>  (confidence: 87%)  — optimal for team size &lt;15' },
+  { t:5400, html: '  <span class="t-agent">→</span> Selecting tech stack: FastAPI · PostgreSQL · Redis · Celery · React · K8s' },
+  { t:5700, html: '  <span class="t-ok">✔</span> Architecture document, 4 ADRs, and component diagram generated' },
+  { t:5800, html: '  <span class="t-file">  📄 docs/ARCHITECTURE.md  📄 docs/ADR-001.md  📄 docs/ADR-002.md</span>' },
+  { t:5900, html: '' },
+  { t:6000, html: '<span class="t-phase">━━━ PHASE 4/15: UX Design Agent ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:6100, html: '  <span class="t-agent">→</span> Generating user journey maps for 6 personas...' },
+  { t:6800, html: '  <span class="t-ok">✔</span> Wireframe specs, design system tokens, and accessibility checklist ready' },
+  { t:6900, html: '' },
+  { t:7000, html: '<span class="t-phase">━━━ PHASE 5/15: Data Engineering Agent ━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:7100, html: '  <span class="t-agent">→</span> Designing multi-tenant schema with row-level security...' },
+  { t:7700, html: '  <span class="t-ok">✔</span> 18 tables, 6 migration scripts, ETL pipeline, and analytics schema generated' },
+  { t:7800, html: '' },
+  { t:7900, html: '<span class="t-phase">━━━ PHASE 6/15: Security Engine ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:8000, html: '  <span class="t-agent">→</span> Running threat model (STRIDE)...' },
+  { t:8400, html: '  <span class="t-agent">→</span> Generating zero-trust policies (OPA/Rego)...' },
+  { t:8700, html: '  <span class="t-agent">→</span> GDPR/SOC2 compliance checklist generated' },
+  { t:8900, html: '  <span class="t-ok">✔</span> Security score: <span class="t-num">94/100</span>  Findings: <span class="t-ok">0 critical</span>, <span class="t-warn">2 medium</span>, <span class="t-dim">4 low</span>' },
+  { t:9000, html: '' },
+  { t:9100, html: '<span class="t-phase">━━━ PHASE 7/15: Engineering Agent ━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:9200, html: '  <span class="t-agent">→</span> Generating production-ready code with NoOps patterns baked in...' },
+  { t:10500,html: '  <span class="t-agent">→</span> Adding circuit breakers, retry logic, and health probes...' },
+  { t:11000,html: '  <span class="t-agent">→</span> Instrumenting with OpenTelemetry traces + metrics...' },
+  { t:11200,html: '  <span class="t-ok">✔</span> <span class="t-num">3,847</span> lines of code across <span class="t-num">24</span> files' },
+  { t:11300,html: '  <span class="t-file">  ⚙️ src/api/  src/models/  src/services/  src/workers/  src/auth/</span>' },
+  { t:11400,html: '' },
+  { t:11500,html: '<span class="t-phase">━━━ PHASE 8/15: QA Agent ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:11600,html: '  <span class="t-agent">→</span> Generating unit, integration, E2E, and load tests...' },
+  { t:12500,html: '  <span class="t-ok">✔</span> <span class="t-num">186</span> tests written  Coverage: <span class="t-ok">94%</span>' },
+  { t:12600,html: '' },
+  { t:12700,html: '<span class="t-phase">━━━ PHASE 9/15: DevOps Agent ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:12800,html: '  <span class="t-agent">→</span> Generating Dockerfile, K8s manifests, Helm chart, GitHub Actions CI/CD...' },
+  { t:13500,html: '  <span class="t-ok">✔</span> Full GitOps pipeline ready (ArgoCD)' },
+  { t:13600,html: '' },
+  { t:13700,html: '<span class="t-phase">━━━ PHASE 10/15: Self-Healing Engine ━━━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:13800,html: '  <span class="t-agent">→</span> Injecting circuit breakers (tenacity), health monitors, auto-restart logic...' },
+  { t:14300,html: '  <span class="t-ok">✔</span> NoOps patterns applied: HPA, PDB, liveness/readiness probes, auto-remediation' },
+  { t:14400,html: '' },
+  { t:14500,html: '<span class="t-phase">━━━ PHASES 11–15: Chaos · Compliance · FinOps · Maintenance · Observability ━━━</span>' },
+  { t:14600,html: '  <span class="t-ok">✔</span> Chaos experiments (Litmus), SOC2 controls, cost forecast ($847/mo), SLOs, OTel' },
+  { t:14700,html: '' },
+  { t:14800,html: '<span class="t-dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>' },
+  { t:14900,html: '<span class="t-ok">✅ PIPELINE COMPLETE</span>' },
+  { t:15000,html: '' },
+  { t:15100,html: '  Project ID:     <span class="t-num">proj-a7f3c9d2</span>' },
+  { t:15150,html: '  Workspace:      <span class="t-file">./projects/crm-saas/</span>' },
+  { t:15200,html: '  Agents run:     <span class="t-num">15</span>' },
+  { t:15250,html: '  Files created:  <span class="t-num">62</span>' },
+  { t:15300,html: '  Lines of code:  <span class="t-num">3,847</span>' },
+  { t:15350,html: '  Tests written:  <span class="t-num">186</span>  (94% coverage)' },
+  { t:15400,html: '  Tokens used:    <span class="t-num">184,320</span>' },
+  { t:15450,html: '  Estimated cost: <span class="t-num">$0.92</span>' },
+  { t:15500,html: '  Run time:       <span class="t-num">47s</span>' },
+  { t:15600,html: '' },
+  { t:15700,html: '  <span class="t-dim">Next steps:</span>' },
+  { t:15750,html: '  <span class="t-ok">→</span> <span class="t-cmd">cd ./projects/crm-saas && docker compose up -d</span>' },
+  { t:15800,html: '  <span class="t-ok">→</span> <span class="t-cmd">kubectl apply -f k8s/</span>' },
+  { t:15850,html: '  <span class="t-ok">→</span> <span class="t-cmd">aisdlc security scan ./projects/crm-saas</span>' },
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let demoRunning  = false;
+let demoComplete = false;
+let runCount     = 0;
+let copyCount    = 0;
+const startTime  = Date.now();
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildPipeline();
+  buildArtifacts();
+  startAnalyticsTicker();
+});
+
+// ── Pipeline ──────────────────────────────────────────────────────────────────
+function buildPipeline() {
+  const grid = document.getElementById('pipeline');
+  grid.innerHTML = PHASES.map((p, i) => `
+    <div class="phase-card" id="phase-${i}">
+      <div class="phase-icon">${p.icon}</div>
+      <div class="phase-name">${p.name}</div>
+      <div class="phase-agent">${p.agent}</div>
+      <div class="phase-status status-pending" id="phase-status-${i}">⬜ Pending</div>
+    </div>
+  `).join('');
+}
+
+// ── Artifacts ─────────────────────────────────────────────────────────────────
+function buildArtifacts() {
+  const grid = document.getElementById('artifacts-grid');
+  grid.innerHTML = ARTIFACTS.map((a, i) => `
+    <div class="artifact-card" id="artifact-${i}">
+      <div class="artifact-icon" style="background:${a.color}22; color:${a.color}">${a.icon}</div>
+      <div class="artifact-body">
+        <div class="artifact-name">${a.name}</div>
+        <div class="artifact-desc">${a.desc}</div>
+        <span class="artifact-tag" style="background:${a.color}22; color:${a.color}">${a.tag}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Terminal ──────────────────────────────────────────────────────────────────
+function appendLine(html) {
+  const term = document.getElementById('terminal');
+  const div  = document.createElement('div');
+  div.innerHTML = html || '&nbsp;';
+  term.appendChild(div);
+  term.scrollTop = term.scrollHeight;
+}
+
+function clearTerminal() {
+  document.getElementById('terminal').innerHTML = '';
+}
+
+// ── Run Demo ──────────────────────────────────────────────────────────────────
+async function runDemo() {
+  if (demoRunning) return;
+  demoRunning = true;
+
+  const btn = document.getElementById('run-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Running...';
+
+  clearTerminal();
+  resetPhases();
+  resetArtifacts();
+  document.getElementById('stats-bar').style.display = 'none';
+
+  runCount++;
+  Analytics.track('demo_run', {
+    run_number: runCount,
+    provider:   document.getElementById('opt-provider').value,
+    model:      document.getElementById('opt-model').value,
+    template:   document.getElementById('opt-template').value,
+  });
+  updateAnalyticsUI();
+
+  // Print terminal lines with timing
+  const baseDelay = 0;
+  for (const line of TERMINAL_LINES) {
+    await sleep(line.t === 0 ? 0 : Math.min(line.t - (TERMINAL_LINES[TERMINAL_LINES.indexOf(line)-1]?.t || 0), 200));
+    appendLine(line.html);
+  }
+
+  // Animate phases
+  for (let i = 0; i < PHASES.length; i++) {
+    const card   = document.getElementById(`phase-${i}`);
+    const status = document.getElementById(`phase-status-${i}`);
+    card.classList.add('active');
+    status.className = 'phase-status status-running';
+    status.textContent = '🔄 Running';
+    await sleep(PHASES[i].time * 0.06);
+    card.classList.remove('active');
+    card.classList.add('done');
+    status.className = 'phase-status status-done';
+    status.textContent = '✅ Done';
+  }
+
+  // Reveal artifacts
+  for (let i = 0; i < ARTIFACTS.length; i++) {
+    await sleep(60);
+    document.getElementById(`artifact-${i}`).classList.add('visible');
+  }
+
+  // Show stats
+  await sleep(300);
+  animateStats();
+
+  demoRunning  = false;
+  demoComplete = true;
+  btn.disabled = false;
+  btn.textContent = '↺ Run Again';
+
+  Analytics.track('demo_complete', { run_number: runCount, artifacts: ARTIFACTS.length });
+  updateAnalyticsUI();
+}
+
+function resetPhases() {
+  PHASES.forEach((_, i) => {
+    const card   = document.getElementById(`phase-${i}`);
+    const status = document.getElementById(`phase-status-${i}`);
+    card.className   = 'phase-card';
+    status.className = 'phase-status status-pending';
+    status.textContent = '⬜ Pending';
+  });
+}
+
+function resetArtifacts() {
+  ARTIFACTS.forEach((_, i) => {
+    document.getElementById(`artifact-${i}`).classList.remove('visible');
+  });
+}
+
+function animateStats() {
+  const bar = document.getElementById('stats-bar');
+  bar.style.display = 'flex';
+  animateNum('s-agents', 0, 15,    800);
+  animateNum('s-files',  0, 62,    900);
+  animateNum('s-lines',  0, 3847, 1200, ',');
+  animateNum('s-tests',  0, 186,   900);
+  animateNum('s-tokens', 0, 184320, 1400, ',');
+  setTimeout(() => {
+    document.getElementById('s-cost').textContent = '$0.92';
+    document.getElementById('s-time').textContent = '47s';
+  }, 800);
+}
+
+function animateNum(id, from, to, duration, sep = '') {
+  const el    = document.getElementById(id);
+  const start = performance.now();
+  function frame(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const val      = Math.round(from + (to - from) * easeOut(progress));
+    el.textContent = sep ? val.toLocaleString() : val;
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+function sleep(ms)  { return new Promise(r => setTimeout(r, ms)); }
+
+// ── Command Builder ───────────────────────────────────────────────────────────
+function updateCommand() {
+  const provider  = document.getElementById('opt-provider').value;
+  const model     = document.getElementById('opt-model').value;
+  const template  = document.getElementById('opt-template').value;
+  const workspace = document.getElementById('opt-workspace').value;
+
+  document.getElementById('live-cmd').innerHTML = `
+    <span class="t-prompt">$</span>
+    <span style="color:var(--accent)"> aisdlc run </span>
+    <span style="color:#f8c555">"Build a multi-tenant SaaS CRM for real estate agents"</span>
+    <span style="color:#c792ea"> --provider ${provider} --model ${model} --template ${template} --workspace ${workspace}</span>
+  `;
+
+  Analytics.track('command_configured', { provider, model, template });
+  updateAnalyticsUI();
+}
+
+// ── Copy ──────────────────────────────────────────────────────────────────────
+function copyCommand(el) {
+  const text = `aisdlc run "Build a multi-tenant SaaS CRM for real estate agents" --provider openai --model gpt-4o`;
+  navigator.clipboard.writeText(text).catch(() => {});
+  copyCount++;
+  Analytics.track('command_copied', { source: 'hero' });
+  updateAnalyticsUI();
+  const btn = el.querySelector('.copy-btn');
+  if (btn) { btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 2000); }
+}
+
+function copyLiveCommand() {
+  const provider  = document.getElementById('opt-provider').value;
+  const model     = document.getElementById('opt-model').value;
+  const template  = document.getElementById('opt-template').value;
+  const workspace = document.getElementById('opt-workspace').value;
+  const text = `aisdlc run "Build a multi-tenant SaaS CRM for real estate agents" --provider ${provider} --model ${model} --template ${template} --workspace ${workspace}`;
+  navigator.clipboard.writeText(text).catch(() => {});
+  copyCount++;
+  Analytics.track('command_copied', { source: 'live_cmd' });
+  updateAnalyticsUI();
+}
+
+function copyMCP() {
+  const text = `{
+  "mcpServers": {
+    "ai-sdlc": {
+      "command": "python3",
+      "args": ["-m", "aisdlc.mcp.server", "--transport", "stdio"],
+      "cwd": "/path/to/ai-sdlc",
+      "env": {
+        "AISDLC_DEFAULT_PROVIDER": "openai",
+        "AISDLC_DEFAULT_MODEL": "gpt-4o",
+        "OPENAI_API_KEY": "sk-..."
+      }
+    }
+  }
+}`;
+  navigator.clipboard.writeText(text).catch(() => {});
+  Analytics.track('mcp_config_copied');
+  updateAnalyticsUI();
+}
+
+// ── Analytics UI ──────────────────────────────────────────────────────────────
+function updateAnalyticsUI() {
+  const stats = Analytics.getStats();
+  const elapsed = Math.round((Date.now() - startTime) / 1000);
+
+  // Top bar
+  document.getElementById('ab-pv').textContent   = stats.total_pageviews;
+  document.getElementById('ab-sess').textContent = stats.unique_sessions;
+  document.getElementById('ab-evts').textContent = stats.total_events;
+  document.getElementById('ab-time').textContent = elapsed + 's';
+
+  // Dashboard
+  document.getElementById('m-pageviews').textContent = stats.total_pageviews;
+  document.getElementById('m-sessions').textContent  = stats.unique_sessions;
+  document.getElementById('m-events').textContent    = stats.total_events;
+  document.getElementById('m-runs').textContent      = runCount;
+  document.getElementById('m-copies').textContent    = copyCount;
+  document.getElementById('m-time').textContent      = elapsed + 's';
+
+  // Event stream
+  const stream = document.getElementById('event-stream');
+  const last   = stats.last_events || [];
+  stream.innerHTML = last.map(e => `
+    <div class="event-row">
+      <span class="event-time">${new Date(e.ts).toLocaleTimeString()}</span>
+      <span class="event-name">${e.event}</span>
+      <span class="event-props">${Object.entries(e).filter(([k]) => !['event','session','ts','referrer','ua'].includes(k)).map(([k,v]) => `${k}=${v}`).join(' ')}</span>
+    </div>
+  `).join('');
+}
+
+function startAnalyticsTicker() {
+  setInterval(updateAnalyticsUI, 1000);
+}
+</script>
+</body>
+</html>
