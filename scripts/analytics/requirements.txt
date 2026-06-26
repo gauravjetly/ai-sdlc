@@ -1,0 +1,16 @@
+# Analytics scripts dependencies
+requests>=2.31.0
+jinja2>=3.1.0
+matplotlib>=3.8.0
+pandas>=2.1.0
+python-dateutil>=2.8.0
+
+# Email delivery (optional — set SENDGRID_API_KEY)
+sendgrid>=6.11.0
+
+# Slack notifications (optional — set SLACK_BOT_TOKEN)
+slack-sdk>=3.27.0
+
+# Google Analytics 4 (optional — set GA4_PROPERTY_ID + GA4_CREDENTIALS_JSON)
+google-analytics-data>=0.18.0
+google-auth>=2.28.0
